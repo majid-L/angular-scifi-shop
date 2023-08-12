@@ -1,9 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable, of, combineLatest } from 'rxjs';
+import { Observable, of, combineLatest, Subject } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { logoutRequest, showAuthOverlay } from '../ngrx/auth/auth.actions';
+import { selectAccount, selectCart, selectCartItemsCount, selectLoggedInUserId } from '../ngrx';
 
 @Component({
   selector: 'app-nav',
@@ -12,10 +13,12 @@ import { logoutRequest, showAuthOverlay } from '../ngrx/auth/auth.actions';
 })
 export class NavComponent {
   private breakpointObserver = inject(BreakpointObserver);
-  loggedInUserId$: Observable<string | null>;
-  logoutMsg$: Observable<string | null>;
-  status$: Observable<Status>;
-  currentUser$: Observable<Customer | null>;
+  loggedInUserId$: Observable<number | string | null> = this.store.select(selectLoggedInUserId);
+  status$: Observable<Status> = this.store.select(state => state.authSlice.status);
+  currentUser$: Observable<Customer | null> = this.store.select(selectAccount);
+  cartItemsCount: Observable<number | undefined> = this.store.select(selectCartItemsCount);
+  rippleRadius = 30;
+  eventsSubject = new Subject<void>();
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -23,25 +26,25 @@ export class NavComponent {
       shareReplay()
     );
 
-  dataStream$: Observable<{ logoutMsg: string | null, status: Status, isHandset: boolean }>;
+  dataStream$: Observable<{
+    status: Status, 
+    isHandset: boolean, 
+    currentUser: Customer | null,
+    loggedInUserId: number | string | null
+   }>;
 
   constructor(private store: Store<AppState>) {
-    this.loggedInUserId$ = of(window.localStorage.getItem('userId'));
-    this.logoutMsg$ = this.store.select(state => state.authSlice.logoutMsg);
-    this.status$ = this.store.select(state => state.authSlice.status);
-    this.currentUser$ = this.store.select(state => state.accountSlice.account);
-
     this.dataStream$ = combineLatest([
-      this.logoutMsg$, this.status$, this.isHandset$
-    ]).pipe(map(([logoutMsg, status, isHandset]) => {
+      this.status$, this.isHandset$, this.currentUser$, this.loggedInUserId$
+    ]).pipe(map(([status, isHandset, currentUser, loggedInUserId]) => {
       return {
-        logoutMsg, status, isHandset
+        status, isHandset, currentUser, loggedInUserId
       }
     }));
   }
 
   yaya() {
-    this.currentUser$.subscribe(x => console.log('CURRENT YOOZA >>>', x))
+    this.dataStream$.subscribe(x => console.log(x))
   }
   
   showOverlay() {
@@ -50,5 +53,9 @@ export class NavComponent {
 
   handleLogout() {
     this.store.dispatch(logoutRequest());
+  }
+
+  emitEventToChild() {
+    this.eventsSubject.next();
   }
 }
