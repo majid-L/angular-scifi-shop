@@ -1,0 +1,25 @@
+<p>account works!</p>
+
+<ng-container *ngIf="accountData$ | async as accountData">
+  <section>
+    <h2>{{ accountData.name }}</h2>
+    <p>{{ accountData.email }}</p>
+    <p>{{ accountData.joinDate }}</p>
+    
+    <h3>Billing address</h3>
+    <p>{{ accountData.billingAddress?.addressLine1 }}</p>
+    <p>{{ accountData.billingAddress?.addressLine2 }}</p>
+    <p>{{ accountData.billingAddress?.city }}</p>
+    <p>{{ accountData.billingAddress?.county }}</p>
+    <p>{{ accountData.billingAddress?.postcode }}</p>
+
+    <h3>Shipping address</h3>
+    <p>{{ accountData.shippingAddress?.addressLine1 }}</p>
+    <p>{{ accountData.shippingAddress?.addressLine2 }}</p>
+    <p>{{ accountData.shippingAddress?.city }}</p>
+    <p>{{ accountData.shippingAddress?.county }}</p>
+    <p>{{ accountData.shippingAddress?.postcode }}</p>
+
+    <img [src]="accountData.avatar">
+  </section>
+</ng-container>
