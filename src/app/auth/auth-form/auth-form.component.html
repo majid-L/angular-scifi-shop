@@ -1,0 +1,35 @@
+<h2>{{ formType }}</h2>
+<form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="login-form">
+  <ng-container *ngIf="formType === 'Signup'">
+    <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Enter name" formControlName="name">
+        <mat-error *ngIf="authForm.controls.name.invalid">{{ showErrorMessage("name") }}</mat-error>
+      </mat-form-field>
+    
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="Enter email" formControlName="email">
+        <mat-error *ngIf="authForm.controls.email.invalid">{{ showErrorMessage("email") }}</mat-error>
+      </mat-form-field>
+  </ng-container>
+
+  <mat-form-field>
+    <mat-label>Username</mat-label>
+    <input matInput placeholder="Enter username" formControlName="username">
+    <mat-error *ngIf="authForm.controls.username.invalid">{{ showErrorMessage("username") }}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Enter password">
+    <mat-error *ngIf="authForm.controls.password.invalid">{{ showErrorMessage("password") }}</mat-error>
+    <button mat-icon-button matSuffix (click)="togglePasswordField($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+  
+  <button type="submit" [disabled]="!authForm.valid" color="primary" class="login-button" mat-raised-button>{{ formType }}</button>
+</form>
+
+<mat-spinner *ngIf="(status$ | async) === 'loading'" class="spinner" color="primary"></mat-spinner>
