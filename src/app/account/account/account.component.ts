@@ -8,8 +8,14 @@ import { loadAccount } from 'src/app/ngrx/account/account.actions';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.sass']
 })
-export class AccountComponent {
-  accountData$: Observable<Customer | null> = this.store.select(state => state.accountSlice.account);
+export class AccountComponent implements OnInit {
+  accountData$: Observable<Customer | null>;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>) {
+    this.accountData$ = this.store.select(state => state.accountSlice.account);
+  }
+
+  ngOnInit() {
+    this.store.dispatch(loadAccount());
+  }
 }
