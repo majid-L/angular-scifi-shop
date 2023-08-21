@@ -1,0 +1,111 @@
+<ng-container [ngSwitch]="stepperOrientation | async">
+  <div *ngSwitchCase="'horizontal'">Make your screen smaller to see a vertical stepper</div>
+  <div *ngSwitchCase="'vertical'">Make your screen larger to see a horizontal stepper</div>
+</ng-container>
+
+<h1>Checkout</h1>
+<mat-stepper
+  [orientation]="(stepperOrientation | async)!">
+
+  <mat-step [stepControl]="addressFormGroup" label="Billing address">
+    <h2>Select billing address.</h2>
+    <mat-card *ngIf="$billingAddress | async as address">
+      <mat-card-header>
+        <h3>Billing address</h3>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ address.addressLine1 }}</p>
+        <p *ngIf="address.addressLine2">{{ address.addressLine2 }}</p>
+        <p>{{ address.city}}</p>
+        <p *ngIf="address.county">{{ address.county }}</p>
+        <p>{{ address.postcode }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button matStepperNext color="primary" class="address-button">Use existing address</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <form [formGroup]="addressFormGroup">
+      <h3>Enter new billing address</h3>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Billing address
+            <mat-icon>local_atm</mat-icon>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+    
+        <mat-form-field>
+          <mat-label>Address line 1</mat-label>
+          <input matInput placeholder="e.g. 123 Fake Street" formControlName="addressLine1" required>
+          <mat-error *ngIf="addressFormGroup.invalid">{{ getErrorMessage() }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Address line 2</mat-label>
+          <input matInput placeholder="e.g. Apartment 126" formControlName="addressLine2">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>City</mat-label>
+          <input matInput placeholder="e.g. New Caprica" formControlName="city" required>
+          <mat-error *ngIf="addressFormGroup.invalid">{{ getErrorMessage() }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>County</mat-label>
+          <input matInput placeholder="e.g. Bone County" formControlName="county">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Postcode</mat-label>
+          <input matInput placeholder="e.g. GV12 7LX" formControlName="postcode" required>
+          <mat-error *ngIf="addressFormGroup.invalid"><p class="error">{{ getErrorMessage() }}</p></mat-error>
+        </mat-form-field>
+    
+      </mat-expansion-panel>
+
+      <!-- <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+      </mat-form-field> -->
+
+      <div>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="secondFormGroup" label="Shipping address">
+    <form [formGroup]="secondFormGroup">
+      <mat-form-field>
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
+               required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="thirdFormGroup" label="Payment">
+    <form [formGroup]="thirdFormGroup">
+      <mat-form-field>
+        <mat-label>Phone number</mat-label>
+        <input matInput formControlName="thirdCtrl" placeholder="Ex. 12345678" required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <p>You are now done.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+    </div>
+  </mat-step>
+</mat-stepper>
