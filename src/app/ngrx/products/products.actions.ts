@@ -8,3 +8,23 @@ export const loadProductsSuccess = createAction(
   "[Products Response] Products Loaded - Success",
   props<ProductsResponse>()
 );
+
+export const loadSingleProduct = createAction(
+  "[SingleProduct Component] Load Single Product",
+  props<{ productId: number }>()
+);
+
+export const loadSingleProductSuccess = createAction(
+  "[SingleProduct Component] Load Single Product - Success",
+  props<SingleProduct>()
+);
+
+export const searchOrderHistory = createAction(
+  "[SingleProduct Component] Search Order History - Loading",
+  props<{ customerId: number, productId: number }>()
+);
+
+export const searchOrderHistorySuccess = createAction(
+  "[SingleProduct Component] Search Order History - Success",
+  props<OrderSearchResponse>()
+);
