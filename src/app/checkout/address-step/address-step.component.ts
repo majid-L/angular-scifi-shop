@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-type requiredAddressField = "addressLine1" | "city" | "postcode";
+type RequiredAddressField = "addressLine1" | "city" | "postcode";
 
 @Component({
   selector: 'app-address-step',
@@ -18,14 +18,13 @@ export class AddressStepComponent {
   }> | undefined;
   @Input() existingAddress: Address | null | undefined;
   @Input() type: "billingAddress" | "shippingAddress" | undefined;
-  @Input() orderAddress: Address | null | undefined;
   @Input() useExisting: { billingAddress: boolean, shippingAddress: boolean } | undefined;
   @Output() addressEvent = new EventEmitter<AddressEmitData>();
 
   getErrorMessage() {
     let msg = '';
-    const requiredFields: requiredAddressField[] = ["addressLine1", "city", "postcode"];
-    requiredFields.forEach((field: requiredAddressField) => {
+    const requiredFields: RequiredAddressField[] = ["addressLine1", "city", "postcode"];
+    requiredFields.forEach((field: RequiredAddressField) => {
       if (this.addressFormGroup?.controls[field].hasError('required')) {
         msg = 'You must enter a value.';
       }
@@ -33,7 +32,34 @@ export class AddressStepComponent {
     return msg;
   }
 
+  get hasError() {
+    return this.addressFormGroup!.invalid;
+  }
+
+  clearValidators() {
+    for (const field in this.addressFormGroup!.controls) {
+      const formControl = this.addressFormGroup!.controls[field as RequiredAddressField];
+      formControl.clearValidators();
+      formControl.updateValueAndValidity();
+    }
+  }
+
+  addValidators() {
+    this.clearValidators();
+    for (const field in this.addressFormGroup!.controls) {
+      if (!["addressLine1", "city", "postcode"].includes(field)) continue;
+      const formControl = this.addressFormGroup!.controls[field as RequiredAddressField];
+      formControl.setValidators([Validators.required]);
+      formControl.updateValueAndValidity();
+    }
+  }
+
+  handleSubmit(e: Event) {
+    console.log(e);
+  }
+
   useAddress(data: AddressEmitData) {
+    this.clearValidators();
     this.addressEvent.emit(data);
   }
 }
