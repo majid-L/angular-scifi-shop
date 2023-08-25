@@ -1,0 +1,64 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      <mat-toolbar
+        color="primary"
+        style=" border-top-right-radius: 6px; border-top-left-radius: 6px; height: 50px;"
+      >
+        Confirm payment
+        <mat-icon style="margin-left: 10px;">credit_card</mat-icon>
+      </mat-toolbar>
+      <mat-divider></mat-divider>
+    </mat-card-title>
+    <mat-card-subtitle *ngIf="paymentMethod === 'Card'" matTooltip="Instead of using real card details, this feature uses mock transactions to simulate real-world payments." matTooltipPosition="above">
+      <mat-icon class="icon">help</mat-icon>
+      <p>Use card number <span class="bold">4000 0082 6000 0000</span></p>
+    </mat-card-subtitle>
+    <mat-card-subtitle *ngIf="paymentMethod === 'Klarna'">
+      <mat-icon class="icon">help</mat-icon>
+      <p>At the next screen, verify your Klarna transaction using this phone number: <span class="bold">01895808666</span></p>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form *ngIf="paymentMethod === 'Card'" [formGroup]="paymentElementForm">
+      <div class="payment-element-form-fields">
+        <mat-form-field appearance="outline" style="flex: 1" subscriptSizing="dynamic">
+          <mat-label>Cardholder's name</mat-label>
+          <input matInput placeholder="Enter name" formControlName="name" />
+          <mat-error *ngIf="paymentElementForm.invalid">{{ getErrorMessage().nameError }}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" style="flex: 1" subscriptSizing="dynamic">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Enter name" formControlName="email" type="email"/>
+          <mat-error *ngIf="paymentElementForm.invalid">{{ getErrorMessage().emailError }}</mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+      <ng-container *ngIf="elementsOptions.clientSecret">
+        <ngx-stripe-payment
+          (change)="handlePaymentMethodChange($event)"
+          [appearance]="appearance"
+          [options]="paymentElementOptions"
+          [clientSecret]="elementsOptions.clientSecret"
+        ></ngx-stripe-payment>
+        <div style="margin-bottom: 20px"></div>
+      </ng-container>
+      <mat-progress-bar *ngIf="status === 'loading' || paying" mode="indeterminate"></mat-progress-bar>
+      <mat-divider></mat-divider>
+      <div style="margin-bottom: 60px"></div>
+      <div *ngIf="status !== 'loading'" style="text-align: right; margin-top: -40px;">
+        <button
+          mat-raised-button
+          color="primary"
+          class="pay"
+          [disabled]="paying || (paymentElementForm.invalid && paymentMethod === 'Card')"
+          (click)="pay()"
+        >
+          <span *ngIf="!paying">
+            PAY <span>{{ orderTotal | currency: '£' }}</span>
+          </span>
+          <span *ngIf="paying">PROCESSING...</span>
+        </button>
+    </div>
+  </mat-card-content>
+</mat-card>
