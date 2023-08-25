@@ -1,0 +1,57 @@
+.mat-mdc-card
+  margin: 25px auto
+  max-width: 800px
+
+.mat-mdc-card-header
+  display: block
+    
+.mat-mdc-card-subtitle
+  display: flex
+  align-items: center
+  background: #18ffff
+  color: black
+  margin: 0 0 18px
+  padding: 10px 5px !important
+  border-radius: 5px
+  border: 1px solid gray
+  box-shadow: 0 0 5px 3px #5f65682f
+
+  p
+    margin: 0
+
+.icon
+  width: auto
+  padding-right: 8px
+
+.mat-mdc-form-field
+  margin-bottom: 12px
+  height: fit-content
+
+.payment-element-form-fields
+  display: flex
+  flex-direction: row
+  gap: 10px
+
+.mat-mdc-card-title
+  margin-bottom: 10px
+
+.mat-toolbar
+  width: fit-content
+
+.pay
+  font-size: 16px
+
+$breakpoint-tablet: 700px
+@media (max-width: $breakpoint-tablet)
+  .mat-mdc-card
+    margin: 0
+    width: 100%
+
+  .payment-element-form-fields
+    display: block
+
+    *
+      width: 100%
+
+  .mat-mdc-card-subtitle p
+    width: 80%
