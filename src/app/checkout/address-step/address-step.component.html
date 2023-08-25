@@ -1,0 +1,67 @@
+<ng-container *ngLet="type!.slice(0, -7) as addressType">
+  <section>
+  <h2>Select {{ addressType }} address.</h2>
+  <mat-card *ngIf="existingAddress as address">
+    <mat-card-header>
+      <h3>{{ addressType[0].toUpperCase() + addressType.slice(1) }} address</h3>
+    </mat-card-header>
+    <mat-card-content>
+      <p>{{ address.addressLine1 }}</p>
+      <p *ngIf="address.addressLine2">{{ address.addressLine2 }}</p>
+      <p>{{ address.city}}</p>
+      <p *ngIf="address.county">{{ address.county }}</p>
+      <p>{{ address.postcode }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button matStepperNext (click)="useAddress({ address, type, useExisting: true })" color="primary" class="address-button" [disabled]="useExisting?.[type!]"><mat-icon *ngIf="useExisting?.[type!]">check_circle</mat-icon>Use existing address</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <form (ngSubmit)="handleSubmit($event)" [formGroup]="addressFormGroup!">
+    <h3>Enter new {{ addressType }} address</h3>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ addressType[0].toUpperCase() + addressType.slice(1) }} address
+          <mat-icon>{{ type === "billingAddress" ? "local_atm" : "local_shipping"}}</mat-icon>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+    
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Address line 1</mat-label>
+        <input matInput placeholder="e.g. 123 Fake Street" formControlName="addressLine1" required>
+        <mat-error *ngIf="hasError">{{ getErrorMessage() }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Address line 2</mat-label>
+        <input matInput placeholder="e.g. Apartment 126" formControlName="addressLine2">
+      </mat-form-field>
+
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>City</mat-label>
+        <input matInput placeholder="e.g. New Caprica" formControlName="city" required>
+        <mat-error *ngIf="hasError">{{ getErrorMessage() }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>County</mat-label>
+        <input matInput placeholder="e.g. Bone County" formControlName="county">
+      </mat-form-field>
+
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Postcode</mat-label>
+        <input matInput placeholder="e.g. GV12 7LX" formControlName="postcode" required>
+        <mat-error *ngIf="hasError">{{ getErrorMessage() }}</mat-error>
+      </mat-form-field>
+    
+    <mat-action-row>
+      <button type="button" class="address-button" mat-raised-button color="primary">Use this address</button>
+    </mat-action-row>
+    </mat-expansion-panel>
+    <!-- <div>
+      <button mat-button matStepperNext>Next</button>
+    </div> -->
+  </form>
+</section>
+</ng-container>
