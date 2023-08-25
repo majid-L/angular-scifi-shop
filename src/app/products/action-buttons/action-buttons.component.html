@@ -1,0 +1,20 @@
+<div class="action-buttons">
+  <ng-container *ngIf="cartIncludesItem(cart$ | async); else showButton">
+  <p class="added-to-cart">
+    <mat-icon>check_circle</mat-icon>
+    Added to cart
+  </p>
+</ng-container>
+
+<ng-template #showButton>
+  <button mat-raised-button color="primary" (click)="addToCart()">
+    <mat-icon>add_shopping_cart</mat-icon>
+    Add to cart
+  </button>
+</ng-template>
+
+<button (click)="showDialog()" mat-raised-button color="primary">
+  <mat-icon>exit_to_app</mat-icon>
+  Buy now
+</button>
+</div>
