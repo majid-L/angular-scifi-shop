@@ -1,0 +1,26 @@
+<div class="bg-overlay">
+  <main *ngLet="(queryParams$ | async) as queryParams">
+    <mat-card>
+      <ng-container *ngIf="queryParams?.['redirect_status'] === 'succeeded'; else failed">
+        <h1>Order succesfully completed.</h1>
+        <mat-icon class="green icon">check_circle</mat-icon>
+        <p>{{ queryParams?.["payment_method"] }} payment has been successfully completed and your order is now completed.</p>
+        <mat-divider></mat-divider>
+        <mat-action-row>
+          <button mat-stroked-button routerLink="/" color="primary">Return to home</button>
+          <button mat-raised-button [routerLink]="['/orders', queryParams?.['order_id']]" color="accent">View new order</button>
+        </mat-action-row>
+      </ng-container>
+  
+      <ng-template #failed>
+        <h1>Unable to complete your order.</h1>
+        <mat-icon class="red icon">cancel</mat-icon>
+        <p>{{ queryParams?.["payment_method"] }} payment has failed.</p>
+        <mat-divider></mat-divider>
+        <mat-action-row>
+          <button mat-stroked-button routerLink="/" color="warn">Return to home</button>
+        </mat-action-row>
+      </ng-template>
+    </mat-card>
+  </main>
+</div>
