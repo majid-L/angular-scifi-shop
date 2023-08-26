@@ -15,6 +15,11 @@ declare global {
     numOfTimesOrdered?: number
   }
 
+  type SingleProduct = Product & { 
+    totalRatings: number
+    averageRating?: string
+  }
+
   type Pagination = {
     page: number
     count: number
@@ -22,7 +27,7 @@ declare global {
   }
 
   type ProductsResponse = Pagination & {
-    products: Product[]
+    products: Product[] | []
   }
 
   type Customer = {
@@ -41,7 +46,7 @@ declare global {
   }
 
   type Address = {
-    id: number
+    id?: number
     addressLine1: string
     addressLine2: string | null
     city: string
@@ -56,12 +61,106 @@ declare global {
     password: string
   }
 
+  type AddressEmitData = { 
+    address: Address
+    type: "billingAddress" | "shippingAddress" | undefined
+    useExisting: boolean 
+  }
+
+  type NewOrderRequest = {
+    billingAddress: Address
+    shippingAddress: Address
+    item?: {
+      productId: number
+      quantity: number
+    }
+  }
+
+  type Order = {
+    id: number,
+    customerId: number
+    billingAddressId: number
+    shippingAddressId: number
+    status: string
+    paymentMethoid: string
+    total: string
+    createdAt: string
+    shippingAddress: Address
+    orderItems: {
+      quantity: number
+      product: Product
+    }[]
+  }
+
+  type Rating = 0 | 1 | 2 | 3 | 4 | 5;
+
+  type NewReviewRequest = {
+    customerId: number
+    productId: number
+    title: string
+    body: string
+    rating: Rating
+  }
+
+  type UpdateReviewRequest = {
+    title?: string
+    body?: string
+    recommend?: boolean | null
+    rating?: Rating
+  }
+
+  type Review = NewReviewRequest & {
+    id: number
+    recommend: boolean | null
+    createdAt: string
+  }
+
+  type ReviewsResponse = Pagination & {
+    reviews: Review[] | []
+  }
+
+  type NewOrderResponse = Order & {
+    billingAddress: Address
+  }
+
+  type SingleOrderResponse = NewOrderResponse;
+
+  type OrdersResponse = {
+    id: number
+    name: string
+    username: string
+    orders: Order[] | []
+  }
+
+  type ExpressCheckoutItem = {
+    productId: number
+    price: number
+    quantity: number
+  }
+
+  type PaymentEvent = { 
+    status: "completed" | "pending"
+    paymentMethod: "Card" | "Klarna" | "PayPal"
+    total: number
+  }
+
+  // Response returned from searching order history for a specific product id
+  type OrderSearchResponse = {
+    productId: number
+    lastOrdered: {
+      orderId: number
+      orderDate: string
+    } | null
+  }
+
   /* NgRx types for state management */
   type AuthState = {
     showOverlay: boolean
     currentUser: Customer | null
     loggedInUserId: number | string | null
-    status: Status,
+    loginStatus: Status
+    logoutStatus: Status
+    signupStatus: Status
     logoutMsg: string | null
   }
 
@@ -75,6 +174,9 @@ declare global {
   type DialogContent = ApiError & {
     title: string
     content?: string
+    buttons?: {
+      newOrder?: string
+    }
   }
 
   type NotificationState = {
@@ -89,17 +191,34 @@ declare global {
     count: number | null
     totalResults: number | null
     products: Product[] | null
-    status: Status
+    singleProduct: SingleProduct | null
+    orderSearchResult: OrderSearchResponse | null
+    loadStatus: Status
+    searchStatus: Status
+  }
+
+  type ReviewsState = {
+    page: number | null
+    count: number | null
+    totalResults: number | null
+    reviews: Review[] | null
+    singleReview: Review | null
+    loadStatus: Status
+    createStatus: Status
+    updateStatus: Status
+    deleteStatus: Status
+  }
+
+  type CartItemDetail = {
+    quantity: number
+    product: Product
   }
 
   type Cart = {
     id: number
     name: string
     username: string
-    cartItems: {
-      quantity: number
-      product: Product
-    }[] | []
+    cartItems: CartItemDetail[] | []
   }
 
   type CartItem = {
@@ -108,12 +227,10 @@ declare global {
     quantity: number
   }
 
-  type CartStatus = {
+  type CartState = {
     loadStatus: Status
     updateStatus: Status
-  }
-
-  type CartState = CartStatus & {
+    activeId: number
     cart: Cart | null
   }
 
@@ -122,11 +239,24 @@ declare global {
     status: Status
   }
 
+  type OrdersState = {
+    orders: OrdersResponse | null
+    singleOrder: SingleOrderResponse | null
+    expressCheckoutItem: ExpressCheckoutItem | null
+    newOrder: NewOrderResponse | null
+    loadStatus: Status
+    createStatus: Status
+    updateStatus: Status
+    deleteStatus: Status
+  }
+
   type AppState = {
     authSlice: AuthState
     accountSlice: AccountState
     cartSlice: CartState
     productsSlice: ProductsState
+    ordersSlice: OrdersState
+    reviewsSlice: ReviewsState
     notificationSlice: NotificationState
   }
 }
