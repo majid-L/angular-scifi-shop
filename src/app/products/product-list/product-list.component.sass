@@ -1,0 +1,85 @@
+section
+    margin: 20px
+    position: relative
+    top: -60px
+
+.bg
+    background: url('/assets/products.png')
+    height: 300px
+    display: flex
+    align-items: center
+    box-shadow: 0 0 40px 40px #605b78 inset
+    
+h1
+    position: relative
+    z-index: 1
+    color: white
+    font-size: 40px
+    margin-left: 30px
+    background: black
+    padding: 10px 15px
+    box-shadow: 1px -1px 10px 3px #7276766f
+    text-shadow: 2px -2px 20px #fdfdfd
+    
+.product-list
+    display: flex
+    flex-wrap: wrap
+
+.product-card
+    width: 400px
+    margin: 10px
+    justify-content: space-between
+    border-radius: 0
+    transition: all 0.4s ease-in-out
+
+.product-card:hover
+    scale: 1.03
+
+.product-card-header
+    justify-content: space-between
+    align-items: center
+    background-color: black
+    color: whitesmoke
+    padding: 0 0 0 10px
+    cursor: pointer
+
+.mat-mdc-card-content
+    flex-grow: 1
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+    cursor: pointer
+    padding: 0
+
+.product-supplier
+    color: whitesmoke
+
+.product-title
+    font-size: 20px
+    font-weight: 700
+
+.product-image
+    width: 120px
+    margin: 5px 5px 5px 10px
+
+.product-description
+    line-height: 1.3
+    padding: 15px 0
+    margin: 0 13px
+
+.price
+    display: flex
+    align-items: center
+    justify-content: space-between
+
+    p
+        margin: 0 10px 5px
+
+.stock, .added-to-cart
+    display: flex
+    gap: 5px
+    align-items: center
+    color: gray
+
+.mdc-card__actions > *
+  flex-grow: 1
