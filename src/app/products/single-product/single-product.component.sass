@@ -1,0 +1,146 @@
+main
+  height: 100%
+  position: relative
+  padding: 10px 30px
+  margin-bottom: 50px
+
+h1
+  margin-bottom: 10px
+  color: whitesmoke
+
+section
+  background: whitesmoke
+  border-radius: 7px
+  margin: 40px auto
+  width: 100%
+  max-width: 1000px
+
+.mat-mdc-tab-group
+  padding: 5px 15px 0
+
+.mat-mdc-tab-body-content
+  padding: 40px
+
+.product-info-tab
+  display: flex
+  gap: 30px
+  align-items: center
+  padding: 10px
+
+.product-information
+  padding: 5px 10px 0
+
+.stats
+  display: flex
+  flex-wrap: wrap
+  padding: 20px 0
+  margin: 10px 10px 10px 30px
+  justify-content: center
+  align-items: center
+  text-align: center
+  background-color: #f2f2f2
+  transition: all 0.4s linear
+
+  div
+    margin: 10px 20px
+
+.stats:hover
+  background-color: #e4dfdf
+  scale: 1.03
+
+.stats div p, .stats div span p 
+  margin: 3px
+
+.bold
+  display: flex
+  align-items: center
+  gap: 5px
+
+.price
+  font-weight: 900
+  background: LavenderBlush !important
+  border: 1px solid lightgray
+  padding: 5px
+  border-radius: 50px
+
+.buttons
+  height: 50px
+  display: flex
+  justify-content: center
+  align-items: center
+  margin: 10px auto 10px
+  gap: 20px
+  max-width: 400px
+
+  *
+    flex-grow: 1
+
+.notifications
+  display: flex
+  max-width: 1000px
+  margin: 30px auto
+  gap: 10px
+
+.notification
+  background-color: whitesmoke
+  padding: 10px 5px !important
+  border: 1px solid gray
+  box-shadow: 0 0 5px 3px #5f65682f
+  border-radius: 7px
+  width: 100%
+
+  .mat-mdc-card-header
+    padding: 5px 10px
+
+  .mat-action-row
+    padding: 5px 10px
+
+  button
+    margin-top: 5px
+
+.notification-text
+  margin: 5px
+
+.review-text
+  font-size: 16px
+  margin: 10px 0
+
+h3.review-text
+  margin-top: 15px
+
+.rating
+  color: #ffc72c
+  scale: 1.2
+  padding: 5px
+
+.rating-chip
+  background-color: red
+
+.review-card-icons
+  margin: 15px auto 0
+  display: flex
+  justify-content: space-between
+
+  .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled)
+    background-color: #4527a0
+
+@media (max-width: 700px)
+  h1
+    margin: 20px 5px
+    font-size: 20px
+
+  main
+    padding: 5px
+
+  .mat-mdc-tab-group
+    padding: 5px 10px 0
+
+  .product-info-tab
+    flex-direction: column
+  
+  .stats
+    margin: 10px auto
+    padding: 0
+
+  img
+    width: 200px

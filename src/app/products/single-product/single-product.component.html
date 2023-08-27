@@ -1,0 +1,129 @@
+<ng-container *ngIf="(loadStatus$ | async) === 'loading'">
+  <app-spinner></app-spinner>
+</ng-container>
+
+<div class="bg-overlay">
+  <main *ngLet="(orderSearchResult$ | async) as result">
+    <ng-container *ngIf="(singleProduct$ | async) as product">
+      <h1>{{ product.name }}</h1>
+      <mat-progress-bar *ngIf="(searchStatus$ | async) === 'loading'" mode="indeterminate"></mat-progress-bar>
+
+      <div class="notifications">
+        <ng-container *ngIf="result?.lastOrdered">
+          <mat-card class="notification">
+            <mat-card-header>
+              <mat-card-title>
+                <p class="notification-text bold"><mat-icon color="primary">info</mat-icon>You ordered this product on {{ result!.lastOrdered!.orderDate | date: 'short' }}.</p>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-divider></mat-divider>
+            <mat-action-row>
+              <p class="notification-text">Click below to visit the order page.</p>
+              <button mat-stroked-button color="primary" [routerLink]="['/orders', result!.lastOrdered!.orderId]">View order.</button>
+            </mat-action-row>
+          </mat-card>
+        </ng-container>
+
+        <ng-container *ngIf="result?.review">
+          <mat-card class="notification" *ngLet="result!.review! as review">
+            <mat-card-header>
+              <mat-card-title>
+                <p class="notification-text bold"><mat-icon color="primary"> rate_review</mat-icon>You reviewed this product on {{ review.createdAt | date: 'short' }}.</p>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-divider></mat-divider>
+            <mat-card-content>
+              <div class="review-card-icons">
+                <mat-chip>
+                  <igc-rating class="rating" [value]="review.rating" min="0" max="5" disabled></igc-rating>
+                </mat-chip>
+                <span class="icon-with-text"><mat-icon color="primary">star</mat-icon>{{ review.rating }}</span>
+                <span *ngIf="review.recommend" class="icon-with-text"><mat-icon color="primary">check</mat-icon>Recommended</span>
+              </div>
+              <h3 class="review-text"><mat-icon>format_quote</mat-icon>{{ review.title }}</h3>
+              <p class="review-text">{{ review.body }}</p>
+            </mat-card-content>
+          </mat-card>
+        </ng-container>
+      </div>
+     
+      <section>
+        <mat-tab-group selectedIndex="0">
+
+          <!-- Product info tab -->
+          <mat-tab label="Product information">
+            <div class="product-info-tab">
+              <img [src]="'assets/icons/transparent/t_' + product.thumbnail.slice(2)">
+              <div>
+                <div class="stats mat-elevation-z4">
+                  <div>
+                    <p>{{ product.totalRatings }}</p>
+                    <span class="bold">
+                      <mat-icon color="primary">rate_review</mat-icon>
+                      <p>Total ratings</p>
+                    </span>
+                  </div>
+
+                  <div>
+                    <ng-container *ngIf>
+
+                    </ng-container>
+                    <p [class.italic]="!product.averageRating">{{ product.averageRating || "No reviews." }}</p>
+                    <span [matBadge]="product.averageRating">
+                      <igc-rating class="rating" [value]="product.averageRating" min="0" max="5" disabled></igc-rating>
+                    </span>
+                    <span class="bold">
+                      <mat-icon color="primary">thumb_up_alt</mat-icon>
+                      <p>Average rating</p>
+                    </span>
+                  </div>
+                  
+                  <div>
+                    <p>{{ product.stock }}</p>
+                    <span class="bold">
+                      <mat-icon color="primary">check_box</mat-icon>
+                      <p>{{ product.stock > 0 ? "In stock" : "Out of stock." }}</p>
+                    </span>
+                  </div>
+                  <div>
+                    <p>{{ product.numOfTimesOrdered }}</p>
+                    <span class="bold">
+                      <mat-icon color="primary">shopping_basket</mat-icon>
+                      <p>Times ordered</p>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-information">
+              <mat-chip-listbox aria-label="Product information">
+                <mat-chip>
+                  <mat-icon matChipAvatar>category</mat-icon>
+                  {{ product.categoryName }}
+                </mat-chip>
+                <mat-chip>
+                  <mat-icon matChipAvatar>business</mat-icon>
+                  Made by <strong>{{ product.supplierName }}</strong>
+                </mat-chip>
+              </mat-chip-listbox>
+              
+              <p>{{ product.description }}</p>
+              <mat-chip class="price mat-elevation-z3">{{ product.price | currency: '£' }}</mat-chip>
+            </div>
+
+            <div class="buttons">
+              <app-action-buttons [product]="product"></app-action-buttons>
+            </div>
+          <mat-progress-bar *ngIf="(cartUpdateStatus$ | async) === 'loading'" mode="indeterminate"></mat-progress-bar>
+          </mat-tab>
+
+          <!-- Reviews tab -->
+          <mat-tab label="Reviews">
+            <app-reviews></app-reviews>
+          </mat-tab>
+          </mat-tab-group>
+      </section>
+    </ng-container>
+  </main>
+</div>

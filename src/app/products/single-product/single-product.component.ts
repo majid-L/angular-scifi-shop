@@ -3,10 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { combineLatest, map, Observable, Subscription } from 'rxjs';
+import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
 import { selectUpdateStatus } from 'src/app/ngrx/cart/cart.feature';
 import { loadSingleProduct, searchOrderHistory } from 'src/app/ngrx/products/products.actions';
 import { selectSingleProduct, selectLoadStatus, selectOrderSearchResult, selectSearchStatus } from 'src/app/ngrx/products/products.feature';
+import { loadProductReviews } from 'src/app/ngrx/reviews/reviews.actions';
 
 @Component({
   selector: 'app-single-product',
@@ -23,9 +25,15 @@ export class SingleProductComponent {
     this._store.select(selectOrderSearchResult);
   readonly searchStatus$: Observable<Status> =
     this._store.select(selectSearchStatus);
-  private _loggedInUserId: string | null = window.localStorage.getItem('userId');
-  private _routeSubscription = Subscription.EMPTY;
-  private _cartStatusSubscription = Subscription.EMPTY;
+  readonly loggedInUserId$: Observable<string | number | null> =
+    this._store.select(selectLoggedInUserId);
+  private _subscription = Subscription.EMPTY;
+
+  readonly dataStream$ = combineLatest([
+    this._route.params, this.cartUpdateStatus$, this.loggedInUserId$
+  ]).pipe(map(([params, cartUpdateStatus, loggedInUserId]) => ({
+    params, cartUpdateStatus, loggedInUserId
+  })));
 
   constructor(
     private _store: Store<AppState>,
@@ -35,27 +43,34 @@ export class SingleProductComponent {
   ) { }
 
   ngOnInit() {
-    this._routeSubscription = this._route.params.subscribe(params => {
-      this.productId = params["id"];
+    this._subscription = this.dataStream$
+      .subscribe(({ params, cartUpdateStatus, loggedInUserId }) => {
+        this.productId = params["id"];
+
+        if (cartUpdateStatus === "success") {
+          this._snackBar.open('Cart updated.', 'Dismiss', {
+            horizontalPosition: "start",
+            verticalPosition: "top",
+            duration: 7000
+          });
+        }
+
+        if (loggedInUserId) {
+          this._store.dispatch(searchOrderHistory({ 
+            customerId: Number(loggedInUserId),
+            productId: this.productId! 
+          }));
+        }
     });
     this._store.dispatch(loadSingleProduct({ productId: this.productId! }));
-    this._store.dispatch(searchOrderHistory({ 
-      customerId: Number(this._loggedInUserId), productId: this.productId! 
-    }));
+    this._store.dispatch(loadProductReviews({ productId: this.productId! }));
+  }
 
-    this._cartStatusSubscription = this.cartUpdateStatus$.subscribe(updateStatus => {
-      if (updateStatus === "success") {
-        this._snackBar.open('Cart updated.', 'Dismiss', {
-          horizontalPosition: "start",
-          verticalPosition: "top",
-          duration: 7000
-        });
-      }
-    });
+  ratingChanged(e: any) {
+    console.log(e);
   }
 
   ngOnDestroy() {
-    this._routeSubscription.unsubscribe();
-    this._cartStatusSubscription.unsubscribe();
+    this._subscription.unsubscribe();
   }
 }
