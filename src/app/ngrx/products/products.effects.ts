@@ -1,27 +1,53 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
 import { map, exhaustMap, catchError } from 'rxjs/operators';
 import { ProductService } from "../../products/product.service";
 import { 
   loadProducts, 
-  loadProductsSuccess
+  loadProductsSuccess,
+  loadSingleProduct,
+  loadSingleProductSuccess,
+  searchOrderHistory,
+  searchOrderHistorySuccess
 } from "./products.actions";
-import { httpError } from "../notification/notification.actions";
+import { dispatchErrorAction } from "..";
 
 @Injectable()
 export class ProductsEffects {
-  loadProducts$ = createEffect(() => this.actions$.pipe(
+  loadProducts$ = createEffect(() => this._actions$.pipe(
     ofType(loadProducts),
-    exhaustMap(() => this.productsService.getProducts()
+    exhaustMap(() => this._productsService.getProducts()
     .pipe(
       map(productsResponse => loadProductsSuccess(productsResponse)),
-      catchError(({ error }: { error: ApiError }) => of(httpError(error)))
+      catchError(dispatchErrorAction)
     ))
   ));
 
+  loadSingleProduct$ = createEffect(() => this._actions$.pipe(
+    ofType(loadSingleProduct),
+    exhaustMap(payload => this._productsService.getSingleProduct(payload.productId)
+      .pipe(
+        map(singleProductResponse => {
+          return loadSingleProductSuccess(singleProductResponse);
+        }),
+        catchError(dispatchErrorAction)
+      )
+    )
+  ));
+
+  searchOrderHistory$ = createEffect(() => this._actions$.pipe(
+    ofType(searchOrderHistory),
+    exhaustMap(payload => this._productsService.getProductFromOrderHistory(
+      payload.customerId, payload.productId
+    ).pipe(
+      map(searchResponse => searchOrderHistorySuccess(searchResponse)),
+      catchError(dispatchErrorAction)
+    )
+    )
+  ));
+
   constructor(
-    private actions$: Actions,
-    private productsService: ProductService
+    private _actions$: Actions,
+    private _productsService: ProductService
   ) {}
 }

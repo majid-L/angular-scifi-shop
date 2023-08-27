@@ -5,7 +5,7 @@ export const loadProducts = createAction("[ProductList Component] Load Products"
 
 // This action is triggered by the effect - if the loading succeeds
 export const loadProductsSuccess = createAction(
-  "[Products Response] Products Loaded - Success",
+  "[ProductList Component] Load Products - Success",
   props<ProductsResponse>()
 );
 
