@@ -1,0 +1,27 @@
+<ng-container *ngIf="(data | async) as data">
+  <div class="dialog">
+    <h2 mat-dialog-title>{{ data.title }}</h2>
+    <div mat-dialog-content>
+      <ng-container *ngIf="data.error; else genericError">
+        <p>Status: {{ data.error.status }}</p>
+        <p>Detail: {{ data.error.info }}</p>
+      </ng-container>
+
+      <ng-template #genericError>
+        <ng-container *ngIf="data.title === 'There was an error.'; else notification">
+        <p>Unable to process request.</p>
+        </ng-container>
+      </ng-template>
+
+      <ng-template #notification>
+        <p>{{ data.content }}</p>
+      </ng-template>
+        
+    </div>
+    <div mat-dialog-actions>
+      <button (click)="hideOverlay()" mat-stroked-button mat-dialog-close color="primary">Close</button>
+      <button *ngIf="!data.buttons" routerLink="/" mat-dialog-close mat-stroked-button color="primary">Return to home</button>
+      <button *ngIf="data.buttons?.newOrder" [routerLink]="data.buttons!.newOrder" (click)="hideOverlay()" mat-raised-button mat-dialog-close color="accent">View order</button>
+    </div>
+  </div>
+</ng-container>
