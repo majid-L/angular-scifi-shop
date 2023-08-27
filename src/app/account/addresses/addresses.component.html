@@ -1,0 +1,18 @@
+<ng-container *ngIf="(addresses$ | async) as addresses">
+  <div class="addresses">
+    <ng-container *ngFor="let address of addresses | keyvalue">
+        <mat-card class="address">
+            <mat-card-header>
+              <mat-card-title>
+                <h2 class="bold">{{ address.key }} address</h2>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <ng-container *ngFor="let field of address.value | keyvalue">
+                <p *ngIf="field.value && field.key !== 'id'">{{ field.value }}</p>
+              </ng-container>
+            </mat-card-content>
+          </mat-card>
+      </ng-container>
+  </div>
+</ng-container>
