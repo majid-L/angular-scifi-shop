@@ -1,0 +1,25 @@
+<section class="reviews-tab">
+  <ng-container *ngIf="(reviews$ | async) as reviews; else loading">
+    <h2>Reviews</h2>
+    <ng-container *ngIf="reviews.length > 0; else noReviews">
+      <mat-list>
+        <mat-list-item *ngFor="let review of reviews">
+            <p>{{ review.title }}</p>
+            <p>{{ review.body }}</p>
+            <p>{{ review.createdAt | date: 'short' }}</p>
+            <p>Rating: {{ review.rating }}</p>
+        </mat-list-item>
+      </mat-list>
+    </ng-container>
+    
+    <ng-template #noReviews>
+        <p>There are no reviews for this product.</p>
+    </ng-template>
+    
+  </ng-container>
+
+  <ng-template #loading>
+    <mat-progress-spinner class="spinner" mode="indeterminate"></mat-progress-spinner>
+    <p class="italic">Loading reviews</p>
+  </ng-template>
+</section>
