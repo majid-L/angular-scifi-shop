@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { loginRequest } from 'src/app/ngrx/auth/auth.actions';
+import { selectAuthIsLoading } from 'src/app/ngrx/auth/auth.feature';
 
 @Component({
   selector: 'app-auth-form',
@@ -22,9 +23,13 @@ export class AuthFormComponent {
    // password: this.formField
   };
   authForm = this.formBuilder.group(this.formFields);
-  status$: Observable<Status> = this.store.select(state => state.authSlice.status);
+  readonly authIsLoading$ : Observable<boolean> = 
+    this._store.select(selectAuthIsLoading);
 
-  constructor(private store: Store<AppState>, private formBuilder: FormBuilder) {}
+  constructor(
+    private _store: Store<AppState>, 
+    private formBuilder: FormBuilder
+  ) { }
 
   showErrorMessage(input: "name" | "email" | "username" | "password") {
     if (this.authForm.controls[input].hasError('required')) {
@@ -62,7 +67,7 @@ export class AuthFormComponent {
     if (formValue.name && formValue.email) {
       //this.
     } else {
-      this.store.dispatch(loginRequest(formValue));
+      this._store.dispatch(loginRequest(formValue));
     }
   }
 }

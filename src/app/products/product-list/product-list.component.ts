@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { selectCartItems, selectCartStatus, selectProducts, selectProductsStatus } from 'src/app/ngrx';
-import { addToCart } from 'src/app/ngrx/cart/cart.actions';
+import { Observable } from 'rxjs';
+import { selectActiveId, selectUpdateStatus } from 'src/app/ngrx/cart/cart.feature';
 import { loadProducts } from 'src/app/ngrx/products/products.actions';
+import { selectLoadStatus, selectProducts } from 'src/app/ngrx/products/products.feature';
 
 @Component({
   selector: 'app-product-list',
@@ -12,26 +12,15 @@ import { loadProducts } from 'src/app/ngrx/products/products.actions';
 })
 export class ProductListComponent implements OnInit {
   products$: Observable<Product[] | null> = this.store.select(selectProducts);
-  productStatus$: Observable<Status> = this.store.select(selectProductsStatus);
-  cartStatus$: Observable<Status> = this.store.select(selectCartStatus);
-  cart$: Observable<CartItems | null> = this.store.select(selectCartItems);
-  loggedInUserId: string | null = window.localStorage.getItem('userId');
+  productLoadStatus$: Observable<Status> = this.store.select(selectLoadStatus);
+  cartUpdateStatus$: Observable<Status> = this.store.select(selectUpdateStatus);
+  activeId$: Observable<number> = this.store.select(selectActiveId);
 
-  constructor(private store: Store<AppState>) {}
+  constructor(
+    private store: Store<AppState>
+  ) {}
 
   ngOnInit() {
 	  this.store.dispatch(loadProducts());
-  }
-
-  addToCart(e: MouseEvent, productId: number) {
-    this.store.dispatch(addToCart({ 
-      productId,
-      customerId: Number(this.loggedInUserId),
-      quantity: 1
-     }));
-  }
-
-  cartIncludesItem(cartItems: CartItem[] | null, productId: number) {
-    return cartItems && cartItems.find(item => item.productId === productId);
   }
 }

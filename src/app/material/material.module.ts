@@ -16,6 +16,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatRippleModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 const materials = [
   MatToolbarModule,
@@ -33,7 +39,13 @@ const materials = [
   MatDialogModule,
   MatBadgeModule,
   MatRippleModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatButtonToggleModule,
+  MatExpansionModule,
+  MatStepperModule,
+  MatSnackBarModule,
+  MatChipsModule,
+  MatGridListModule
 ];
 
 @NgModule({

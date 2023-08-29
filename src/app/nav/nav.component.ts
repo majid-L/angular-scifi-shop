@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable, combineLatest, Subject } from 'rxjs';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { Observable, combineLatest, Subject, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { logoutRequest, showAuthOverlay } from '../ngrx/auth/auth.actions';
-import { selectLoggedInUserId } from '../ngrx';
 import { selectAccount } from '../ngrx/account/account.feature';
 import { selectCartItemsCount } from '../ngrx/cart/cart.feature';
+import { selectAnyLoadingState, selectLoggedInUserId, selectLogoutStatus } from '../ngrx/auth/auth.feature';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -15,10 +16,12 @@ import { selectCartItemsCount } from '../ngrx/cart/cart.feature';
 })
 export class NavComponent {
   private _breakpointObserver = inject(BreakpointObserver);
-  loggedInUserId$: Observable<number | string | null> = this.store.select(selectLoggedInUserId);
-  status$: Observable<Status> = this.store.select(state => state.authSlice.status);
-  currentUser$: Observable<Customer | null> = this.store.select(selectAccount);
-  cartItemsCount$: Observable<number | undefined> = this.store.select(selectCartItemsCount);
+  loggedInUserId$: Observable<number | string | null> = this._store.select(selectLoggedInUserId);
+  authIsLoading$: Observable<boolean> = this._store.select(selectAnyLoadingState);
+  logoutStatus$: Observable<Status> = this._store.select(selectLogoutStatus);
+  currentUser$: Observable<Customer | null> = this._store.select(selectAccount);
+  cartItemsCount$: Observable<number | undefined> = this._store.select(selectCartItemsCount);
+  private _subscription = Subscription.EMPTY;
   rippleRadius = 30;
   eventsSubject = new Subject<void>();
 
@@ -29,30 +32,37 @@ export class NavComponent {
       shareReplay()
     );
 
-  dataStream$: Observable<{
-    status: Status, 
-    isHandset: boolean, 
-    currentUser: Customer | null,
-    loggedInUserId: number | string | null,
-    cartItemsCount: number | undefined
-   }>;
+  dataStream$ = combineLatest([
+    this.logoutStatus$, this.authIsLoading$, this.isHandset$, this.currentUser$, this.loggedInUserId$, this.cartItemsCount$
+  ]).pipe(map(([logoutStatus, authIsLoading, isHandset, currentUser, loggedInUserId, cartItemsCount]) => {
+    return {
+      logoutStatus, authIsLoading, isHandset, currentUser, loggedInUserId, cartItemsCount
+    }
+  }));
 
-  constructor(private store: Store<AppState>) {
-    this.dataStream$ = combineLatest([
-      this.status$, this.isHandset$, this.currentUser$, this.loggedInUserId$, this.cartItemsCount$
-    ]).pipe(map(([status, isHandset, currentUser, loggedInUserId, cartItemsCount]) => {
-      return {
-        status, isHandset, currentUser, loggedInUserId, cartItemsCount
+  constructor(
+    private _store: Store<AppState>,
+    private _router: Router
+  ) { }
+
+  ngOnInit() {
+    this._subscription = this.logoutStatus$.subscribe(status => {
+      if (status === "success") {
+        this._router.navigate(['/']);
       }
-    }));
+    })
+  }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
   }
   
   showOverlay() {
-    this.store.dispatch(showAuthOverlay());
+    this._store.dispatch(showAuthOverlay());
   }
 
   handleLogout() {
-    this.store.dispatch(logoutRequest());
+    this._store.dispatch(logoutRequest());
   }
 
   emitEventToChild() {

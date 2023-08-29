@@ -100,6 +100,7 @@ declare global {
     title: string
     body: string
     rating: Rating
+    recommend?: boolean
   }
 
   type UpdateReviewRequest = {
@@ -113,6 +114,11 @@ declare global {
     id: number
     recommend: boolean | null
     createdAt: string
+    product?: Product
+    customer?: {
+      username: string
+      avatar: string | null
+    }
   }
 
   type ReviewsResponse = Pagination & {
@@ -150,7 +156,8 @@ declare global {
     lastOrdered: {
       orderId: number
       orderDate: string
-    } | null
+    } | null,
+    review: Review | null
   }
 
   /* NgRx types for state management */

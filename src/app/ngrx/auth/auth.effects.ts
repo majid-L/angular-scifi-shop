@@ -3,9 +3,10 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, exhaustMap, catchError } from 'rxjs/operators';
 import { AuthService } from "src/app/auth/auth.service";
-import { clearCurrentUser, loginRequest, loginSuccess, logoutRequest, logoutSuccess } from "./auth.actions";
-import { httpError } from "../error/error.actions";
+import { loginRequest, loginSuccess, logoutRequest, logoutSuccess } from "./auth.actions";
+import { httpError, notify } from "../notification/notification.actions";
 import { Router } from "@angular/router";
+import { clearCurrentUser } from "../account/account.actions";
 
 @Injectable()
 export class AuthEffects {
@@ -33,6 +34,11 @@ export class AuthEffects {
       }),
       catchError(({ error }: { error: ApiError }) => of(httpError(error)))
     ))
+  ));
+
+  logoutNotification$ = createEffect(() => this.actions$.pipe(
+    ofType(logoutSuccess),
+    map(payload => notify({ title: "Successfully logged out.", content: payload.msg }))
   ));
 
   clearCurrentUser$ = createEffect(() => this.actions$.pipe(

@@ -4,6 +4,8 @@ import { CartComponent } from './cart/cart.component';
 import { MaterialModule } from '../material/material.module';
 import { EffectsModule } from '@ngrx/effects';
 import { CartEffects } from '../ngrx/cart/cart.effects';
+import { StoreModule } from '@ngrx/store';
+import { cartFeature } from '../ngrx/cart/cart.feature';
 
 @NgModule({
   declarations: [
@@ -12,6 +14,7 @@ import { CartEffects } from '../ngrx/cart/cart.effects';
   imports: [
     CommonModule,
     MaterialModule,
+    StoreModule.forFeature(cartFeature),
     EffectsModule.forFeature(CartEffects)
   ]
 })

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { combineLatest, map, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { hideAuthOverlay, resetStatus } from 'src/app/ngrx/auth/auth.actions';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { selectAuthIsLoading, selectAuthIsSuccess, selectLoggedInUserId, selectShowOverlay } from 'src/app/ngrx/auth/auth.feature';
 
 @Component({
   selector: 'app-login',
@@ -10,16 +11,14 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
   styleUrls: ['./login.component.sass']
 })
 export class LoginComponent {
-  showOverlay$: Observable<boolean>;
-  status$: Observable<Status>;
-  loggedInUserId$: Observable<number | string | null>;
+  showOverlay$: Observable<boolean> = this._store.select(selectShowOverlay);
+  authIsLoading$: Observable<boolean> = this._store.select(selectAuthIsLoading);
+  authIsSuccess$: Observable<boolean> = this._store.select(selectAuthIsSuccess);
+  loggedInUserId$: Observable<number | string | null> 
+    = this._store.select(selectLoggedInUserId);
   formType = 'Login';
 
-  constructor(private store: Store<AppState>) {
-    this.showOverlay$ = store.select(state => state.authSlice.showOverlay);
-    this.loggedInUserId$ = store.select(state => state.authSlice.loggedInUserId);
-    this.status$ = store.select(state => state.authSlice.status);
-  }
+  constructor(private _store: Store<AppState>) { }
 
   tabChange(e: MatTabChangeEvent) {
     switch (e.index) {
@@ -30,11 +29,11 @@ export class LoginComponent {
         this.formType = 'Signup';
         break;
     }
-    this.store.dispatch(resetStatus());
+    this._store.dispatch(resetStatus());
   }
 
   hideOverlay() {
-    this.store.dispatch(hideAuthOverlay());
+    this._store.dispatch(hideAuthOverlay());
   }
 
   hideOverlayOnBodyClick(e: MouseEvent) {
