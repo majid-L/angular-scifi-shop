@@ -14,10 +14,17 @@ import { productsFeature } from '../ngrx/products/products.feature';
 import { ActionButtonsComponent } from './action-buttons/action-buttons.component';
 import { NgLetModule } from 'ng-let';
 import { ReviewsModule } from '../reviews/reviews.module';
+import { PaginationComponent } from './pagination/pagination.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @NgModule({
-  declarations: [ProductListComponent, ProductDialogComponent, SingleProductComponent, ActionButtonsComponent],
+  declarations: [
+    ProductListComponent, 
+    ProductDialogComponent, 
+    SingleProductComponent, 
+    ActionButtonsComponent,
+    PaginationComponent
+  ],
   imports: [
     CommonModule,
     MaterialModule,

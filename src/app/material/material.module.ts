@@ -22,6 +22,11 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSliderModule } from '@angular/material/slider';
 
 const materials = [
   MatToolbarModule,
@@ -45,7 +50,12 @@ const materials = [
   MatStepperModule,
   MatSnackBarModule,
   MatChipsModule,
-  MatGridListModule
+  MatGridListModule,
+  MatPaginatorModule,
+  MatSelectModule,
+  MatRadioModule,
+  MatSlideToggleModule,
+  MatSliderModule
 ];
 
 @NgModule({

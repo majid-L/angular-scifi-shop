@@ -22,7 +22,12 @@ import { cartFeature } from './ngrx/cart/cart.feature';
 import { CheckoutModule } from './checkout/checkout.module';
 import { accountFeature } from './ngrx/account/account.feature';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { OrdersModule } from './orders/orders.module';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { notificationFeature } from './ngrx/notification/notification.feature';
+import { categoriesFeature } from './ngrx/categories/categories.feature';
+import { CategoriesEffects } from './ngrx/categories/categories.effects';
 
 @NgModule({
   declarations: [
@@ -30,12 +35,14 @@ import { OrdersModule } from './orders/orders.module';
     HomeComponent,
     NavComponent,
     CartSidebarComponent,
-    DialogComponent
+    DialogComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    RouterModule,
     BrowserAnimationsModule,
     FormsModule,
     AuthModule,
@@ -47,8 +54,11 @@ import { OrdersModule } from './orders/orders.module';
     MaterialModule,
     NgLetModule,
     StoreModule.forRoot(reducers, { metaReducers }),
+    StoreModule.forFeature(categoriesFeature),
     StoreModule.forFeature(accountFeature),
     StoreModule.forFeature(cartFeature),
+    StoreModule.forFeature(notificationFeature),
+    EffectsModule.forFeature(CategoriesEffects),
     EffectsModule.forRoot([])
   ],
   providers: [],
