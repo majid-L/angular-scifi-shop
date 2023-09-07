@@ -1,19 +1,42 @@
+.active
+  background-color: #9c27b0
+  
+  *
+    color: whitesmoke
+
+.light
+  background: lightgray
+
 .sidenav-container
   height: 100%
 
 .sidenav 
-  width: 200px
-  background: lightgray
+  width: 210px
+  //background: #37474F
 
 .topnav
+  background-color: #212121
   position: absolute
   z-index: 2 !important
 
+.mdc-list-item.mdc-list-item--with-one-line
+  height: 45px
+
 .mat-toolbar
+  position: relative
+  //background-color: #212121
   justify-content: space-between
+  //color: whitesmoke
+  padding: 35px 15px
+
+.nav-header
+  height: 80px
+
+.mat-mdc-nav-list
+  padding: 0
 
 .sidenav .mat-toolbar
-  background: inherit
+  //background: inherit
 
 .mat-toolbar.mat-primary
   position: sticky
@@ -21,18 +44,16 @@
   z-index: 1
 
 .active-user-controls
+  position: relative
+  top: 5px
   display: flex
   align-items: center
+  gap: 20px
 
-.cart-icon
-  position: relative
-  top: 3px
-  right: 8px
-  z-index: 1
-  color: white
-  background: none
-  border: none
-  cursor: pointer
+.theme-toggle .mat-icon
+  height: fit-content
+  width: fit-content
+  font-size: 30px
 
 .login
   padding: 4px 8px
@@ -48,15 +69,52 @@
     font-size: 25px
 
 .account-icon
-  position: relative
-  top: 4px
-  margin-right: 0px
-  height: 30px
-  width: 30px
-  cursor: pointer
+  font-size: 30px
+  height: 40px
+  width: 40px
   transition: all 1s ease-in-out
 
   img
     height: 100%
     width: 100%
     border-radius: 50%
+
+.progress-bar
+  position: relative
+  z-index: 1
+
+.logo-container, .theme-toggle
+  display: flex
+  align-items: center
+
+.logo
+  width: 200px
+  margin-bottom: -10px
+
+.toolbar-image
+  height: 90%
+  position: absolute
+  z-index: 1
+  scale: 1.4
+  left: 15%
+  top: 7px
+
+@media (max-width: 380px)
+  .theme-toggle
+    flex-direction: column-reverse
+
+  .active-user-controls
+    gap: 15px
+
+  .theme-toggle .mat-icon
+    font-size: 20px
+
+  .account-icon, .mat-mdc-mini-fab
+    height: 30px
+    width: 30px
+
+  .mat-mdc-menu-trigger
+    margin-left: -20px
+
+  .logo-container
+    margin-left: -10px
