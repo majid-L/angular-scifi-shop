@@ -1,0 +1,62 @@
+<!-- <div class="bg-overlay"> -->
+  <main>
+    <div class="bg">
+      <div class="logo-container">
+        <img src="assets/logo.svg">
+      </div>
+      <div class="slogan">
+        <img src="assets/slogan.svg">
+      </div>
+      <h1>From high-tech prototypes and exotic devices to junk supplies - we sell it all.</h1>
+    </div>
+    
+    <div class="logo-container suppliers">
+      <img src="assets/suppliers.svg">
+    </div>
+
+    <div class="bg-alt">
+    <section class="suppliers-list">
+      <ng-container *ngFor="let supplier of (suppliers$ | async)" >
+        <mat-card>
+          <mat-chip class="label">
+            <mat-icon>view_module</mat-icon>
+            {{ supplier.products }} products
+          </mat-chip>
+          <img mat-card-image [src]="'assets/suppliers/' + supplier.thumbnail + '.svg'" [class.dark-bg]="lightModeEnabled">
+          <mat-divider></mat-divider>
+          <mat-card-header>
+            <mat-card-title>{{ supplier.name }}</mat-card-title>
+            <mat-card-subtitle>{{ supplier.location }}</mat-card-subtitle>
+            <mat-card-subtitle>Established {{ supplier.establishYear }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ supplier.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+    </section>
+  </div>
+
+    <div class="logo-container categories">
+      <img src="assets/categories.svg">
+    </div>
+
+    <div class="bg-alt">
+      <section class="categories-list">
+        <ng-container *ngFor="let category of (categories$ | async)">
+          <mat-card>
+            <mat-chip class="label">
+              <mat-icon>view_module</mat-icon>
+              {{ category.products }} products
+            </mat-chip>
+            <img mat-card-image [src]="'assets/categories/' + category.thumbnail + '.svg'">
+            <mat-divider></mat-divider>
+            <mat-card-content>
+              <p>{{ category.description }}</p>
+            </mat-card-content>
+          </mat-card>
+        </ng-container>
+      </section>
+    </div>
+  </main>
+<!-- </div> -->
