@@ -1,0 +1,100 @@
+main
+  position: relative
+  margin: 0
+
+h1
+  max-width: 1000px
+  text-align: center
+  margin: 0 auto
+  position: relative
+  z-index: 1
+  color: whitesmoke
+
+.bg
+  position: relative
+  background: url('/assets/products.png')
+  padding: 150px 0
+
+.bg-alt
+  position: relative
+  background: url('/assets/tools.png')
+  padding: 50px 0
+
+.bg::before, .bg-alt::before
+  content: ""
+  position: absolute
+  top: 0
+  height: 100%
+  width: 100%
+  background: #212121b7
+
+img
+  width: 100%
+
+.slogan
+  margin: 70px auto 0
+  max-width: 800px
+  position: relative
+  
+.logo-container
+  padding: 0 30px
+  display: flex
+  position: relative
+  
+  img
+    margin: 0 auto
+    max-width: 900px
+
+.categories, .suppliers
+  margin: 0 auto
+  padding: 20px 0 0
+  background: #44224446
+
+  img
+    max-width: 600px
+
+.mat-mdc-card
+  position: relative
+  width: 300px
+  transition: all 0.4s ease-in-out
+  
+.mat-mdc-card:hover
+  scale: 1.05
+
+::ng-deep span.mdc-evolution-chip__cell.mdc-evolution-chip__cell--primary > span > span
+  display: flex
+  align-items: center !important
+  gap: 5px
+  cursor: pointer
+
+.label
+  position: absolute
+  z-index: 1
+  margin: 10px
+
+.suppliers-list, .categories-list
+  padding: 10px 20px
+  border-radius: 6px
+  display: flex
+  justify-content: center
+  flex-wrap: wrap
+  gap: 20px
+  max-width: 1200px
+  margin: 0 auto 60px
+
+  img
+    padding-top: 20px
+    width: 300px
+    cursor: pointer
+
+.categories-list img
+    max-width: 300px
+    margin: 30px 10px 10px 0
+    height: 200px
+
+.dark-bg
+  background: #212121
+
+@media (max-width: 700px)
+  .suppliers-list
+    justify-content: center
