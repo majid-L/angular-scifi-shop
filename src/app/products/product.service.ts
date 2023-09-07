@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +9,12 @@ export class ProductService {
 
   constructor(private _http: HttpClient) { }
 
-  getProducts() {
-    return this._http.get<ProductsResponse>(`${this.baseUrl}/products`);
+  getProducts(queryParams: ProductsUrlParams) {
+    const options = {
+      params: new HttpParams().appendAll(queryParams)
+    };
+    
+    return this._http.get<ProductsResponse>(`${this.baseUrl}/products`, options);
   }
 
   getSingleProduct(productId: number) {
@@ -22,5 +26,13 @@ export class ProductService {
       `${this.baseUrl}/customers/${customerId}/orders?productId=${productId}`,
       { withCredentials: true }
     );
+  }
+
+  getCategories() {
+    return this._http.get<{ categories: Category[] }>(`${this.baseUrl}/categories`);
+  }
+
+  getSuppliers() {
+    return this._http.get<{ suppliers: Supplier[] }>(`${this.baseUrl}/suppliers`);
   }
 }
