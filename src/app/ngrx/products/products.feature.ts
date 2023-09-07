@@ -10,9 +10,11 @@ import {
 } from './products.actions';
 
 export const initialState: ProductsState = {
-  page: null,
-  count: null,
-  totalResults: null,
+  pagination: {
+    page: 1,
+    count: 0,
+    totalResults: 0
+  },
   products: null,
   singleProduct: null,
   orderSearchResult: null,
@@ -25,9 +27,7 @@ export const productsReducer = createReducer(
   on(loadProducts, state => ({ ...state, loadStatus: "loading" as const })),
   on(loadProductsSuccess, (state, { page, count, totalResults, products }) => ({ 
     ...state,
-    page,
-    count,
-    totalResults,
+    pagination: { page, count, totalResults },
     products,
     loadStatus: "success" as const
   })),
@@ -65,7 +65,5 @@ export const {
   selectOrderSearchResult,
   selectLoadStatus,
   selectSearchStatus,
-  selectTotalResults,
-  selectPage,
-  selectCount,
+  selectPagination
 } = productsFeature;

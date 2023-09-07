@@ -47,3 +47,5 @@ export const deleteReviewSuccess = createAction(
   "[Reviews Component] Delete Review - Success",
   props<{ deletedReview: Review }>()
 );
+
+export const resetReviewsStatus = createAction("[Reviews Component] Reset Status");

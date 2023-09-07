@@ -1,10 +1,13 @@
 import { createFeature, createReducer, on } from "@ngrx/store"
-import { createReview, createReviewSuccess, deleteReview, deleteReviewSuccess, loadCustomerReviews, loadCustomerReviewsSuccess, loadProductReviews, loadProductReviewsSuccess, updateReview, updateReviewSuccess } from "./reviews.actions";
+import { httpError } from "../notification/notification.actions";
+import { createReview, createReviewSuccess, deleteReview, deleteReviewSuccess, loadCustomerReviews, loadCustomerReviewsSuccess, loadProductReviews, loadProductReviewsSuccess, resetReviewsStatus, updateReview, updateReviewSuccess } from "./reviews.actions";
 
 export const initialState: ReviewsState = {
-  page: null,
-  count: null,
-  totalResults: null,
+  pagination: {
+    page: 1,
+    count: 0,
+    totalResults: 0
+  },
   reviews: null,
   singleReview: null,
   loadStatus: "pending",
@@ -27,9 +30,7 @@ export const reviewsReducer = createReducer(
       return {
         ...state,
         loadStatus: "success" as const,
-        page,
-        count,
-        totalResults,
+        pagination: { page, count, totalResults },
         reviews
       }
   }),
@@ -38,8 +39,11 @@ export const reviewsReducer = createReducer(
     return {
       ...state,
       createStatus: "success" as const,
-      reviews: [...state.reviews!, payload.newReview],
-      totalResults: state.totalResults! + 1
+      pagination: { 
+        ...state.pagination, 
+        totalResults: state.pagination.totalResults + 1 
+      },
+      reviews: [...state.reviews!, payload.newReview]
     }
   }),
   on(updateReview, state => ({ ...state, updateStatus: "loading" as const })),
@@ -63,7 +67,33 @@ export const reviewsReducer = createReducer(
       reviews: state.reviews!.filter(review => {
         return review.id !== payload.deletedReview.id;
       }),
-      totalResults: state.totalResults! - 1
+      pagination: { 
+        ...state.pagination, 
+        totalResults: state.pagination.totalResults - 1 
+      }
+    }
+  }),
+  on(httpError, state => {
+    return {
+      ...state,
+      loadStatus: "error" as const,
+      createStatus: "error" as const,
+      updateStatus: "error" as const,
+      deleteStatus: "error" as const
+    }
+  }),
+  on(resetReviewsStatus, state => {
+    for (const key in state) {
+      if (state[key as keyof ReviewsState] === "loading") {
+        return state;
+      }
+    };
+    return {
+      ...state,
+      loadStatus: "pending" as const,
+      createStatus: "pending" as const,
+      updateStatus: "pending" as const,
+      deleteStatus: "pending" as const
     }
   })
 );
@@ -74,13 +104,11 @@ export const reviewsFeature = createFeature({
 });
 
 export const {
-  selectCount,
   selectCreateStatus,
   selectDeleteStatus,
   selectLoadStatus,
-  selectPage,
   selectReviews,
+  selectPagination,
   selectSingleReview,
-  selectTotalResults,
   selectUpdateStatus
 } = reviewsFeature;

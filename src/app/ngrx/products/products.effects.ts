@@ -16,7 +16,7 @@ import { dispatchErrorAction } from "..";
 export class ProductsEffects {
   loadProducts$ = createEffect(() => this._actions$.pipe(
     ofType(loadProducts),
-    exhaustMap(() => this._productsService.getProducts()
+    exhaustMap(queryParams => this._productsService.getProducts(queryParams)
     .pipe(
       map(productsResponse => loadProductsSuccess(productsResponse)),
       catchError(dispatchErrorAction)
