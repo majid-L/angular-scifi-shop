@@ -1,0 +1,104 @@
+<div class="bg-overlay">
+  <main>
+    <div class="bg heading">
+      <div class="header-flex">
+        <img [src]="headerImageSrc" [class.negative-margin]="headerImageSrc.includes('suppliers')">
+      <ng-container *ngIf="category">
+        <p>{{ category.description }}</p>
+      </ng-container>
+
+      <ng-container *ngIf="supplier">
+        <p>{{ supplier.description }}</p>
+      </ng-container>
+
+      <ng-container *ngIf="!category && !supplier">
+        <p>Browse all products. Use the filter/sort tool by opening the expansion panel below.</p>
+      </ng-container>
+      </div>
+
+      <app-pagination 
+      (toggleStyleEvent)="toggleStyle($event)" 
+      [showDisplayToggle]="showDisplayToggle">
+    </app-pagination>
+    </div>
+
+  <ng-container *ngIf="products$ | async as products">
+    <section [ngClass]="productListClass">
+  
+      <mat-card class="product-card" *ngFor="let product of products">
+  
+        <div *ngIf="listDisplayStyle === 'list'" class="list-image">
+          <img mat-card-image [src]="'assets/icons/transparent/' + product.thumbnail">
+        </div>
+  
+        <div class="product-card-content">
+          <mat-card-header [routerLink]="['/products', product.id]" class="product-card-header" [class.dark]="listDisplayStyle === 'grid'">
+            <mat-card-title class="product-title">{{ product.name }}</mat-card-title>
+            
+            <div class="product-subtitle">
+              <mat-chip>
+                <mat-icon class="icon" matChipAvatar>business</mat-icon>
+                <strong>{{ product.supplierName }}</strong>
+              </mat-chip>
+              <mat-chip>
+                <mat-icon matChipAvatar>category</mat-icon>
+                {{ product.categoryName }}
+              </mat-chip>
+            </div>
+  
+            <div class="product-header-stats">
+              <mat-chip>
+                <igc-rating class="chip" [value]="product.averageRating" min="0" max="5" disabled></igc-rating>
+              </mat-chip>
+              <span class="icon-with-text">
+                <mat-icon color="primary">stars</mat-icon>
+                {{ product.averageRating }} <span class="italic">({{ product.numOfReviews }} reviews)</span>
+              </span>
+            </div>
+  
+            <div class="product-header-stats">
+              <span class="icon-with-text">
+                <mat-icon color="primary">local_offer</mat-icon>
+                Ordered {{ product.numOfTimesOrdered }} times
+              </span>
+              <span class="icon-with-text">
+                <mat-icon color="primary">receipt</mat-icon>
+                {{ product.totalUnitsOrdered }} units sold
+              </span>
+            </div>
+  
+            <img *ngIf="listDisplayStyle === 'grid'" class="product-image" mat-card-image [src]="'assets/icons/black/' + product.thumbnail">
+          </mat-card-header>
+          <mat-divider></mat-divider>
+    
+          <mat-card-content [routerLink]="['/products', product.id]">
+            <p class="product-description">{{ product.description }}</p>
+            <div class="price">
+              <p class="stock">
+                <mat-icon>label</mat-icon>
+                {{ product.stock }} in stock
+              </p>
+              <mat-chip class="bold">
+                <p>{{ product.price | currency: 'GBP' }}</p>
+              </mat-chip>
+            </div>
+          </mat-card-content>
+          <div>
+            
+            <mat-divider></mat-divider>
+            <mat-card-actions>
+              <app-action-buttons [product]="product"></app-action-buttons>
+            </mat-card-actions>
+          </div>
+        
+  
+        <ng-container *ngIf="(cartUpdateStatus$ | async) === 'loading' && (activeId$ | async) === product.id">
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </ng-container>
+      </div>
+      </mat-card>
+  
+    </section>
+  </ng-container>
+  </main>
+</div>
