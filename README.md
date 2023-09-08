@@ -1,6 +1,9 @@
-# AngularEcommerce
+# Angular sci-fi ecommerce app
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.7.
+
+<img src="src/assets/logo.svg" width=600>
+<br>
 
 ## Development server
 
