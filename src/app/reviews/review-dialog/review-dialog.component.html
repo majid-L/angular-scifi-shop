@@ -1,0 +1,83 @@
+<section *ngLet="data.review as review">
+  <h2 mat-dialog-title>{{ data.operation === "update" ? "Update review" : "Post new review"}}</h2>
+  <mat-divider></mat-divider>
+  <br>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <h3>{{ review.product!.name }}</h3>
+      </mat-card-title>
+        <mat-chip-listbox aria-label="Product information">
+            <mat-chip>
+              <mat-icon matChipAvatar>category</mat-icon>
+              {{ review.product!.categoryName }}
+            </mat-chip>
+            <mat-chip>
+              <mat-icon matChipAvatar>business</mat-icon>
+              Sold by <strong>{{ review.product!.supplierName }}</strong>
+            </mat-chip>
+          </mat-chip-listbox>
+        </mat-card-header>
+        <mat-card-content>
+            <p class="product-description">{{ review.product!.description }}</p>
+            <img mat-card-image [src]="'assets/icons/black/' + review.product!.thumbnail">
+        </mat-card-content>
+  </mat-card>
+
+  <div mat-dialog-content>
+    <div class="rating-label">
+    <p>Rating:</p>
+    <span class="rating-chip" [matBadge]="reviewForm.get('rating')!.value" matBadgeColor="accent">
+        <mat-chip>
+          <igc-rating class="stars" (igcChange)="changeRating($event)" [value]="review.rating" min="0" max="5"></igc-rating>
+        </mat-chip>
+      </span>
+    </div>
+
+    <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+      <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" placeholder="Give your review a title.">
+        <button *ngIf="reviewForm.get('title')!.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearField('title', '')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Review</mat-label>
+        <textarea matInput formControlName="body" placeholder="Type your review here."></textarea>
+        <button *ngIf="reviewForm.get('body')!.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearField('body', '')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <div class="radio-group">
+        <label><mat-icon>thumbs_up_down</mat-icon>Recommend product?</label>
+        <mat-radio-group formControlName="recommend">
+          <mat-radio-button [value]="true">Yes</mat-radio-button>
+          <mat-radio-button [value]="false">No</mat-radio-button>
+        </mat-radio-group>
+        <button *ngIf="reviewForm.get('recommend')!.value !== null" matSuffix mat-icon-button aria-label="Clear" (click)="clearField('recommend', null)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div mat-dialog-actions>
+        <button mat-stroked-button color="primary" (click)="onNoClick()">
+          <mat-icon>not_interested</mat-icon>
+          Cancel
+        </button>
+        <button mat-raised-button type="submit" [disabled]="!reviewForm.valid" color="primary">
+          <mat-icon>edit</mat-icon>
+          {{ data.operation === "update" ? "Update review" : "Post review"}}
+        </button>
+        <button *ngIf="data.operation === 'update'" type="button" (click)="deleteReview(review.id)" mat-raised-button color="warn">
+          <mat-icon>delete_forever</mat-icon>
+          Delete review
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+<mat-progress-bar *ngIf="showLoadingBar" mode="indeterminate"></mat-progress-bar>

@@ -3,8 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { selectAccount } from 'src/app/ngrx/account/account.feature';
-import { createReview, deleteReview, resetReviewsStatus, updateReview } from 'src/app/ngrx/reviews/reviews.actions';
+import { createReview, deleteReview, resetReviewsStatus, updateActiveId, updateReview } from 'src/app/ngrx/reviews/reviews.actions';
 import { selectReviewStatus } from 'src/app/ngrx/reviews/reviews.feature';
 
 @Component({
@@ -21,12 +20,9 @@ export class ReviewDialogComponent {
   });
   private readonly _reviewStatus$: Observable<Status> = 
     this._store.select(selectReviewStatus);
-  private readonly _accountData$: Observable<Customer | null> = 
-    this._store.select(selectAccount);
   private _reviewStatusSubscription = Subscription.EMPTY;
   private _accountDataSubscription = Subscription.EMPTY;
   showLoadingBar = false;
-  private _customer: { username: string, avatar: string | null } | undefined;
 
   constructor(
     public dialogRef: MatDialogRef<ReviewDialogComponent>,
@@ -52,15 +48,6 @@ export class ReviewDialogComponent {
           this.showLoadingBar = true;
         }
       });
-
-    this._accountDataSubscription = this._accountData$.subscribe(customer => {
-      if (customer) {
-        this._customer = {
-          username: customer.username,
-          avatar: customer.avatar
-        };
-      }
-    });
   }
 
   changeRating(e: CustomEvent<number>) {
@@ -74,6 +61,7 @@ export class ReviewDialogComponent {
   }
 
   submitReview(): void {
+    this._store.dispatch(updateActiveId({ activeId: this.data.review.id }));
     if (this.data.operation === "update") {
       this._store.dispatch(updateReview({
         reviewId: this.data.review.id,
@@ -88,10 +76,6 @@ export class ReviewDialogComponent {
         ...this.reviewForm.value
       };
       this._store.dispatch(createReview(requestBody as NewReviewRequest));
-      // this._store.dispatch(updateReviewsList({
-      //   customer: this._customer,
-      //   ...requestBody,
-      // } as Review));
     }
   }
 

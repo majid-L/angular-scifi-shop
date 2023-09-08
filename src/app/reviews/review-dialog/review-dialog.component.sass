@@ -17,16 +17,14 @@ form
 
 .mat-mdc-dialog-actions
   padding: 8px 0
+  gap: 10px 0
 
 .mat-mdc-card-header
   display: flex
   flex-direction: column
 
-  .mat-mdc-chip
-    margin: 10px
-
-::ng-deep .mdc-evolution-chip-set__chips
-  gap: 5px
+.mat-mdc-chip-set
+  margin: 10px 0
 
 h3
   margin: 0
@@ -58,3 +56,19 @@ label
 
 .radio-group
   height: 40px
+
+@media (max-width: 440px)
+  .mat-mdc-dialog-content
+    padding: 0 0 20px
+
+  .radio-group
+    flex-direction: column
+
+  .mat-mdc-dialog-actions
+    flex-direction: column
+    align-items: stretch
+    margin: 40px 0 0
+
+    *
+      margin: 0
+      gap: 10px
