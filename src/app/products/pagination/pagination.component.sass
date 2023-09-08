@@ -1,0 +1,111 @@
+section
+  position: relative
+
+.controls
+  padding: 10px
+
+p
+  margin: 0
+
+.mat-expansion-panel
+  border-radius: 0
+
+.mat-expansion-panel-header-title
+  display: flex
+  gap: 10px
+
+.controls-container, .orderby
+  margin: 3px 0 10px
+  display: flex
+  flex-direction: column
+  flex-wrap: wrap
+  justify-content: center
+  gap: 30px
+
+.controls-container
+  flex-direction: row
+  margin: 20px 0 0
+
+.orderby
+  margin: 0
+  align-items: baseline
+  justify-content: space-between
+  gap: 5px
+
+.mat-mdc-slide-toggle
+  margin: 0 10px
+
+.mat-mdc-radio-group
+  margin: 0 0 0px -20px !important
+  display: flex
+  flex-direction: column
+
+.header, .toggle-display
+  display: flex
+  align-items: center
+  gap: 20px
+  margin-bottom: 5px
+
+.header
+  margin-top: 5px
+
+.toggle-display
+  flex-direction: column
+  width: 120px
+  gap: 5px
+
+  *
+    width: 100%
+
+.mat-mdc-chip-set
+  margin-bottom: 10px
+
+#paginator
+  flex-direction: column !important
+  padding: 5px 0
+
+  p
+    padding: 10px 20px 10px 10px
+
+::ng-deep .mat-mdc-paginator-container
+  justify-content: center !important
+
+.mat-button-toggle-appearance-standard.mat-button-toggle-checked
+  background-color: #263238
+  color: whitesmoke
+
+.mat-button-toggle-label-content
+  width: 50%
+
+.mat-mdc-form-field, form .mat-mdc-form-field
+  width: 160px
+
+::ng-deep .mat-mdc-select-panel
+  max-height: none !important
+
+form
+  display: flex
+  flex-direction: column
+  gap: 5px
+
+.submit
+  width: 100%
+
+@media (max-width: 380px)
+  section
+    margin: 0
+
+  #paginator
+    padding: 5px 0 10px
+
+  ::ng-deep .mat-mdc-paginator-container
+    flex-direction: column-reverse
+
+  ::ng-deep div.mat-mdc-paginator-range-label
+    position: absolute
+    bottom: 65px
+    margin-left: 50px
+
+  ::ng-deep .mat-mdc-paginator-page-size
+    margin-top: 40px
+    margin-right: 0 !important
