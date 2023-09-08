@@ -2,80 +2,99 @@
   <app-spinner></app-spinner>
 </ng-container>
 
-<div class="bg-overlay">
+<ng-container *ngTemplateOutlet="loading"></ng-container>
+
   <main *ngLet="(orderSearchResult$ | async) as result">
     <ng-container *ngIf="(singleProduct$ | async) as product">
+      <div class="heading">
+        <img src="assets/product.svg">
+      </div>
       <h1>{{ product.name }}</h1>
       <mat-progress-bar *ngIf="(searchStatus$ | async) === 'loading'" mode="indeterminate"></mat-progress-bar>
 
-      <div class="notifications">
-        <ng-container *ngIf="result?.lastOrdered">
-          <mat-card class="notification">
-            <mat-card-header>
-              <mat-card-title>
-                <p class="notification-text bold"><mat-icon color="primary">info</mat-icon>You ordered this product on {{ result!.lastOrdered!.orderDate | date: 'short' }}.</p>
-              </mat-card-title>
-            </mat-card-header>
-            <mat-divider></mat-divider>
-            <mat-action-row>
-              <p class="notification-text">Click below to visit the order page.</p>
-              <button mat-stroked-button color="primary" [routerLink]="['/orders', result!.lastOrdered!.orderId]">View order.</button>
-            </mat-action-row>
-          </mat-card>
-        </ng-container>
+      <ng-container *ngIf="result?.lastOrdered">
+        <div class="notifications">
+            <mat-card class="notification">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon color="primary">check</mat-icon>
+                  <p>You ordered this product on {{ result!.lastOrdered!.orderDate | date: 'short' }}.</p>
+                  <div class="top-card-buttons">
+                    <button mat-stroked-button color="primary" [routerLink]="['/orders', result!.lastOrdered!.orderId]">View order.</button>
+                    <button *ngIf="showCreateReviewButton" (click)="showDialog(newReviewTemplate(product), 'create')" mat-raised-button color="accent">
+                      <mat-icon>rate_review</mat-icon>
+                      Review product
+                    </button>
+                  </div>
+                </mat-card-title>
+              </mat-card-header>
+            </mat-card>
+  
+          <ng-container *ngIf="result!.review">
+            <mat-card class="notification" *ngLet="result!.review! as review">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon color="primary"> rate_review</mat-icon>
+                  <p>You reviewed this product on {{ review.createdAt | date: 'short' }}.</p>
+                </mat-card-title>
+              </mat-card-header>
+              <mat-divider></mat-divider>
+              <mat-card-content>
+                <div class="review-card-icons">
 
-        <ng-container *ngIf="result?.review">
-          <mat-card class="notification" *ngLet="result!.review! as review">
-            <mat-card-header>
-              <mat-card-title>
-                <p class="notification-text bold"><mat-icon color="primary"> rate_review</mat-icon>You reviewed this product on {{ review.createdAt | date: 'short' }}.</p>
-              </mat-card-title>
-            </mat-card-header>
-            <mat-divider></mat-divider>
-            <mat-card-content>
-              <div class="review-card-icons">
-                <mat-chip>
-                  <igc-rating class="rating" [value]="review.rating" min="0" max="5" disabled></igc-rating>
-                </mat-chip>
-                <span class="icon-with-text"><mat-icon color="primary">star</mat-icon>{{ review.rating }}</span>
-                <span *ngIf="review.recommend" class="icon-with-text"><mat-icon color="primary">check</mat-icon>Recommended</span>
-              </div>
-              <h3 class="review-text"><mat-icon>format_quote</mat-icon>{{ review.title }}</h3>
-              <p class="review-text">{{ review.body }}</p>
-            </mat-card-content>
-          </mat-card>
-        </ng-container>
-      </div>
+                  <span [matBadge]="review.rating" matBadgeColor="accent" class="rating-chip">
+                    <mat-chip>
+                      <igc-rating class="stars" [value]="review.rating" min="0" max="5" disabled></igc-rating>
+                    </mat-chip>
+                  </span>
+
+                  <span *ngIf="review.recommend" class="icon-with-text"><mat-icon color="primary">thumb_up</mat-icon>You recommended this item.</span>
+                </div>
+                <h3 class="review-text"><mat-icon>format_quote</mat-icon>{{ review.title }}</h3>
+                <blockquote class="review-text">{{ review.body }}</blockquote>
+              </mat-card-content>
+              <mat-divider></mat-divider>
+              <ng-container *ngTemplateOutlet="loading"></ng-container>
+              <mat-card-actions>
+                <button mat-raised-button (click)="showDialog(review, 'update')" color="primary">
+                  <mat-icon>edit</mat-icon>
+                  Edit review
+                </button>
+                <button mat-raised-button (click)="deleteReview(review.id)" color="warn">
+                  <mat-icon>delete_forever</mat-icon>
+                  Delete review
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </ng-container>
+          
+        </div>
+      </ng-container>
      
-      <section>
-        <mat-tab-group selectedIndex="0">
+      <section [class.light-bg]="lightModeEnabled">
+        <mat-tab-group selectedIndex="1">
 
           <!-- Product info tab -->
           <mat-tab label="Product information">
             <div class="product-info-tab">
-              <img [src]="'assets/icons/transparent/t_' + product.thumbnail.slice(2)">
+              <img [src]="'assets/icons/transparent/' + product.thumbnail">
               <div>
-                <div class="stats mat-elevation-z4">
+                <div class="stats mat-elevation-z4" [class.light-stats-bg]="lightModeEnabled">
                   <div>
-                    <p>{{ product.totalRatings }}</p>
-                    <span class="bold">
+                    <span>
+                      <p>{{ product.totalRatings }}</p>
                       <mat-icon color="primary">rate_review</mat-icon>
-                      <p>Total ratings</p>
                     </span>
+                    <p class="bold">Total ratings</p>
                   </div>
 
                   <div>
-                    <ng-container *ngIf>
-
-                    </ng-container>
-                    <p [class.italic]="!product.averageRating">{{ product.averageRating || "No reviews." }}</p>
-                    <span [matBadge]="product.averageRating">
-                      <igc-rating class="rating" [value]="product.averageRating" min="0" max="5" disabled></igc-rating>
+                    <span [matBadge]="product.averageRating" matBadgeColor="accent" class="rating-chip">
+                      <mat-chip>
+                        <igc-rating class="stars" [value]="product.averageRating" min="0" max="5" disabled></igc-rating>
+                      </mat-chip>
                     </span>
-                    <span class="bold">
-                      <mat-icon color="primary">thumb_up_alt</mat-icon>
-                      <p>Average rating</p>
-                    </span>
+                    <p class="bold">Average rating</p>
                   </div>
                   
                   <div>
@@ -104,7 +123,7 @@
                 </mat-chip>
                 <mat-chip>
                   <mat-icon matChipAvatar>business</mat-icon>
-                  Made by <strong>{{ product.supplierName }}</strong>
+                  Sold by <strong>{{ product.supplierName }}</strong>
                 </mat-chip>
               </mat-chip-listbox>
               
@@ -115,15 +134,22 @@
             <div class="buttons">
               <app-action-buttons [product]="product"></app-action-buttons>
             </div>
-          <mat-progress-bar *ngIf="(cartUpdateStatus$ | async) === 'loading'" mode="indeterminate"></mat-progress-bar>
           </mat-tab>
 
           <!-- Reviews tab -->
           <mat-tab label="Reviews">
-            <app-reviews></app-reviews>
+            <app-reviews 
+              [showCreateReviewButton]="showCreateReviewButton"
+              [newReviewTemplate]="newReviewTemplate(product)"
+            ></app-reviews>
           </mat-tab>
-          </mat-tab-group>
+        </mat-tab-group>
+        <mat-progress-bar *ngIf="(cartUpdateStatus$ | async) === 'loading' && (activeId$ | async) === product.id" mode="indeterminate"></mat-progress-bar>
       </section>
     </ng-container>
   </main>
-</div>
+
+
+<ng-template #loading>
+  <mat-progress-bar *ngIf="(reviewStatus$ | async) === 'loading'" mode="indeterminate"></mat-progress-bar>
+</ng-template>
