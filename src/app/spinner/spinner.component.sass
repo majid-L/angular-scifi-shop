@@ -1,8 +1,18 @@
+.overlay
+  position: fixed
+  z-index: 2
+    
 .content
-    background: none
+  background: none
 
 .spinner
-    position: absolute
-    top: 40%
-    left: 45%
-    margin: 0
+  width: 100px
+  position: absolute
+  top: 40%
+  left: 50%
+  transform: translate(0, 40%)
+  margin: 0
+
+@media (max-width: 800px)
+  .spinner
+    transform: translate(-50%, 0)
