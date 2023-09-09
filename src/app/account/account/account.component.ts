@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { loadAccount } from 'src/app/ngrx/account/account.actions';
+import { selectAccount, selectStatus } from 'src/app/ngrx/account/account.feature';
 
 @Component({
   selector: 'app-account',
@@ -9,13 +11,47 @@ import { loadAccount } from 'src/app/ngrx/account/account.actions';
   styleUrls: ['./account.component.sass']
 })
 export class AccountComponent implements OnInit {
-  accountData$: Observable<Customer | null>;
+  readonly accountData$: Observable<Customer | null> = 
+    this._store.select(selectAccount);
+  readonly accountStatus$: Observable<Status> = 
+    this._store.select(selectStatus);
+  private _subscription = Subscription.EMPTY;
+  accountForm: FormGroup<{
+    name: FormControl<string | null>;
+    username: FormControl<string | null>;
+    password: FormControl<string | null>;
+    email: FormControl<string | null>;
+    phone: FormControl<string | null>;
+    avatar: FormControl<string | null>;
+  }> | undefined;
+  public hide = true;
 
-  constructor(private store: Store<AppState>) {
-    this.accountData$ = this.store.select(state => state.accountSlice.account);
-  }
+  constructor(
+    private _store: Store<AppState>,
+    private _formBuilder: FormBuilder
+  ) { }
 
   ngOnInit() {
-    this.store.dispatch(loadAccount());
+    this._store.dispatch(loadAccount());
+    this._subscription = this.accountData$.subscribe(data => {
+      if (data) {
+        this.accountForm = this._formBuilder.group({
+          name: [data.name],
+          username: [data.username],
+          password: [data.password],
+          email: [data.email],
+          phone: [data.phone],
+          avatar: [data.avatar]
+        });
+      }
+    });
+  }
+
+  updateAccountData() {
+    console.log(this.accountForm!.value);
+  }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
   }
 }
