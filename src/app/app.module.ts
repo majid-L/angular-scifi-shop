@@ -28,6 +28,9 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { notificationFeature } from './ngrx/notification/notification.feature';
 import { categoriesFeature } from './ngrx/categories/categories.feature';
 import { CategoriesEffects } from './ngrx/categories/categories.effects';
+import { WishlistModule } from './wishlist/wishlist.module';
+import { wishlistFeature } from './ngrx/wishlist/wishlist.feature';
+import { WishlistEffects } from './ngrx/wishlist/wishlist.effects';
 
 @NgModule({
   declarations: [
@@ -49,6 +52,7 @@ import { CategoriesEffects } from './ngrx/categories/categories.effects';
     ProductsModule,
     AccountModule,
     CartModule,
+    WishlistModule,
     CheckoutModule,
     OrdersModule,
     MaterialModule,
@@ -57,8 +61,10 @@ import { CategoriesEffects } from './ngrx/categories/categories.effects';
     StoreModule.forFeature(categoriesFeature),
     StoreModule.forFeature(accountFeature),
     StoreModule.forFeature(cartFeature),
+    StoreModule.forFeature(wishlistFeature),
     StoreModule.forFeature(notificationFeature),
     EffectsModule.forFeature(CategoriesEffects),
+    EffectsModule.forFeature(WishlistEffects),
     EffectsModule.forRoot([])
   ],
   providers: [],

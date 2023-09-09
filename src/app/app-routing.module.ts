@@ -9,12 +9,14 @@ import { SingleOrderComponent } from './orders/single-order/single-order.compone
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { NewOrderRedirectComponent } from './orders/new-order-redirect/new-order-redirect.component';
 import { SingleProductComponent } from './products/single-product/single-product.component';
+import { WishlistComponent } from './wishlist/wishlist/wishlist.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent},
   { path: "products", component: ProductListComponent },
   { path: "products/:id", component: SingleProductComponent },
   { path: "account", component: AccountComponent},
+  { path: "wishlist", component: WishlistComponent },
   { path: "orders", component: OrdersComponent },
   { path: "orders/new", component: NewOrderRedirectComponent },
   { path: "orders/:id", component: SingleOrderComponent },
