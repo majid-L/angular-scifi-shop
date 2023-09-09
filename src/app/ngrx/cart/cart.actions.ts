@@ -1,6 +1,9 @@
 import { createAction, props } from '@ngrx/store';
 
-export const loadCart = createAction("[Cart Component] Load Cart");
+export const loadCart = createAction(
+  "[Cart Component] Load Cart",
+  props<{ customerId: number }>()
+);
 
 export const loadCartSuccess = createAction(
   "[Cart Component] Cart Loaded - Success",
@@ -14,15 +17,25 @@ export const addToCart = createAction(
 
 export const removeCartItem = createAction(
   "[Cart Component] Remove Cart Item - Loading",
-  props<{ productId: number }>()
+  props<{ 
+    productId: number,
+    customerId: number
+  }>()
 );
 
 export const modifyQuantity = createAction(
   "[Cart Component] Modify Quantity - Loading",
-  props<{ productId: number, quantity: number }>()
+  props<{ 
+    productId: number, 
+    customerId: number,
+    quantity: number 
+  }>()
 );
 
-export const clearCart = createAction("[Cart Component] Clear Cart - Loading");
+export const clearCart = createAction(
+  "[Cart Component] Clear Cart - Loading",
+  props<{ customerId: number }>()
+);
 
 export const updateCartSuccess = createAction(
   "[Cart Component] Update Cart - Success",

@@ -49,3 +49,8 @@ export const deleteReviewSuccess = createAction(
 );
 
 export const resetReviewsStatus = createAction("[Reviews Component] Reset Status");
+
+export const updateActiveId = createAction(
+  "[Reviews Component] Update Active Id",
+  props<{ activeId: number }>()
+);

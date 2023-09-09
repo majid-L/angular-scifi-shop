@@ -10,7 +10,7 @@ import { createOrder, createOrderSuccess, deleteOrder, deleteOrderSuccess, loadO
 export class OrdersEffects {
   loadOrders$ = createEffect(() => this._actions$.pipe(
     ofType(loadOrders),
-    exhaustMap(() => this._ordersService.getOrders()
+    exhaustMap(({ customerId }) => this._ordersService.getOrders(customerId)
       .pipe(
         map(ordersResponse => loadOrdersSuccess(ordersResponse)),
         catchError(({ error }: { error: ApiError }) => of(httpError(error)))
@@ -20,8 +20,8 @@ export class OrdersEffects {
 
   loadSingleOrder$ = createEffect(() => this._actions$.pipe(
     ofType(loadSingleOrder),
-    exhaustMap(payload => {
-      return this._ordersService.getSingleOrder(payload.orderId)
+    exhaustMap(({ orderId, customerId }) => {
+      return this._ordersService.getSingleOrder(orderId, customerId)
       .pipe(
         map(singleOrderResponse => loadSingleOrderSuccess(singleOrderResponse)),
         catchError(({ error }: { error: ApiError }) => of(httpError(error)))
@@ -32,7 +32,7 @@ export class OrdersEffects {
 
   createOrder$ = createEffect(() => this._actions$.pipe(
     ofType(createOrder),
-    exhaustMap(payload => this._ordersService.createOrder(payload)
+    exhaustMap(({ newOrder, customerId }) => this._ordersService.createOrder(newOrder, customerId)
       .pipe(
         map(newOrderResponse => {
           return createOrderSuccess(newOrderResponse);
@@ -54,7 +54,7 @@ export class OrdersEffects {
 
   deleteOrder$ = createEffect(() => this._actions$.pipe(
     ofType(deleteOrder),
-    exhaustMap(({ orderId }) => this._ordersService.deleteOrder(orderId)
+    exhaustMap(({ orderId, customerId }) => this._ordersService.deleteOrder(orderId, customerId)
       .pipe(
         map(deletedOrderResponse => deleteOrderSuccess(deletedOrderResponse)),
         catchError(({ error }: { error: ApiError }) => of(httpError(error)))

@@ -7,6 +7,7 @@ import { httpError } from "../notification/notification.actions";
 import { CartService } from "src/app/cart/cart.service";
 import { Store } from "@ngrx/store";
 import { selectCartItems } from "./cart.feature";
+import { dispatchErrorAction } from "..";
 
 @Injectable()
 export class CartEffects {
@@ -17,21 +18,21 @@ export class CartEffects {
 
   loadCart$ = createEffect(() => this.actions$.pipe(
     ofType(loadCart),
-    exhaustMap(() => this.cartService.getCart()
+    exhaustMap(({ customerId }) => this.cartService.getCart(customerId)
     .pipe(
       map(cartResponse => loadCartSuccess(cartResponse.cart)),
-      catchError(({ error }: { error: ApiError }) => of(httpError(error)))
+      catchError(dispatchErrorAction)
     ))
   ));
 
   addToCart$ = createEffect(() => this.actions$.pipe(
     ofType(addToCart),
     withLatestFrom(this.store.select(selectCartItems)),
-    exhaustMap(([newItem, cartItems]) => {
-      return this.cartService.updateCart([ ...cartItems, newItem ])
+    exhaustMap(([cartItem, cartItems]) => {
+      return this.cartService.updateCart([ ...cartItems, cartItem ], cartItem.customerId)
       .pipe(
         map(cartResponse => this.formatActionPayload(cartResponse)),
-        catchError(({ error }: { error: ApiError }) => of(httpError(error)))
+        catchError(dispatchErrorAction)
       );
     })
   ));
@@ -39,12 +40,13 @@ export class CartEffects {
   removeCartItem$ = createEffect(() => this.actions$.pipe(
     ofType(removeCartItem),
     withLatestFrom(this.store.select(selectCartItems)),
-    exhaustMap(([{ productId }, cartItems]) => {
+    exhaustMap(([{ productId, customerId }, cartItems]) => {
       return this.cartService.updateCart(
-        cartItems.filter(item => item.productId !== productId)
+        cartItems.filter(item => item.productId !== productId),
+        customerId
       ).pipe(
          map(cartResponse => this.formatActionPayload(cartResponse)),
-         catchError(({ error }: { error: ApiError }) => of(httpError(error)))
+         catchError(dispatchErrorAction)
       );
     })
   ));
@@ -52,7 +54,7 @@ export class CartEffects {
   modifyQuantity$ = createEffect(() => this.actions$.pipe(
     ofType(modifyQuantity),
     withLatestFrom(this.store.select(selectCartItems)),
-    exhaustMap(([{ productId, quantity }, cartItems]) => {
+    exhaustMap(([{ productId, customerId, quantity }, cartItems]) => {
       return this.cartService.updateCart(
         cartItems.map(item => {
           if (item.productId === productId) {
@@ -60,20 +62,20 @@ export class CartEffects {
           } else {
             return item;
           }
-        })
+        }), customerId
       ).pipe(
          map(cartResponse => this.formatActionPayload(cartResponse)),
-         catchError(({ error }: { error: ApiError }) => of(httpError(error)))
+         catchError(dispatchErrorAction)
       );
     })
   ));
 
   clearCart$ = createEffect(() => this.actions$.pipe(
     ofType(clearCart),
-    exhaustMap(() => this.cartService.updateCart([])
+    exhaustMap(({ customerId }) => this.cartService.updateCart([], customerId)
     .pipe(
       map(cartResponse => this.formatActionPayload(cartResponse)),
-      catchError(({ error }: { error: ApiError }) => of(httpError(error)))
+      catchError(dispatchErrorAction)
     ))
   ));
 

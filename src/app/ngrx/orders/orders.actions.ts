@@ -1,6 +1,9 @@
 import { createAction, props } from "@ngrx/store";
 
-export const loadOrders = createAction("[Orders Component] Load Orders");
+export const loadOrders = createAction(
+  "[Orders Component] Load Orders",
+  props<{ customerId: number }>()
+);
 export const loadOrdersSuccess = createAction(
   "[Orders Component] Orders Loaded - Success",
   props<OrdersResponse>()
@@ -8,7 +11,10 @@ export const loadOrdersSuccess = createAction(
 
 export const loadSingleOrder = createAction(
   "[Single Order Component] Load Single Order",
-  props<{ orderId: string }>()
+  props<{ 
+    orderId: string,
+    customerId: number
+  }>()
 );
 export const loadSingleOrderSuccess = createAction(
   "[Single Order Component] Single Order Loaded - Success",
@@ -18,7 +24,10 @@ export const clearSingleOrder = createAction("[Single Order Component] Clear Sin
 
 export const createOrder = createAction(
   "[Checkout Component] Create Order - Loading",
-  props<NewOrderRequest>()
+  props<{
+    newOrder: NewOrderRequest,
+    customerId: number
+  }>()
 );
 export const createOrderSuccess = createAction(
   "[Checkout Component] Create Order - Success",
@@ -33,7 +42,10 @@ export const clearExpressCheckout = createAction("[Checkout Component] Remove Ex
 
 export const deleteOrder = createAction(
   "[Orders Component] Delete Order - Loading",
-  props<{ orderId: number }>()
+  props<{ 
+    customerId: number,
+    orderId: number
+  }>()
 );
 
 export const deleteOrderSuccess = createAction(
@@ -45,7 +57,8 @@ export const updateOrder = createAction(
   "[New Order - Redirect Component] Update Order - Loading",
   props<{ 
     status: string, 
-    orderId: number 
+    orderId: number,
+    customerId: number
   }>()
 );
 
