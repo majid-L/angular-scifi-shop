@@ -1,0 +1,71 @@
+<ng-container *ngIf="(loadStatus$ | async) === 'loading'">
+  <app-spinner></app-spinner>
+</ng-container>
+
+<div class="heading">
+  <img src="assets/order.svg">
+  <div>
+    <span class="bold"><mat-chip>Order #{{ orderId }}</mat-chip></span>
+  </div>
+</div>
+
+<ng-container *ngIf="singleOrder$ | async as order">
+  <main>
+    <section>
+      <ng-container *ngIf="(accountData$ | async) as customer">
+        <div>
+          <h1 class="username">{{ customer.username }}</h1>
+          <p class="name">{{ customer.name }}</p>
+        </div>
+      </ng-container>
+      <mat-divider></mat-divider>
+
+      <button *ngIf="(newOrder$ | async)?.id === order.id" disabled mat-raised-button class="new-notification">
+        <mat-icon>new_releases</mat-icon>
+        New order!
+      </button>
+
+      <div class="order">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <h2 class="bold">{{ formatTitle(order) }}</h2>
+          </mat-card-title>
+          <mat-card-subtitle>
+            Order #{{ order.id }}; placed on {{ order.createdAt | date: 'short' }}
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content [class.light-border]="lightModeEnabled">
+          <p class="list-title" [class.light-bg]="lightModeEnabled">{{ order.orderItems.length === 1 ? 'Order item' : 'Order items' }}</p>
+          <mat-list>
+            <mat-list-item *ngFor="let item of order.orderItems">
+              <div class="list-item-content">
+                <img class="product-image" [routerLink]="['/products', item.product.id]" [matTooltip]="item.product.description" matTooltipPosition="after" mat-card-image [src]="'assets/icons/transparent/' + item.product.thumbnail">
+                <div>
+                  <h3 [routerLink]="['/products', item.product.id]" class="product-name" matTooltip="Go to product page" matTooltipPosition="after" matListItemTitle>{{ item.product.name }}</h3>
+                  <p matListItemLine>{{ item.product.price | currency: '£' }}</p>
+                  <p matListItemLine>Quantity: {{ item.quantity }}</p>
+                </div>
+              </div>
+            </mat-list-item>
+            <br>
+          </mat-list>
+          <mat-progress-bar *ngIf="(deleteStatus$ | async) === 'loading'" mode="indeterminate"></mat-progress-bar>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-action-row>
+          <mat-chip><strong>Total:</strong> {{ order.total | currency: '£' }}</mat-chip>
+          <button (click)="deleteOrder()" class="delete" matTooltip="Delete order" matTooltipPosition="above" mat-fab color="warn" aria-label="Delete order">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-action-row>
+      </mat-card>
+      <div>
+        <app-addresses></app-addresses>
+      </div>
+      </div>
+    </section>      
+  </main>
+</ng-container>
+
