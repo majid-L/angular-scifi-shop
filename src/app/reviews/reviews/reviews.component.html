@@ -22,6 +22,14 @@
       </div>
 
       <mat-divider></mat-divider>
+
+      <div *ngIf="showCreateReviewButton" class="new-review">
+        <button mat-fab extended (click)="showDialog(newReviewTemplate!, 'create')" color="accent">
+          <mat-icon>add_comment</mat-icon>
+          Post a review
+        </button>
+      </div>
+      
       <mat-list>
         <mat-list-item *ngFor="let review of reviews">
           <mat-card>
@@ -43,7 +51,7 @@
 
               <mat-card-subtitle class="list-item-subtitle">
                   <p>Reviewed on {{ review.createdAt | date: 'short' }}</p>
-                  <span *ngIf="review.recommend" class="icon-with-text"><mat-icon color="primary">check</mat-icon>Recommended</span>
+                  <span *ngIf="review.recommend" class="icon-with-text"><mat-icon color="primary">thumb_up</mat-icon>Recommended</span>
               </mat-card-subtitle>
             </mat-card-header>
 
@@ -55,8 +63,16 @@
               </blockquote>
             </mat-card-content>
             <mat-card-actions *ngIf="review.customerId == (loggedInUserId$ | async)">
-              <button mat-raised-button (click)="showDialog(review)" color="primary">Edit review</button>
+              <button mat-raised-button (click)="showDialog(review, 'update')" color="primary">
+                <mat-icon>edit</mat-icon>
+                Edit review
+              </button>
+              <button mat-raised-button (click)="deleteReview(review.id)" color="warn">
+                <mat-icon>delete_forever</mat-icon>
+                Delete review
+              </button>
             </mat-card-actions>
+            <mat-progress-bar *ngIf="(reviewStatus$ | async) === 'loading' && (activeId$ | async) === review.id" mode="indeterminate"></mat-progress-bar>
             </mat-card>
         </mat-list-item>
       </mat-list>
@@ -69,7 +85,9 @@
   </ng-container>
 
   <ng-template #loading>
-    <mat-progress-spinner class="spinner" mode="indeterminate"></mat-progress-spinner>
-    <p class="italic">Loading reviews</p>
+    <ng-container *ngIf="(loadStatus$ | async) === 'loading'">
+      <mat-progress-spinner class="spinner" mode="indeterminate"></mat-progress-spinner>
+      <p class="italic">Loading reviews</p>
+    </ng-container>
   </ng-template>
 </section>
