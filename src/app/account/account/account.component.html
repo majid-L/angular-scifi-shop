@@ -1,25 +1,93 @@
-<p>account works!</p>
+<div class="heading">
+  <img src="assets/account.svg">
+</div>
 
-<ng-container *ngIf="accountData$ | async as accountData">
-  <section>
-    <h2>{{ accountData.name }}</h2>
-    <p>{{ accountData.email }}</p>
-    <p>{{ accountData.joinDate }}</p>
+<ng-container *ngLet="accountData$ | async as accountData">
+  <ng-container *ngIf="(accountStatus$ | async) === 'loading' && !accountData">
+    <div class="loading">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+      <p class="italic">Loading account data</p>
+    </div>
+  </ng-container>
+
+  <main *ngIf="accountData">
+    <section>
+      <h1 class="username">{{ accountData.username }}</h1>
+      <p class="name">{{ accountData.name }}</p>
+      <mat-divider></mat-divider>
+      <div class="container">
+        <div class="avatar-div">
+          <p class="email">{{ accountData.email }}</p>
+          <p class="join-date">Joined {{ accountData.joinDate | date }}</p>
+          <br>
+          <img class="avatar-image" [src]="accountData.avatar">
+        </div>
+        <div class="addresses">
+          <app-addresses></app-addresses>
+        </div>
+
+        <div class="account-panel">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Update account details</mat-panel-title>
+              <mat-panel-description>
+                Update as many or as few field as you would like.
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <form [formGroup]="accountForm!" (ngSubmit)="updateAccountData()">
+
+              <mat-form-field floatLabel="always">
+                <mat-label>Name</mat-label>
+                <input matInput type="text" formControlName="name" placeholder="Enter your name">
+              </mat-form-field>
+  
+              <mat-form-field floatLabel="always">
+                <mat-label>Username</mat-label>
+                <input matInput type="text" formControlName="username" placeholder="Enter your username">
+              </mat-form-field>
+  
+              <mat-form-field floatLabel="always">
+                <mat-label>Enter your password</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" placeholder="Enter your password">
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+              </mat-form-field>
+            
+             <button mat-stroked-button type="submit" color="primary">
+              <mat-icon>edit</mat-icon>
+              Update details
+            </button>
+            </form>
+          </mat-expansion-panel>
+        </div>
+
+        <div class="password-panel">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Change password</mat-panel-title>
+              <mat-panel-description>
+                Choose a new password.
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <form [formGroup]="accountForm!" (ngSubmit)="updateAccountData()">
     
-    <h3>Billing address</h3>
-    <p>{{ accountData.billingAddress?.addressLine1 }}</p>
-    <p>{{ accountData.billingAddress?.addressLine2 }}</p>
-    <p>{{ accountData.billingAddress?.city }}</p>
-    <p>{{ accountData.billingAddress?.county }}</p>
-    <p>{{ accountData.billingAddress?.postcode }}</p>
-
-    <h3>Shipping address</h3>
-    <p>{{ accountData.shippingAddress?.addressLine1 }}</p>
-    <p>{{ accountData.shippingAddress?.addressLine2 }}</p>
-    <p>{{ accountData.shippingAddress?.city }}</p>
-    <p>{{ accountData.shippingAddress?.county }}</p>
-    <p>{{ accountData.shippingAddress?.postcode }}</p>
-
-    <img [src]="accountData.avatar">
-  </section>
+              <mat-form-field floatLabel="always">
+                <mat-label>Enter your password</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" placeholder="Enter your password">
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+              </mat-form-field>
+            
+             <button mat-stroked-button type="submit" color="primary">
+              <mat-icon>edit</mat-icon>
+              Update password
+            </button>
+            </form>
+          </mat-expansion-panel>
+        </div>
+      </div>
+    </section>
+  </main>
 </ng-container>
