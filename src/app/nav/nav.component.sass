@@ -7,6 +7,9 @@
 .light
   background: lightgray
 
+.italic
+  text-align: center
+
 .sidenav-container
   height: 100%
 
@@ -88,8 +91,7 @@
   align-items: center
 
 .logo
-  width: 200px
-  margin-bottom: -10px
+  width: 160px
 
 .toolbar-image
   height: 90%
@@ -99,9 +101,16 @@
   left: 15%
   top: 7px
 
-@media (max-width: 380px)
+@media (max-width: 580px)
+  .logo
+    width: 100px
+    margin: 0 0 -5px -5px
+
+@media (max-width: 480px)
   .theme-toggle
     flex-direction: column-reverse
+    margin-top: -5px
+    gap: 5px
 
   .active-user-controls
     gap: 15px
@@ -109,12 +118,12 @@
   .theme-toggle .mat-icon
     font-size: 20px
 
-  .account-icon, .mat-mdc-mini-fab
+  .mat-mdc-mini-fab
     height: 30px
     width: 30px
 
   .mat-mdc-menu-trigger
-    margin-left: -20px
+    margin: 0 -10px 0 -20px
 
   .logo-container
     margin-left: -10px
