@@ -1,0 +1,20 @@
+<div class="heading">
+  <img src="assets/wishlist.svg">
+</div>
+
+<ng-container *ngIf="(wishlistLoadStatus$ | async) === 'loading'">
+  <div class="loading">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    <p class="italic">Loading account data</p>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="wishlist$ | async as wishlist">
+  <main>
+    <section>
+      <h1 class="username">{{ wishlist.username }}'s wishlist</h1>
+      <p class="name">{{ wishlist.name }}</p>
+      <mat-divider></mat-divider>
+    </section>
+  </main>
+</ng-container>

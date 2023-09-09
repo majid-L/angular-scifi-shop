@@ -1,6 +1,6 @@
 <div class="bg-overlay">
   <main>
-    <div class="bg heading">
+    <div id="products-heading" class="bg heading">
       <div class="header-flex">
         <img [src]="headerImageSrc" [class.negative-margin]="headerImageSrc.includes('suppliers')">
       <ng-container *ngIf="category">
@@ -28,14 +28,14 @@
       <mat-card class="product-card" *ngFor="let product of products">
   
         <div *ngIf="listDisplayStyle === 'list'" class="list-image">
-          <img mat-card-image [src]="'assets/icons/transparent/' + product.thumbnail">
+          <img class="product-image" mat-card-image [src]="'assets/icons/transparent/' + product.thumbnail">
         </div>
   
         <div class="product-card-content">
-          <mat-card-header [routerLink]="['/products', product.id]" class="product-card-header" [class.dark]="listDisplayStyle === 'grid'">
-            <mat-card-title class="product-title">{{ product.name }}</mat-card-title>
+          <mat-card-header class="product-card-header" [class.dark]="listDisplayStyle === 'grid'">
+            <mat-card-title [routerLink]="['/products', product.id]" class="product-title bring-to-front">{{ product.name }}</mat-card-title>
             
-            <div class="product-subtitle">
+            <div class="product-subtitle bring-to-front">
               <mat-chip>
                 <mat-icon class="icon" matChipAvatar>business</mat-icon>
                 <strong>{{ product.supplierName }}</strong>
@@ -46,7 +46,7 @@
               </mat-chip>
             </div>
   
-            <div class="product-header-stats">
+            <div class="product-header-stats bring-to-front">
               <mat-chip>
                 <igc-rating class="chip" [value]="product.averageRating" min="0" max="5" disabled></igc-rating>
               </mat-chip>
@@ -56,7 +56,7 @@
               </span>
             </div>
   
-            <div class="product-header-stats">
+            <div class="product-header-stats bring-to-front">
               <span class="icon-with-text">
                 <mat-icon color="primary">local_offer</mat-icon>
                 Ordered {{ product.numOfTimesOrdered }} times
@@ -67,7 +67,33 @@
               </span>
             </div>
   
-            <img *ngIf="listDisplayStyle === 'grid'" class="product-image" mat-card-image [src]="'assets/icons/black/' + product.thumbnail">
+            <img *ngIf="listDisplayStyle === 'grid'" [routerLink]="['/products', product.id]" class="product-image" mat-card-image [src]="'assets/icons/black/' + product.thumbnail">
+
+            <ng-container *ngIf="(wishlist$ | async) as wishlist">
+              <div class="product-card-overlay" [class.foreground]="listDisplayStyle === 'list'">
+                <ng-container *ngIf="!productIsInWishlist(product.id, wishlist); else alt">
+                  <div class="wishlist-button" [class.fit-content]="listDisplayStyle === 'list'">
+                    <button mat-fab extended (click)="updateWishlist(product.id, wishlist, 'add')" color="primary">
+                      <mat-icon>library_books</mat-icon>
+                      Add to wishlist
+                    </button>
+                  </div>
+                </ng-container>
+
+                <ng-template #alt>
+                  <mat-card class="wishlist-message-card" [class.push-right]="listDisplayStyle === 'list'">
+                    <p>You have added this product to your wishlist.</p>
+                    <mat-card-actions>
+                    <button class="remove" mat-fab extended (click)="updateWishlist(product.id, wishlist, 'remove')" color="warn">
+                      <mat-icon>delete</mat-icon>
+                      Remove
+                    </button>
+                    </mat-card-actions>
+                  </mat-card>
+                </ng-template>
+              </div>
+            </ng-container>
+           
           </mat-card-header>
           <mat-divider></mat-divider>
     
@@ -92,7 +118,7 @@
           </div>
         
   
-        <ng-container *ngIf="(cartUpdateStatus$ | async) === 'loading' && (activeId$ | async) === product.id">
+        <ng-container *ngIf="((cartUpdateStatus$ | async) === 'loading' && (cartActiveId$ | async) === product.id) || ((wishlistUpdateStatus$ | async) === 'loading' && (wishlistActiveId$ | async) === product.id)">
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         </ng-container>
       </div>

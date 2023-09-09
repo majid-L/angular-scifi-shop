@@ -2,10 +2,17 @@
   <div class="dialog">
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <div mat-dialog-content>
-      <ng-container *ngIf="data.error; else genericError">
-        <p>Status: {{ data.error.status }}</p>
-        <p>Detail: {{ data.error.info }}</p>
+      <ng-container *ngIf="data.error?.message; else apiError">
+        <p>Status: {{ data.error!.message }}</p>
+        <p>Detail: {{ data.error!.stack }}</p>
       </ng-container>
+
+      <ng-template #apiError>
+        <ng-container *ngIf="data.error; else genericError">
+          <p>Status: {{ data.error.status }}</p>
+          <p>Detail: {{ data.error.info }}</p>
+        </ng-container>
+      </ng-template>
 
       <ng-template #genericError>
         <ng-container *ngIf="data.title === 'There was an error.'; else notification">

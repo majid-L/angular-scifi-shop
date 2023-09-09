@@ -1,5 +1,5 @@
 <div class="bg-overlay">
-  <main *ngLet="(queryParams$ | async) as queryParams">
+  <main>
     <mat-card>
       <ng-container *ngIf="queryParams?.['redirect_status'] === 'succeeded'; else failed">
         <h1>Order succesfully completed.</h1>
