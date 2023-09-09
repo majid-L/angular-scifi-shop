@@ -1,0 +1,105 @@
+<ng-container *ngIf="(loadStatus$ | async) === 'loading'">
+  <app-spinner></app-spinner>
+</ng-container>
+
+<div class="heading">
+  <img src="assets/orders.svg">
+</div>
+
+  <ng-container *ngIf="orders$ | async as data">
+    <main>
+      <section>
+        <h1 class="username">{{ data.username }}</h1>
+        <p class="name">{{ data.name }}</p>
+        <mat-divider></mat-divider>
+        <h2>Order history</h2>
+        <ng-container *ngIf="data.orders.length > 0; else noOrders">
+          <mat-list>
+            <mat-list-item class="order-item" [class.light-border]="lightModeEnabled" *ngFor="let order of data.orders; last as last">
+              <div class="header">
+                <p class="bold">{{ formatTitle(order) }}</p>
+                <button (click)="deleteOrderById(order.id)" class="delete" mat-fab color="warn" aria-label="Delete order">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+              <button *ngIf="(newOrder$ | async)?.id === order.id" disabled mat-raised-button class="new-notification">
+                <mat-icon>new_releases</mat-icon>
+                New order!
+              </button>
+            
+              <div class="flex">
+                <ng-container *ngIf="(mediumViewport$ | async); else noTable">
+                  <table mat-table [dataSource]="[order]">
+                    <!-- Order date Column -->
+                    <ng-container matColumnDef="createdAt">
+                      <th mat-header-cell *matHeaderCellDef> Order date </th>
+                      <td mat-cell *matCellDef="let element"> {{ element.createdAt | date }} </td>
+                    </ng-container>
+                  
+                    <!-- Order total Column -->
+                    <ng-container matColumnDef="total">
+                      <th mat-header-cell *matHeaderCellDef> Order total </th>
+                      <td mat-cell *matCellDef="let element"> {{ element.total | currency: "£" }} </td>
+                    </ng-container>
+                  
+                    <!-- Payment method Column -->
+                    <ng-container matColumnDef="paymentMethod">
+                      <th mat-header-cell *matHeaderCellDef> Payment method </th>
+                      <td mat-cell *matCellDef="let element"> {{ element.paymentMethod }} </td>
+                    </ng-container>
+                  
+                    <!-- Status Column -->
+                    <ng-container matColumnDef="status">
+                      <th mat-header-cell *matHeaderCellDef> Order status </th>
+                      <td mat-cell *matCellDef="let element">
+                        <div class="status-column">
+                          <mat-icon *ngIf="element.status === 'completed'" class="green">check_circle</mat-icon>
+                          <mat-icon *ngIf="element.status === 'pending'" class="amber">error</mat-icon>
+                          <mat-icon *ngIf="element.status==='payment failed'" color="warn">cancel</mat-icon>
+                          {{ element.status }}
+                        </div>
+                      </td>
+                    </ng-container>
+                  
+                    <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: tableColumns;"></tr>
+                  </table>
+                </ng-container>
+
+                <ng-template #noTable>
+                    <mat-card>
+                      <p>Ordered on {{ order.createdAt | date }}</p>
+                      <p>Order total: <strong>{{ getOrderTotal(order) | currency: "£" }}</strong></p>
+                      <p>Payment method: {{ order.paymentMethod }}</p>
+                      <p>Status: {{ order.status }}</p>
+                    </mat-card>
+                </ng-template>
+                
+                <div class="gallery">
+                  <span 
+                    *ngFor="let item of order.orderItems" 
+                    [matBadge]="item.quantity"
+                    [matBadgeHidden]="item.quantity === 1"
+                    matBadgeSize="large"
+                    matBadgePosition="above after"
+                    matBadgeColor="warn">
+                    <img 
+                      [src]="'assets/icons/transparent/' + item.product.thumbnail"
+                      [matTooltip]="item.product.name"
+                      [routerLink]="['/products', item.product.id]">
+                  </span>
+                </div>
+                <button mat-stroked-button color="primary" [routerLink]="['/orders', order.id]">View order</button>
+                <mat-divider class="list-divider" [inset]="true" *ngIf="!last"></mat-divider>
+              </div>
+              <mat-progress-bar *ngIf="(deleteStatus$ | async) === 'loading' && activeId === order.id" mode="indeterminate"></mat-progress-bar>
+            </mat-list-item>
+          </mat-list>
+        </ng-container>
+
+        <ng-template #noOrders>
+          <p class="no-orders"><mat-icon>mood_bad</mat-icon>You have no orders.</p>
+        </ng-template>
+      </section>
+    </main>
+  </ng-container>
