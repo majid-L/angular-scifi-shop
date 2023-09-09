@@ -13,29 +13,27 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class CartSidebarComponent implements AfterViewInit {
   @Input() events: Observable<void> = EMPTY;
+  @Input() loggedInUserId: string | number | null | undefined;
   @ViewChild(MatSidenav) cart: MatSidenav | undefined;
   eventsSubscription: Subscription = Subscription.EMPTY;
   updateStatusSubscription: Subscription = Subscription.EMPTY;
-  cart$: Observable<Cart | null> = this.store.select(selectCart);
-  cartTotal$: Observable<number> = this.store.select(selectCartTotal);
-  loadStatus$: Observable<Status> = this.store.select(selectLoadStatus);
-  updateStatus$: Observable<Status> = this.store.select(selectUpdateStatus);
-  activeId$: Observable<number> = this.store.select(selectActiveId);
-  dataStream$: Observable<{ 
-    loadStatus: Status, 
-    updateStatus: Status,
-    activeId: number 
-  }>;
+  cart$: Observable<Cart | null> = this._store.select(selectCart);
+  cartTotal$: Observable<number> = this._store.select(selectCartTotal);
+  loadStatus$: Observable<Status> = this._store.select(selectLoadStatus);
+  updateStatus$: Observable<Status> = this._store.select(selectUpdateStatus);
+  activeId$: Observable<number> = this._store.select(selectActiveId);
+  dataStream$ = combineLatest([this.loadStatus$, this.updateStatus$, this.activeId$]).pipe(
+    map(([loadStatus, updateStatus, activeId]) => ({ loadStatus, updateStatus, activeId }))
+  );
   showDescription: { [productId: number]: boolean } = {};
   showForm: { [productId: number]: boolean } = {};
   quantitiesSubscription: Subscription = Subscription.EMPTY;
   quantities: { [productId: number]: number } = {};
 
-  constructor(private store: Store<AppState>, private _snackBar: MatSnackBar) {
-    this.dataStream$ = combineLatest([this.loadStatus$, this.updateStatus$, this.activeId$]).pipe(
-      map(([loadStatus, updateStatus, activeId]) => ({ loadStatus, updateStatus, activeId }))
-    );
-  }
+  constructor(
+    private _store: Store<AppState>, 
+    private _snackBar: MatSnackBar
+  ) { }
 
   ngOnInit() {
     this.quantitiesSubscription = this.cart$.subscribe(cart => {
@@ -69,22 +67,32 @@ export class CartSidebarComponent implements AfterViewInit {
   }
 
   modifyQuantity(productId: number, quantity: number) {
-    this.store.dispatch(updateActiveId({ activeId: productId }));
+    this._store.dispatch(updateActiveId({ activeId: productId }));
     if (quantity === 0) {
-      this.store.dispatch(removeCartItem({ productId }));
+      this._store.dispatch(removeCartItem({ 
+        productId, 
+        customerId: Number(this.loggedInUserId!) 
+      }));
     } else {
-      this.store.dispatch(modifyQuantity({ productId, quantity }));
+      this._store.dispatch(modifyQuantity({ 
+        productId, 
+        quantity,
+        customerId: Number(this.loggedInUserId!)
+      }));
     }
   }
 
   deleteItem(productId: number) {
-    this.store.dispatch(updateActiveId({ activeId: productId }));
-    this.store.dispatch(removeCartItem({ productId }));
+    this._store.dispatch(updateActiveId({ activeId: productId }));
+    this._store.dispatch(removeCartItem({ 
+      productId, 
+      customerId: Number(this.loggedInUserId!) 
+    }));
   }
 
   emptyCart() {
-    this.store.dispatch(updateActiveId({ activeId: -1 }));
-    this.store.dispatch(clearCart());
+    this._store.dispatch(updateActiveId({ activeId: -1 }));
+    this._store.dispatch(clearCart({ customerId: Number(this.loggedInUserId!) }));
   }
 
   toggleDescription(productId: number, show: boolean) {

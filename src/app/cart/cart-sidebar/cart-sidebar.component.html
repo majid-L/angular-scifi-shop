@@ -36,7 +36,7 @@
             <mat-card *ngFor="let item of cart.cartItems" class="item-card">
                 <mat-card-header class="item-header">
                   <h3>{{ item.product.name }}</h3>
-                  <img [src]="'assets/icons/transparent/t_' + item.product.thumbnail.slice(2)" [alt]="item.product.name">
+                  <img [src]="'assets/icons/transparent/' + item.product.thumbnail" [alt]="item.product.name">
                 </mat-card-header>
 
                 <mat-accordion>
@@ -76,7 +76,7 @@
                       </mat-error>
                     </mat-form-field>
                     <mat-action-row>
-                      <button mat-button color="primary" (click)="modifyQuantity(item.product.id, quantities[item.product.id])">Update</button>
+                      <button mat-button color="accent" (click)="modifyQuantity(item.product.id, quantities[item.product.id])">Update</button>
                     </mat-action-row>
                   </mat-expansion-panel>
                 </mat-accordion>

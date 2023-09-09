@@ -1,25 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Store } from '@ngrx/store';
+import { selectAccount } from '../ngrx/account/account.feature';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  userId = window.localStorage.getItem('userId');
-  endpointUrl = `https://taliphus.vercel.app/api/customers/${this.userId}/cart`;
+  private _url = `https://taliphus.vercel.app/api/customers`;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private _http: HttpClient
+  ) { }
 
-  getCart() {
-    return this.http.get<{ cart: Cart }>(
-      this.endpointUrl,
+  getCart(customerId: number) {
+    return this._http.get<{ cart: Cart }>(
+      `${this._url}/${customerId}/cart`,
       { withCredentials: true }
     );
   }
 
-  updateCart(updatedCart: CartItem[] | []) {
-    return this.http.put<{ cart: Cart | [] }>(
-      this.endpointUrl,
+  updateCart(updatedCart: CartItem[] | [], customerId: number) {
+    return this._http.put<{ cart: Cart | [] }>(
+      `${this._url}/${customerId}/cart`,
       updatedCart,
       { withCredentials: true }
     );
