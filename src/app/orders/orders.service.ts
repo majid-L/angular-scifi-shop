@@ -1,57 +1,53 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { selectLoggedInUserId } from '../ngrx/auth/auth.feature';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrdersService {
-  private _url = "";
+  private _url = "https://taliphus.vercel.app/api/customers";
 
   constructor(
-    private _http: HttpClient,
-    private _store: Store<AppState>
-  ) {
-    this._store.select(selectLoggedInUserId).subscribe(userId => {
-      this._url = `https://taliphus.vercel.app/api/customers/${userId}/orders`;
-    });
-  }
+    private _http: HttpClient
+  ) { }
 
-  getOrders() {
+  getOrders(customerId: number) {
     return this._http.get<OrdersResponse>(
-      this._url,
+      `${this._url}/${customerId}/orders`,
       { withCredentials: true }
     );
   }
 
-  getSingleOrder(orderId: string) {
+  getSingleOrder(orderId: string, customerId: number) {
     return this._http.get<SingleOrderResponse>(
-      `${this._url}/${orderId}`,
+      `${this._url}/${customerId}/orders/${orderId}`,
       { withCredentials: true }
     );
   }
 
-  createOrder(newOrder: NewOrderRequest) {
+  createOrder(newOrder: NewOrderRequest, customerId: number) {
     return this._http.post<NewOrderResponse>(
-      this._url,
+      `${this._url}/${customerId}/orders`,
       newOrder,
       { withCredentials: true }
     );
   }
 
-  updateOrder(requestBody: { status: string, orderId: number }) {
+  updateOrder(requestBody: { 
+    status: string, 
+    orderId: number,
+    customerId: number
+  }) {
     return this._http.put<SingleOrderResponse>(
-      `${this._url}/${requestBody.orderId}`,
+      `${this._url}/${requestBody.customerId}/orders/${requestBody.orderId}`,
       requestBody,
       { withCredentials: true }
     );
   }
 
-  deleteOrder(orderId: number) {
+  deleteOrder(orderId: number, customerId: number) {
     return this._http.delete<{ deletedOrder: SingleOrderResponse }>(
-      `${this._url}/${orderId}`,
+      `${this._url}/${customerId}/orders/${orderId}`,
       { withCredentials: true }
     );
   }
