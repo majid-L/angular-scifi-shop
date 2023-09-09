@@ -16,6 +16,8 @@ import { NgLetModule } from 'ng-let';
 import { ReviewsModule } from '../reviews/reviews.module';
 import { PaginationComponent } from './pagination/pagination.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { wishlistFeature } from '../ngrx/wishlist/wishlist.feature';
+import { WishlistEffects } from '../ngrx/wishlist/wishlist.effects';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     NgLetModule,
     ReviewsModule,
     StoreModule.forFeature(productsFeature),
-    EffectsModule.forFeature(ProductsEffects)
+    StoreModule.forFeature(wishlistFeature),
+    EffectsModule.forFeature(ProductsEffects),
+    EffectsModule.forFeature(WishlistEffects)
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

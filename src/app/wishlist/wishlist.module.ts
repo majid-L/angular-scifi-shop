@@ -5,6 +5,7 @@ import { StoreModule } from '@ngrx/store';
 import { wishlistFeature } from '../ngrx/wishlist/wishlist.feature';
 import { EffectsModule } from '@ngrx/effects';
 import { WishlistEffects } from '../ngrx/wishlist/wishlist.effects';
+import { MaterialModule } from '../material/material.module';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { WishlistEffects } from '../ngrx/wishlist/wishlist.effects';
   ],
   imports: [
     CommonModule,
+    MaterialModule,
     StoreModule.forFeature(wishlistFeature),
     EffectsModule.forFeature(WishlistEffects)
   ]

@@ -27,6 +27,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatTableModule } from '@angular/material/table';
 
 const materials = [
   MatToolbarModule,
@@ -55,7 +56,8 @@ const materials = [
   MatSelectModule,
   MatRadioModule,
   MatSlideToggleModule,
-  MatSliderModule
+  MatSliderModule,
+  MatTableModule
 ];
 
 @NgModule({

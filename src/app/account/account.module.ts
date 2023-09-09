@@ -5,6 +5,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { AccountEffects } from '../ngrx/account/account.effects';
 import { AddressesComponent } from './addresses/addresses.component';
 import { MaterialModule } from '../material/material.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgLetModule } from 'ng-let';
 
 @NgModule({
   declarations: [
@@ -14,6 +16,8 @@ import { MaterialModule } from '../material/material.module';
   imports: [
     CommonModule,
     MaterialModule,
+    ReactiveFormsModule,
+    NgLetModule,
     EffectsModule.forFeature(AccountEffects)
   ],
   exports: [
