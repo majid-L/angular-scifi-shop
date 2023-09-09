@@ -1,9 +1,14 @@
 <div class="action-buttons">
   <ng-container *ngIf="cartIncludesItem(cart$ | async); else showButton">
-  <p class="added-to-cart">
-    <mat-icon>check_circle</mat-icon>
-    Added to cart
-  </p>
+    <div class="flex">
+      <p class="added-to-cart" [class.green]="lightModeEnabled">
+        <mat-icon>check_circle</mat-icon>
+        Added to cart
+      </p>
+      <button mat-fab (click)="removeFromCart()" color="warn" matTooltip="Remove from cart" matTooltipPosition="above" aria-label="Remove item from cart">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
 </ng-container>
 
 <ng-template #showButton>

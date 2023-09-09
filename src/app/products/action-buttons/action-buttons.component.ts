@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { addToCart, updateActiveId } from 'src/app/ngrx/cart/cart.actions';
+import { Observable, Subscription } from 'rxjs';
+import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
+import { addToCart, removeCartItem, updateActiveId } from 'src/app/ngrx/cart/cart.actions';
 import { selectCartItems } from 'src/app/ngrx/cart/cart.feature';
 import { ProductDialogComponent } from '../product-dialog/product-dialog.component';
 
@@ -13,14 +14,33 @@ import { ProductDialogComponent } from '../product-dialog/product-dialog.compone
 })
 export class ActionButtonsComponent {
   @Input() product: Product | undefined;
-  private _loggedInUserId: string | null = window.localStorage.getItem('userId');
   readonly cart$: Observable<CartItem[] | [] | null> =
-    this._store.select(selectCartItems);
+  this._store.select(selectCartItems);
+  private readonly _loggedInUserId$: Observable<number | string | null> = 
+    this._store.select(selectLoggedInUserId);
+  private _loggedInUserId: string | number | null | undefined;
+  private _subscription = Subscription.EMPTY;
 
   constructor(
     private _store: Store<AppState>,
     public dialog: MatDialog
   ) { }
+
+  ngOnInit() {
+    this._subscription = this._loggedInUserId$.subscribe(id => {
+      if (id) {
+        this._loggedInUserId = id;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
+  }
+
+  get lightModeEnabled() {
+    return document.body.classList.contains("light-mode");
+  }
 
   showDialog() {
     const { id, name, price, stock, thumbnail } = this.product!;
@@ -37,11 +57,19 @@ export class ActionButtonsComponent {
 
   addToCart() {
     this._store.dispatch(updateActiveId({ activeId: this.product!.id }));
-    this._store.dispatch(addToCart({ 
+    this._store.dispatch(addToCart({
       productId: this.product!.id,
-      customerId: Number(this._loggedInUserId),
-      quantity: 1
-     }));
+      quantity: 1,
+      customerId: Number(this._loggedInUserId)
+    }));
+  }
+
+  removeFromCart() {
+    this._store.dispatch(updateActiveId({ activeId: this.product!.id }));
+    this._store.dispatch(removeCartItem({ 
+      productId: this.product!.id, 
+      customerId: Number(this._loggedInUserId) 
+    }));
   }
 
   cartIncludesItem(cartItems: CartItem[] | null) {
