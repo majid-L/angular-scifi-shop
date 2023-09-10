@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { combineLatest, map, Observable, Subscription } from 'rxjs';
+import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
 import { notify } from 'src/app/ngrx/notification/notification.actions';
 import { updateOrder } from 'src/app/ngrx/orders/orders.actions';
 
@@ -12,7 +13,14 @@ import { updateOrder } from 'src/app/ngrx/orders/orders.actions';
 })
 export class NewOrderRedirectComponent {
   private _subscription = Subscription.EMPTY;
-  readonly queryParams$: Observable<Params> = this._route.queryParams;
+  private readonly _loggedInUserId$: Observable<number | string | null> = 
+    this._store.select(selectLoggedInUserId);
+  private readonly _dataStream$ = 
+    combineLatest([this._loggedInUserId$, this._route.queryParams])
+    .pipe(map(([loggedInUserId, queryParams]) => {
+      return { loggedInUserId, queryParams }
+    }));
+  public queryParams: Params | undefined;
 
   constructor(
     private _route: ActivatedRoute,
@@ -21,7 +29,11 @@ export class NewOrderRedirectComponent {
   ) { }
 
   ngOnInit() {
-    this._subscription = this._route.queryParams.subscribe(queryParams => {
+    this._subscription = this._dataStream$.subscribe(({ loggedInUserId, queryParams }) => {
+      if (!loggedInUserId) return;
+      const customerId = Number(loggedInUserId);
+      this.queryParams = queryParams;
+
       if (!queryParams["redirect_status"]) {
         return this._router.navigate(['/']);
       }
@@ -33,7 +45,8 @@ export class NewOrderRedirectComponent {
           }));
           this._store.dispatch(updateOrder({ 
             orderId: queryParams["order_id"], 
-            status: "payment failed" 
+            status: "payment failed",
+            customerId
           }));
         } else if (queryParams["redirect_status"] === "succeeded") {
           this._store.dispatch(notify({ 
@@ -43,7 +56,8 @@ export class NewOrderRedirectComponent {
           }));
           this._store.dispatch(updateOrder({ 
             orderId: queryParams["order_id"], 
-            status: "completed" 
+            status: "completed",
+            customerId
           }));
         }
          this._router.navigate([], {
