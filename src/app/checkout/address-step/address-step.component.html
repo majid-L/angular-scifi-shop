@@ -1,7 +1,10 @@
 <ng-container *ngLet="type!.slice(0, -7) as addressType">
-  <section>
-  <h2>Select {{ addressType }} address.</h2>
-  <mat-card *ngIf="existingAddress as address">
+  <section [class.margin-left]="isCheckout">
+  <h2 *ngIf="isCheckout">Select {{ addressType }} address.</h2>
+  <p *ngIf="isCheckout && !existingAddress" class="subtitle">Your account is missing a {{ addressType }} address. Use the form below to provide a new address.</p>
+  <mat-card 
+  *ngIf="isCheckout && existingAddress as address"
+  [class.extra-margin]="isCheckout">
     <mat-card-header>
       <h3>{{ addressType[0].toUpperCase() + addressType.slice(1) }} address</h3>
     </mat-card-header>
@@ -13,13 +16,18 @@
       <p>{{ address.postcode }}</p>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button matStepperNext (click)="useAddress({ address, type, useExisting: true })" color="primary" class="address-button" [disabled]="useExisting?.[type!]"><mat-icon *ngIf="useExisting?.[type!]">check_circle</mat-icon>Use existing address</button>
+      <button mat-raised-button matStepperNext (click)="useAddress({ address, type, useExisting: true })" color="primary" class="address-button"><mat-icon style="color: yellow" *ngIf="useExisting?.[type!]">check_circle</mat-icon>Use existing address</button>
     </mat-card-actions>
+    <mat-card-footer *ngIf="useExisting?.[type!]">
+      <p class="footer-text">This address will be used for your order.</p>
+    </mat-card-footer>
   </mat-card>
 
-  <form (ngSubmit)="handleSubmit($event)" [formGroup]="addressFormGroup!">
-    <h3>Enter new {{ addressType }} address</h3>
-    <mat-expansion-panel>
+  <h3 *ngIf="isCheckout">Enter new {{ addressType }} address</h3>
+  <form [formGroup]="addressFormGroup!">
+    <mat-expansion-panel 
+    [expanded]="view === 'account' && (updateStatus$ | async) !== 'success' && (deleteStatus$ | async) !== 'success' && (activeItem$ | async) === type"
+    [class.extra-margin]="isCheckout">
       <mat-expansion-panel-header>
         <mat-panel-title>
           {{ addressType[0].toUpperCase() + addressType.slice(1) }} address
@@ -30,7 +38,10 @@
       <mat-form-field subscriptSizing="dynamic">
         <mat-label>Address line 1</mat-label>
         <input matInput placeholder="e.g. 123 Fake Street" formControlName="addressLine1" required>
-        <mat-error *ngIf="hasError">{{ getErrorMessage() }}</mat-error>
+        <mat-error *ngIf="addressLine1.invalid && (addressLine1.dirty || addressLine1.touched)">
+          <span *ngIf="addressLine1.errors?.['required']">Address line 1 is required.</span>
+          <span *ngIf="addressLine1.errors?.['pattern']">Address line 1 cannot be blank.</span>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field subscriptSizing="dynamic">
@@ -41,7 +52,10 @@
       <mat-form-field subscriptSizing="dynamic">
         <mat-label>City</mat-label>
         <input matInput placeholder="e.g. New Caprica" formControlName="city" required>
-        <mat-error *ngIf="hasError">{{ getErrorMessage() }}</mat-error>
+        <mat-error *ngIf="city.invalid && (city.dirty || city.touched)">
+          <span *ngIf="city.errors?.['required']">City is required.</span>
+          <span *ngIf="city.errors?.['pattern']">City cannot be blank.</span>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field subscriptSizing="dynamic">
@@ -52,16 +66,22 @@
       <mat-form-field subscriptSizing="dynamic">
         <mat-label>Postcode</mat-label>
         <input matInput placeholder="e.g. GV12 7LX" formControlName="postcode" required>
-        <mat-error *ngIf="hasError">{{ getErrorMessage() }}</mat-error>
+        <mat-error *ngIf="postcode.invalid && (postcode.dirty || postcode.touched)">
+          <span *ngIf="postcode.errors?.['required']">Postcode is required.</span>
+          <span *ngIf="postcode.errors?.['pattern']">Postcode cannot be blank.</span>
+        </mat-error>
       </mat-form-field>
     
     <mat-action-row>
-      <button type="button" class="address-button" mat-raised-button color="primary">Use this address</button>
+      <ng-container>
+        <button *ngIf="isCheckout; else altButton" type="button" matStepperNext (click)="handleSubmit()" class="address-button" mat-raised-button color="primary" [disabled]="!addressFormGroup!.valid">Use this address</button>
+      </ng-container>
+
+      <ng-template #altButton>
+        <button type="button" (click)="handleSubmit()" class="address-button" mat-raised-button color="primary" [disabled]="!addressFormGroup!.valid">Confirm address</button>
+      </ng-template>
     </mat-action-row>
     </mat-expansion-panel>
-    <!-- <div>
-      <button mat-button matStepperNext>Next</button>
-    </div> -->
   </form>
 </section>
 </ng-container>
