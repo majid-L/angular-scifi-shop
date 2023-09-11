@@ -1,18 +1,60 @@
-<ng-container *ngIf="(addresses$ | async) as addresses">
-  <div class="addresses">
+  <div 
+    *ngLet="(activeItem$ | async) as activeItem" 
+    class="addresses" 
+    [class.flex-row]="component === 'account'">
     <ng-container *ngFor="let address of addresses | keyvalue">
         <mat-card class="address">
             <mat-card-header>
               <mat-card-title>
-                <h2 class="bold">{{ address.key }} address</h2>
+                <h2 class="bold">{{ address.key[0].toUpperCase() + address.key.slice(1) }} address</h2>
               </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <ng-container *ngFor="let field of address.value | keyvalue">
-                <p *ngIf="field.value && field.key !== 'id'">{{ field.value }}</p>
-              </ng-container>
+
+                <ng-container *ngIf="address.value; else noAddress">
+                  <ng-container *ngFor="let field of address.value | keyvalue">
+                    <p *ngIf="field.value && field.key !== 'id'">{{ field.value }}</p>
+                  </ng-container>
+                </ng-container>
+  
+                <ng-template #noAddress>
+                  <p>You haven't added a {{ address.key }} address yet.</p>
+                </ng-template>
+
+                <app-address-step
+                  *ngIf="formIsShown(address.key)"
+                  view="account"
+                  [type]="address.key === 'billing' ? 'billingAddress' : 'shippingAddress'"
+                  [addressFormGroup]="address.key === 'billing' ? billingAddressFormGroup : shippingAddressFormGroup"
+                  [existingAddress]="address.value"
+                  [useExisting]="useExisting"
+                  (addressEvent)="createOrUpdateAddress($event)">
+                </app-address-step>
             </mat-card-content>
+
+            <mat-action-row>
+              <button mat-stroked-button (click)="toggleForm(address.key)" class="toggle-form" color="accent">
+                <ng-container *ngIf="formIsShown(address.key); else altText">
+                  <mat-icon>visibility_off</mat-icon>
+                  <span>Hide form</span>
+                </ng-container>
+
+                <ng-template #altText>
+                  <mat-icon>{{ address.value ? "edit" : "add" }}</mat-icon>
+                  <span>{{ address.value ? "Update" : "Add" }} {{ address.key }} address</span>
+                </ng-template>
+              </button>
+
+              <ng-container *ngIf="address.value">
+                <button mat-raised-button (click)="removeAddress(address.value, address.key)" class="delete-address" color="warn">
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete {{ address.key }} address</span>
+                </button>
+              </ng-container>
+            </mat-action-row>
+
+            <mat-progress-bar *ngIf="((updateStatus$ | async) === 'loading' || (deleteStatus$ | async) === 'loading') && activeItem === address.key + 'Address'" mode="indeterminate"></mat-progress-bar>
+
           </mat-card>
       </ng-container>
   </div>
-</ng-container>
