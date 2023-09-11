@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { selectActiveItem, selectDeleteStatus, selectUpdateStatus } from 'src/app/ngrx/account/account.feature';
 
 type RequiredAddressField = "addressLine1" | "city" | "postcode";
 
@@ -9,32 +12,29 @@ type RequiredAddressField = "addressLine1" | "city" | "postcode";
   styleUrls: ['./address-step.component.sass']
 })
 export class AddressStepComponent {
-  @Input() addressFormGroup: FormGroup<{
-    addressLine1: FormControl<string | null>;
-    addressLine2: FormControl<string | null>;
-    city: FormControl<string | null>;
-    county: FormControl<string | null>;
-    postcode: FormControl<string | null>;
-  }> | undefined;
+  @Input() addressFormGroup: AddressFormGroup | undefined;
   @Input() existingAddress: Address | null | undefined;
+  @Input() view: "checkout" | "account" | undefined;
   @Input() type: "billingAddress" | "shippingAddress" | undefined;
   @Input() useExisting: { billingAddress: boolean, shippingAddress: boolean } | undefined;
   @Output() addressEvent = new EventEmitter<AddressEmitData>();
+  isCheckout: boolean | undefined;
+  readonly updateStatus$: Observable<Status> = this._store.select(selectUpdateStatus);
+  readonly deleteStatus$: Observable<Status> = this._store.select(selectDeleteStatus);
+  readonly activeItem$: Observable<AccountActiveItem> = 
+    this._store.select(selectActiveItem);
 
-  getErrorMessage() {
-    let msg = '';
-    const requiredFields: RequiredAddressField[] = ["addressLine1", "city", "postcode"];
-    requiredFields.forEach((field: RequiredAddressField) => {
-      if (this.addressFormGroup?.controls[field].hasError('required')) {
-        msg = 'You must enter a value.';
-      }
-    });
-    return msg;
+  constructor(
+    private _store: Store<AppState>
+  ) { }
+
+  ngOnInit() {
+    this.isCheckout = this.view === "checkout";
   }
 
-  get hasError() {
-    return this.addressFormGroup!.invalid;
-  }
+  get addressLine1() { return this.addressFormGroup!.get("addressLine1")!; }
+  get city() { return this.addressFormGroup!.get("city")!; }
+  get postcode() { return this.addressFormGroup!.get("postcode")!; }
 
   clearValidators() {
     for (const field in this.addressFormGroup!.controls) {
@@ -54,8 +54,12 @@ export class AddressStepComponent {
     }
   }
 
-  handleSubmit(e: Event) {
-    console.log(e);
+  handleSubmit() {
+    this.useAddress({ 
+      address: this.addressFormGroup!.value as Address, 
+      type: this.type, 
+      useExisting: false 
+    })
   }
 
   useAddress(data: AddressEmitData) {
