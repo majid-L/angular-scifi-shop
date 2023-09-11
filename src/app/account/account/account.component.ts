@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { loadAccount } from 'src/app/ngrx/account/account.actions';
-import { selectAccount, selectLoadStatus, selectUpdateStatus, selectDeleteStatus } from 'src/app/ngrx/account/account.feature';
+import { loadAccount, resetStatus, updateAccount, updateActiveItem } from 'src/app/ngrx/account/account.actions';
+import { selectAccount, selectLoadStatus, selectUpdateStatus, selectDeleteStatus, selectActiveItem } from 'src/app/ngrx/account/account.feature';
 import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
 
 @Component({
@@ -18,20 +18,23 @@ export class AccountComponent implements OnInit {
     this._store.select(selectAccount);
   readonly accountLoadStatus$: Observable<Status> = 
     this._store.select(selectLoadStatus);
+  // account update status
+  // account active item
   private _accountDataSubscription = Subscription.EMPTY;
-  accountForm: FormGroup<{
-    name: FormControl<string | null>;
-    username: FormControl<string | null>;
-    email: FormControl<string | null>;
-    phone: FormControl<string | null>;
-    avatar: FormControl<string | null>;
-  }> | undefined;
+  private _loggedInUserIdSubscription = Subscription.EMPTY;
+  private _loggedInUserId: number | undefined;
+  accountForm = this._formBuilder.group({
+    name: [""],
+    username: [""],
+    email: [""],
+    phone: [""],
+    avatar: [""]
+  });
   passwordField = ["", [Validators.required, Validators.minLength(6), Validators.pattern(/[A-Z]+/), Validators.pattern(/\d+/)]];
   passwordForm = this._formBuilder.group({
     password: this.passwordField,
     passwordConfirm: this.passwordField
   });
-  passwordsDoNotMatch = false;
   public hide = true;
 
   constructor(
@@ -40,24 +43,29 @@ export class AccountComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this._accountDataSubscription = this.loggedInUserId$.subscribe(id => {
+    this._loggedInUserIdSubscription = this.loggedInUserId$.subscribe(id => {
       if (id) {
+        this._loggedInUserId = Number(id);
         this._store.dispatch(loadAccount({ customerId: Number(id) }));
       }
     });
     this._accountDataSubscription = this.accountData$.subscribe(data => {
       if (data) {
         this.accountForm = this._formBuilder.group({
-          name: [data.name],
-          username: [data.username],
+          name: [data.name, Validators.pattern(/[\S]+/)],
+          username: [data.username, Validators.pattern(/[\S]+/)],
           email: [data.email, Validators.email],
-          phone: [data.phone],
-          avatar: [data.avatar]
+          phone: [data.phone, [Validators.pattern(/^[^a-zA-Z]+$/), Validators.pattern(/[\S]+/)]],
+          avatar: [data.avatar, Validators.pattern(/[\S]+/)]
         });
       }
     });
   }
 
+  get name() { return this.accountForm.get("email"); }
+  get username() { return this.accountForm.get("email"); }
+  get avatar() { return this.accountForm.get("avatar"); }
+  get phone() { return this.accountForm.get("phone"); }
   get password() { return this.passwordForm.get("password"); }
   get passwordConfirm() { return this.passwordForm.get("passwordConfirm"); }
 
@@ -81,6 +89,12 @@ export class AccountComponent implements OnInit {
   }
 
   updateAccountData() {
+    this._store.dispatch(resetStatus());
+    this._store.dispatch(updateActiveItem({ activeItem: "account" }));
+    this._store.dispatch(updateAccount({
+      requestBody: this.accountForm.value as UpdateCustomerRequest,
+      customerId: this._loggedInUserId!
+    }));
   }
 
   updatePassword() {
@@ -89,5 +103,6 @@ export class AccountComponent implements OnInit {
 
   ngOnDestroy() {
     this._accountDataSubscription.unsubscribe();
+    this._loggedInUserIdSubscription.unsubscribe();
   }
 }
