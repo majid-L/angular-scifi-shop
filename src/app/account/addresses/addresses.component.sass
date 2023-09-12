@@ -4,11 +4,32 @@
   gap: 13px
   margin-bottom: 15px
 
+.flex-row
+  flex-direction: row
+
 .address
   min-width: 250px
+  height: fit-content
 
   .mat-mdc-card-content
     margin: 0
+    padding: 10px 15px 15px
+
+.toggle-form, .delete-address
+  margin: 5px 0
+  width: 100%
+
+::ng-deep .mdc-button__label
+  display: flex
+  align-items: center
+  gap: 5px
+
+.mat-mdc-button-base
+  margin: 5px 0 !important
+
+.mat-action-row
+  padding: 15px
+  flex-direction: column
 
 p
   margin: 2px 0
@@ -16,3 +37,7 @@ p
 h2
   margin: 0 0 5px
   font-size: 20px
+
+.spinner
+  margin: 10px auto 15px !important
+  height: 50px !important

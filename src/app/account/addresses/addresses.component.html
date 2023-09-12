@@ -16,6 +16,12 @@
                     <p *ngIf="field.value && field.key !== 'id'">{{ field.value }}</p>
                   </ng-container>
                 </ng-container>
+
+                <!-- <ng-template #loading>
+                  <ng-container *ngIf="!address.value && loadStatus === 'loading'; else noAddress">
+                    <mat-progress-spinner class="spinner" mode="indeterminate"></mat-progress-spinner>
+                  </ng-container>
+                </ng-template> -->
   
                 <ng-template #noAddress>
                   <p>You haven't added a {{ address.key }} address yet.</p>
@@ -32,7 +38,7 @@
                 </app-address-step>
             </mat-card-content>
 
-            <mat-action-row>
+            <mat-action-row *ngIf="component === 'account'">
               <button mat-stroked-button (click)="toggleForm(address.key)" class="toggle-form" color="accent">
                 <ng-container *ngIf="formIsShown(address.key); else altText">
                   <mat-icon>visibility_off</mat-icon>
