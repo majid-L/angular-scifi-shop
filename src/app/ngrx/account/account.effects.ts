@@ -48,8 +48,8 @@ export class AccountEffects {
 
   deleteAddress$ = createEffect(() => this._actions$.pipe(
     ofType(deleteAddress),
-    exhaustMap(({ addressId, customerId }) => {
-      return this._accountService.deleteAddress(addressId, customerId)
+    exhaustMap(({ addressId, addressIdType, customerId }) => {
+      return this._accountService.deleteAddress(addressId, addressIdType, customerId)
       .pipe(
         map(response => deleteAddressSuccess(response)),
         catchError(dispatchErrorAction)

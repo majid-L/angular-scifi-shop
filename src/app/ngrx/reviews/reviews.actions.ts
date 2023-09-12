@@ -18,6 +18,15 @@ export const loadCustomerReviewsSuccess = createAction(
   props<ReviewsResponse>()
 );
 
+export const loadFavorites = createAction(
+  "[Favorites Component] Load Favorites",
+  props<{ customerId: number }>()
+);
+export const loadFavoritesSuccess = createAction(
+  "[Favorites Component] Load Favorites - Success",
+  props<FavoritesResponse>()
+);
+
 export const createReview = createAction(
   "[Reviews Component] Create Review - Loading",
   props<NewReviewRequest>()

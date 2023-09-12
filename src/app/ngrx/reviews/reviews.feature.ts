@@ -1,6 +1,6 @@
 import { createFeature, createReducer, createSelector, on } from "@ngrx/store"
 import { httpError } from "../notification/notification.actions";
-import { createReview, createReviewSuccess, deleteReview, deleteReviewSuccess, loadCustomerReviews, loadCustomerReviewsSuccess, loadProductReviews, loadProductReviewsSuccess, resetReviewsStatus, updateActiveId, updateReview, updateReviewSuccess } from "./reviews.actions";
+import { createReview, createReviewSuccess, deleteReview, deleteReviewSuccess, loadCustomerReviews, loadCustomerReviewsSuccess, loadFavorites, loadFavoritesSuccess, loadProductReviews, loadProductReviewsSuccess, resetReviewsStatus, updateActiveId, updateReview, updateReviewSuccess } from "./reviews.actions";
 
 export const initialState: ReviewsState = {
   pagination: {
@@ -9,6 +9,7 @@ export const initialState: ReviewsState = {
     totalResults: 0
   },
   reviews: null,
+  favorites: null,
   singleReview: null,
   activeId: -1,
   loadStatus: "pending",
@@ -21,7 +22,8 @@ export const reviewsReducer = createReducer(
   initialState,
   on(
     loadCustomerReviews, 
-    loadProductReviews, 
+    loadProductReviews,
+    loadFavorites,
     state => ({ ...state, loadStatus: "loading" as const })
   ),
   on(
@@ -33,6 +35,16 @@ export const reviewsReducer = createReducer(
         loadStatus: "success" as const,
         pagination: { page, count, totalResults },
         reviews
+      }
+  }),
+  on(
+    loadFavoritesSuccess,
+    (state, { page, count, totalResults, favorites }) => {
+      return {
+        ...state,
+        loadStatus: "success" as const,
+        pagination: { page, count, totalResults },
+        favorites
       }
   }),
   on(createReview, state => ({ ...state, createStatus: "loading" as const })),
@@ -128,6 +140,7 @@ export const {
   selectDeleteStatus,
   selectLoadStatus,
   selectReviews,
+  selectFavorites,
   selectPagination,
   selectSingleReview,
   selectActiveId,

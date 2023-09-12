@@ -10,6 +10,8 @@ import {
     deleteReviewSuccess, 
     loadCustomerReviews, 
     loadCustomerReviewsSuccess, 
+    loadFavorites, 
+    loadFavoritesSuccess, 
     loadProductReviews, 
     loadProductReviewsSuccess, 
     updateReview,
@@ -36,6 +38,18 @@ export class ReviewsEffects {
       .pipe(
         map(reviewsResponse => {
           return loadCustomerReviewsSuccess(reviewsResponse);
+        }),
+        catchError(dispatchErrorAction)
+      )
+    )
+  ));
+
+  $loadFavorites = createEffect(() => this._actions$.pipe(
+    ofType(loadFavorites),
+    exhaustMap(({ customerId }) => this._reviewsService.getFavorites(customerId)
+      .pipe(
+        map(favoritesResponse => {
+          return loadFavoritesSuccess(favoritesResponse);
         }),
         catchError(dispatchErrorAction)
       )

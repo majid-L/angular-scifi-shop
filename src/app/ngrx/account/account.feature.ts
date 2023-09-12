@@ -1,9 +1,10 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { httpError } from '../notification/notification.actions';
-import { clearCurrentUser, createOrUpdateAddress, createOrUpdateAddressSuccess, deleteAddress, deleteAddressSuccess, deleteUser, deleteUserSuccess, loadAccount, loadAccountSuccess, updateAccount, updateAccountSuccess } from './account.actions';
+import { clearCurrentUser, createOrUpdateAddress, createOrUpdateAddressSuccess, deleteAddress, deleteAddressSuccess, deleteUser, deleteUserSuccess, loadAccount, loadAccountSuccess, updateAccount, updateAccountSuccess, updateActiveItem, resetStatus } from './account.actions';
 
 const initialState: AccountState = {
   account: null,
+  activeItem: null,
   loadStatus: "pending",
   updateStatus: "pending",
   deleteStatus: "pending"
@@ -44,7 +45,7 @@ export const accountReducer = createReducer(
   on(updateAccountSuccess, (state, payload) => ({
     ...state,
     account: payload,
-    updateStatus: "loading" as const
+    updateStatus: "success" as const
   })),
   on(createOrUpdateAddressSuccess, (state, payload) => {
     if (payload.hasOwnProperty("newAddress")) {
@@ -87,8 +88,20 @@ export const accountReducer = createReducer(
     account: null,
     deleteStatus: "success" as const
   })),
+  on(updateActiveItem, (state, payload) => ({ ...state, activeItem: payload.activeItem })),
   on(clearCurrentUser, state => ({ ...state, account: null })),
-  on(httpError, state => ({ ...state, status: "error" as const }))
+  on(resetStatus, state => ({
+    ...state,
+    loadStatus: "pending" as const,
+    updateStatus: "pending" as const,
+    deleteStatus: "pending" as const
+  })),
+  on(httpError, state => ({ 
+    ...state, 
+    loadStatus: "error" as const,
+    updateStatus: "error" as const,
+    deleteStatus: "error" as const
+  }))
 );
 
 export const accountFeature = createFeature({
@@ -112,5 +125,6 @@ export const {
   selectUpdateStatus,
   selectDeleteStatus,
   selectBillingAddress,
-  selectShippingAddress
+  selectShippingAddress,
+  selectActiveItem
 } = accountFeature;

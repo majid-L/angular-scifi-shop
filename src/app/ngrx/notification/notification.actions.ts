@@ -13,6 +13,12 @@ export const notify = createAction(
   props<{ 
     title: string, 
     content: string, 
-    buttons?: { [key: string]: string }
+    buttons?: { [key: string]: string },
+    deletedUser?: {
+      id: number
+      name: string
+      username: string
+      email: string
+    }
   }>()
 );

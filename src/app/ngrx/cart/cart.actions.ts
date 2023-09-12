@@ -46,3 +46,7 @@ export const updateActiveId = createAction(
   "[Cart Component] Update Active Id",
   props<{ activeId: number }>()
 );
+
+export const resetStatus = createAction(
+  "[Cart Component] Reset Status"
+);

@@ -1,6 +1,6 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { httpError } from '../notification/notification.actions';
-import { addToCart, clearCart, loadCart, loadCartSuccess, modifyQuantity, removeCartItem, updateActiveId, updateCartSuccess } from './cart.actions';
+import { addToCart, clearCart, loadCart, loadCartSuccess, modifyQuantity, removeCartItem, resetStatus, updateActiveId, updateCartSuccess } from './cart.actions';
 
 const initialState: CartState = {
     cart: null,
@@ -33,6 +33,11 @@ export const cartReducer = createReducer(
     }
   }),
   on(updateActiveId, (state, { activeId }) => ({ ...state, activeId })),
+  on(resetStatus, state => ({
+    ...state,
+    loadStatus: "pending" as const,
+    updateStatus: "pending" as const
+  })),
   on(httpError, state => ({ ...state, loadStatus: "error" as const, updateStatus: "error" as const }))
 );
 

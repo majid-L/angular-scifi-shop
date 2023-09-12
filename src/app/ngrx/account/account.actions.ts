@@ -36,7 +36,8 @@ export const createOrUpdateAddressSuccess = createAction(
 export const deleteAddress = createAction(
   "[Account Component] Delete Address - Loading",
   props<{ 
-    addressId: number, 
+    addressId: number,
+    addressIdType: AddressId,
     customerId: number 
   }>()
 );
@@ -54,4 +55,10 @@ export const deleteUserSuccess = createAction(
   props<DeleteUserResponse>()
 );
 
+export const updateActiveItem = createAction(
+  "[Account Component] - Update Active Item",
+  props<{ activeItem: AccountActiveItem }>()
+);
+
+export const resetStatus = createAction("[Account Component] Reset Status");
 export const clearCurrentUser = createAction("[Login Component] Clear Current User");
