@@ -2,19 +2,62 @@
   <img src="assets/wishlist.svg">
 </div>
 
-<ng-container *ngIf="(wishlistLoadStatus$ | async) === 'loading'">
-  <div class="loading">
-    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    <p class="italic">Loading account data</p>
-  </div>
+<ng-container *ngIf="(loadStatus$ | async) === 'loading'">
+  <app-spinner></app-spinner>
 </ng-container>
 
 <ng-container *ngIf="wishlist$ | async as wishlist">
   <main>
-    <section>
-      <h1 class="username">{{ wishlist.username }}'s wishlist</h1>
+    <section *ngLet="(updateStatus$ | async) as updateStatus">
+      <ng-container *ngIf="wishlist.wishlistItems.length === 0; else wishlistItems">
+        <div class="empty">
+          <p class="bold">Your wishlist is currently empty.</p>
+          <p>Nothing else to see here.</p>
+          <img class="filter" src="assets/empty.svg">
+        </div>
+      </ng-container>
+
+      <ng-template #wishlistItems>
+        <h1 class="username">{{ wishlist.username }}'s wishlist</h1>
       <p class="name">{{ wishlist.name }}</p>
       <mat-divider></mat-divider>
+
+      <mat-progress-bar *ngIf="updateStatus === 'loading' && operation === 'removeAll'"></mat-progress-bar>
+
+      <div class="remove">
+        <button  mat-fab extended (click)="updateWishlist('removeAll', wishlist, -1)" color="warn">
+          <mat-icon>delete_forever</mat-icon>
+          Clear wishlist
+        </button>
+      </div>
+
+      <div class="grid">
+          <mat-card [ngClass]="{'item-card': true, 'weak-shadow': lightModeEnabled}" *ngFor="let item of wishlist.wishlistItems">
+            <mat-card-header>
+              <mat-card-title>
+                <h2 [class.hover-dark]="lightModeEnabled" [routerLink]="['/products', item.product.id]" matTooltip="Go to product page">{{ item.product.name }}</h2>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-divider></mat-divider>
+
+            <mat-card-content>
+              <img [src]="'assets/icons/transparent/' + item.product.thumbnail" [routerLink]="['/products', item.product.id]" [alt]="item.product.name" matTooltip="Go to product page">
+              <p>{{ item.product.description }}</p>
+            </mat-card-content>
+
+            <mat-action-row>
+              <app-chips [product]="item.product"></app-chips>
+              <button mat-fab extended (click)="updateWishlist('remove', wishlist, item.product.id)" color="warn">
+                <mat-icon>delete</mat-icon>
+                Remove
+              </button>
+            </mat-action-row>
+      
+          <mat-progress-bar *ngIf="updateStatus === 'loading' && (activeId$ | async) === item.product.id" mode="indeterminate"></mat-progress-bar>
+          </mat-card>
+      </div>
+
+      </ng-template>
     </section>
   </main>
 </ng-container>
