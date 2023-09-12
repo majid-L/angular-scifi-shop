@@ -1,0 +1,57 @@
+<div class="heading">
+  <img src="assets/recommended.svg">
+</div>
+
+<ng-container *ngIf="(loadStatus$ | async) === 'loading'">
+  <app-spinner></app-spinner>
+</ng-container>
+
+<ng-container *ngIf="favorites$ | async as favorites">
+  <main>
+    <section *ngLet="(accountData$ | async) as customer">
+      <ng-container *ngIf="favorites.length === 0; else favoritesList">
+        <div class="empty">
+          <p class="bold">Your wishlist is currently empty.</p>
+          <p>Nothing else to see here.</p>
+          <img class="filter" src="assets/empty.svg">
+        </div>
+      </ng-container>
+
+      <ng-template #favoritesList>
+      <h1 class="username">{{ customer?.username }}'s recomended products</h1>
+      <p class="name">{{ customer?.name }}</p>
+      <mat-divider></mat-divider>
+
+      <div class="grid">
+        <mat-card *ngFor="let favorite of favorites">
+            <h2>{{ favorite.product!.name }}</h2>
+        </mat-card>
+          <!-- <mat-card [ngClass]="{'item-card': true, 'weak-shadow': lightModeEnabled}" *ngFor="let item of wishlist.wishlistItems">
+            <mat-card-header>
+              <mat-card-title>
+                <h2 [class.hover-dark]="lightModeEnabled" [routerLink]="['/products', item.product.id]" matTooltip="Go to product page">{{ item.product.name }}</h2>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-divider></mat-divider>
+
+            <mat-card-content>
+              <img [src]="'assets/icons/transparent/' + item.product.thumbnail" [routerLink]="['/products', item.product.id]" [alt]="item.product.name" matTooltip="Go to product page">
+              <p>{{ item.product.description }}</p>
+            </mat-card-content>
+
+            <mat-action-row>
+              <app-chips [product]="item.product"></app-chips>
+              <button mat-fab extended (click)="updateWishlist('remove', wishlist, item.product.id)" color="warn">
+                <mat-icon>delete</mat-icon>
+                Remove
+              </button>
+            </mat-action-row>
+      
+          <mat-progress-bar *ngIf="updateStatus === 'loading' && (activeId$ | async) === item.product.id" mode="indeterminate"></mat-progress-bar>
+          </mat-card> -->
+      </div>
+
+      </ng-template>
+    </section>
+  </main>
+</ng-container>
