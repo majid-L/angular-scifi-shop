@@ -1,9 +1,6 @@
 .mat-drawer-container
   position: static
 
-.mat-sidenav
-  background: whitesmoke
-
 .cart-sidebar
   width: 300px
 
@@ -18,13 +15,18 @@ h2
 .cart-list
   padding: 0
 
+.limit-max-width
+  max-width: 1000px
+  margin: 0 auto
+
 .item-card
-  margin: 15px auto
+  margin: 15px auto 25px
   width: 95%
   border-radius: 0
+  box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.5)
 
 .item-header
-  background: gray
+  background: #212121
   padding: 10px
 
   h3
@@ -43,11 +45,15 @@ h2
     width: 75px
     height: 75px
 
+.light-bg
+  background: #dbdbdb !important
+
+.mat-accordion
+  margin: 10px 0
+
 .mat-expansion-panel
   width: 95%
   margin: 0 auto
-  position: relative
-  top: -7px
 
 .mat-expansion-panel-spacing
   margin: 5px auto
@@ -72,7 +78,8 @@ h2
 
 .buttons
   display: flex
-  justify-content: space-evenly
+  justify-content: center
+  gap: 10px
   margin: 20px 0 30px
 
 .close-icon
@@ -93,7 +100,8 @@ h2
 .mat-mdc-card-actions
   height: 20px
   margin: 0 0 10px
-  justify-content: space-around
+  justify-content: center
+  gap: 30px
 
 .delete
   height: 35px
@@ -111,18 +119,17 @@ h2
     height: 35px
     width: 35px
 
-.green
-  color: green
-  font-weight: 900
-
 .total
   width: 100%
-  background: #263238
-  color: white
+  background: #212121
+  color: #18ffff
   padding: 10px 0
   text-align: center
   margin: 0
   font-weight: 900
+
+.total-purple
+  color: #9c27b0
 
 .mat-mdc-form-field
   font-size: 13px
@@ -134,8 +141,4 @@ h2
 
 .mat-mdc-form-field-error
   font-size: 13px
-  font-weight: 800
-
-.ng-dirty
-  color: green !important
   font-weight: 800
