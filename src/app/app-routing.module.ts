@@ -10,13 +10,17 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { NewOrderRedirectComponent } from './orders/new-order-redirect/new-order-redirect.component';
 import { SingleProductComponent } from './products/single-product/single-product.component';
 import { WishlistComponent } from './wishlist/wishlist/wishlist.component';
+import { CartPageComponent } from './cart/cart-page/cart-page.component';
+import { FavoritesComponent } from './products/favorites/favorites.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent},
   { path: "products", component: ProductListComponent },
   { path: "products/:id", component: SingleProductComponent },
   { path: "account", component: AccountComponent},
+  { path: "cart", component: CartPageComponent},
   { path: "wishlist", component: WishlistComponent },
+  { path: "favorites", component: FavoritesComponent },
   { path: "orders", component: OrdersComponent },
   { path: "orders/new", component: NewOrderRedirectComponent },
   { path: "orders/:id", component: SingleOrderComponent },

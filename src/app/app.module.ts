@@ -37,7 +37,6 @@ import { WishlistEffects } from './ngrx/wishlist/wishlist.effects';
     AppComponent,
     HomeComponent,
     NavComponent,
-    CartSidebarComponent,
     DialogComponent,
     PageNotFoundComponent
   ],
@@ -60,7 +59,6 @@ import { WishlistEffects } from './ngrx/wishlist/wishlist.effects';
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreModule.forFeature(categoriesFeature),
     StoreModule.forFeature(accountFeature),
-    StoreModule.forFeature(cartFeature),
     StoreModule.forFeature(wishlistFeature),
     StoreModule.forFeature(notificationFeature),
     EffectsModule.forFeature(CategoriesEffects),

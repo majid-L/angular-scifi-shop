@@ -8,6 +8,7 @@ import { NgLetModule } from 'ng-let';
 import { NgxStripeModule } from 'ngx-stripe';
 import { PaymentComponent } from './payment/payment.component';
 import { SpinnerModule } from '../spinner/spinner.module';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,11 @@ import { SpinnerModule } from '../spinner/spinner.module';
     ReactiveFormsModule,
     NgLetModule,
     SpinnerModule,
+    ClipboardModule,
     NgxStripeModule.forRoot(import.meta.env.NG_APP_STRIPE_KEY)
+  ],
+  exports: [
+    AddressStepComponent
   ]
 })
 export class CheckoutModule { }

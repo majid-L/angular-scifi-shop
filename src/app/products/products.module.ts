@@ -18,6 +18,10 @@ import { PaginationComponent } from './pagination/pagination.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { wishlistFeature } from '../ngrx/wishlist/wishlist.feature';
 import { WishlistEffects } from '../ngrx/wishlist/wishlist.effects';
+import { ChipsComponent } from './chips/chips.component';
+import { FavoritesComponent } from './favorites/favorites.component';
+import { reviewsFeature } from '../ngrx/reviews/reviews.feature';
+import { ReviewsEffects } from '../ngrx/reviews/reviews.effects';
 
 @NgModule({
   declarations: [
@@ -25,7 +29,9 @@ import { WishlistEffects } from '../ngrx/wishlist/wishlist.effects';
     ProductDialogComponent, 
     SingleProductComponent, 
     ActionButtonsComponent,
-    PaginationComponent
+    PaginationComponent,
+    ChipsComponent,
+    FavoritesComponent
   ],
   imports: [
     CommonModule,
@@ -36,9 +42,14 @@ import { WishlistEffects } from '../ngrx/wishlist/wishlist.effects';
     NgLetModule,
     ReviewsModule,
     StoreModule.forFeature(productsFeature),
+    StoreModule.forFeature(reviewsFeature),
     StoreModule.forFeature(wishlistFeature),
     EffectsModule.forFeature(ProductsEffects),
+    EffectsModule.forFeature(ReviewsEffects),
     EffectsModule.forFeature(WishlistEffects)
+  ],
+  exports: [
+    ChipsComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

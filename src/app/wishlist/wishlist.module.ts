@@ -6,6 +6,10 @@ import { wishlistFeature } from '../ngrx/wishlist/wishlist.feature';
 import { EffectsModule } from '@ngrx/effects';
 import { WishlistEffects } from '../ngrx/wishlist/wishlist.effects';
 import { MaterialModule } from '../material/material.module';
+import { SpinnerModule } from '../spinner/spinner.module';
+import { NgLetModule } from 'ng-let';
+import { ProductsModule } from '../products/products.module';
+import { AppRoutingModule } from '../app-routing.module';
 
 @NgModule({
   declarations: [
@@ -14,6 +18,10 @@ import { MaterialModule } from '../material/material.module';
   imports: [
     CommonModule,
     MaterialModule,
+    SpinnerModule,
+    NgLetModule,
+    ProductsModule,
+    AppRoutingModule,
     StoreModule.forFeature(wishlistFeature),
     EffectsModule.forFeature(WishlistEffects)
   ]
