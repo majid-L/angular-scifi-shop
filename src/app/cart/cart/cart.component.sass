@@ -1,0 +1,24 @@
+.fit-content
+  height: fit-content !important
+
+.cart-page-card-content
+  display: flex
+  align-items: center
+
+  div
+    flex-grow: 1
+
+::ng-deep .mdc-evolution-chip-set__chips 
+  justify-content: center
+  margin-bottom: 10px
+
+@media(max-width: 850px)
+  .cart-page-card-content
+    flex-direction: column
+    gap: 10p
+
+  .cart-page-card-content div > *
+    margin: 10px 0
+
+  img
+    margin: 20px
