@@ -9,17 +9,23 @@ import { reviewsFeature } from '../ngrx/reviews/reviews.feature';
 import { NgLetModule } from 'ng-let';
 import { ReviewDialogComponent } from './review-dialog/review-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ReviewsPageComponent } from './reviews-page/reviews-page.component';
+import { SpinnerModule } from '../spinner/spinner.module';
+import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
     ReviewsComponent,
-    ReviewDialogComponent
+    ReviewDialogComponent,
+    ReviewsPageComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     NgLetModule,
     ReactiveFormsModule,
+    SpinnerModule,
+    PageNotFoundComponent,
     StoreModule.forFeature(reviewsFeature),
     EffectsModule.forFeature(ReviewsEffects)
   ],
