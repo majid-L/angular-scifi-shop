@@ -1,12 +1,10 @@
 import { createAction, props } from '@ngrx/store';
 
-// This action is dispatched by the ngOnInit hook and triggers the loading process
 export const loadProducts = createAction(
   "[ProductList Component] Load Products",
   props<ProductsUrlParams>()
 );
 
-// This action is triggered by the effect - if the loading succeeds
 export const loadProductsSuccess = createAction(
   "[ProductList Component] Load Products - Success",
   props<ProductsResponse>()
@@ -30,4 +28,9 @@ export const searchOrderHistory = createAction(
 export const searchOrderHistorySuccess = createAction(
   "[SingleProduct Component] Search Order History - Success",
   props<OrderSearchResponse>()
+);
+
+export const setSearchTerm = createAction(
+  "[Search Component] Update Search Term",
+  props<{ searchTerm: string | null }>()
 );

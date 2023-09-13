@@ -6,7 +6,8 @@ import {
   loadSingleProduct,
   loadSingleProductSuccess,
   searchOrderHistory,
-  searchOrderHistorySuccess
+  searchOrderHistorySuccess,
+  setSearchTerm
 } from './products.actions';
 
 export const initialState: ProductsState = {
@@ -17,6 +18,7 @@ export const initialState: ProductsState = {
   },
   products: null,
   singleProduct: null,
+  searchTerm: null,
   orderSearchResult: null,
   loadStatus: "pending",
   searchStatus: "pending"
@@ -47,6 +49,7 @@ export const productsReducer = createReducer(
       orderSearchResult: payload
     }
   }),
+  on(setSearchTerm, (state, { searchTerm }) => ({ ...state, searchTerm })),
   on(httpError, state => ({ 
     ...state, 
     loadStatus: "error" as const, 
@@ -65,5 +68,6 @@ export const {
   selectOrderSearchResult,
   selectLoadStatus,
   selectSearchStatus,
+  selectSearchTerm,
   selectPagination
 } = productsFeature;

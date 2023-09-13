@@ -5,20 +5,31 @@ export const hideAuthOverlay = createAction("[Login Component] Hide Overlay");
 export const resetStatus = createAction("[Login Component] Reset Status");
 
 export const loginRequest = createAction(
-  "[Login Component] Login Request",
-  props<AuthCredentials>()
+  "[Auth Component] Login Request",
+  props<{ 
+    requestBody: AuthCredentials,
+    endpoint: "/login"
+  }>()
 );
 export const loginSuccess = createAction(
-  "[Login Component] Login Success",
+  "[Auth Component] Login Success",
   props<{ customer: Customer }>()
 );
 
-export const signup = createAction(
-  "[Login Component] Signup",
-  props<AuthCredentials>()
+export const signupRequest = createAction(
+  "[Auth Component] Signup Request",
+  props<{ 
+    requestBody: AuthCredentials,
+    endpoint: "/signup"
+  }>()
 );
-export const logoutRequest = createAction("[Login Component] Logout");
+export const signupSuccess = createAction(
+  "[Auth Component] Signup Success",
+  props<{ customer: Customer }>()
+);
+
+export const logoutRequest = createAction("[Auth Component] Logout");
 export const logoutSuccess = createAction(
-  "[Login Component] Logout Success",
+  "[Auth Component] Logout Success",
   props<{ msg: string }>()
 );

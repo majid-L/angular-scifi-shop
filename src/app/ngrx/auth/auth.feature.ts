@@ -2,13 +2,14 @@ import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { httpError } from '../notification/notification.actions';
 import { 
   showAuthOverlay, 
-  hideAuthOverlay, 
-  signup, 
+  hideAuthOverlay,
   loginRequest, 
   logoutRequest,
   logoutSuccess, 
   loginSuccess,
-  resetStatus
+  resetStatus,
+  signupSuccess,
+  signupRequest
 } from './auth.actions';
 
 const initialState: AuthState = {
@@ -26,12 +27,19 @@ export const authReducer = createReducer(
   on(showAuthOverlay, state => ({...state, showOverlay: true})),
   on(hideAuthOverlay, state => ({...state, showOverlay: false})),
   on(loginRequest, state => ({ ...state, loginStatus: "loading" as const })),
+  on(signupRequest, state => ({ ...state, signupStatus: "loading" as const })),
   on(loginSuccess, (state, payload) => {
     return { 
       ...state, 
       loggedInUserId: payload.customer.id,
       currentUser: payload.customer,
       loginStatus: "success" as const
+     };
+  }),
+  on(signupSuccess, state => {
+    return { 
+      ...state,
+      signupStatus: "success" as const
      };
   }),
   on(logoutRequest, state => ({ ...state, logoutStatus: "loading" as const })),
