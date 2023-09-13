@@ -17,28 +17,25 @@ import { NavComponent } from './nav/nav.component';
 import { AccountModule } from './account/account.module';
 import { DialogComponent } from './dialog/dialog.component';
 import { CartModule } from './cart/cart.module';
-import { CartSidebarComponent } from './cart/cart-sidebar/cart-sidebar.component';
-import { cartFeature } from './ngrx/cart/cart.feature';
 import { CheckoutModule } from './checkout/checkout.module';
 import { accountFeature } from './ngrx/account/account.feature';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { OrdersModule } from './orders/orders.module';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { notificationFeature } from './ngrx/notification/notification.feature';
 import { categoriesFeature } from './ngrx/categories/categories.feature';
 import { CategoriesEffects } from './ngrx/categories/categories.effects';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { wishlistFeature } from './ngrx/wishlist/wishlist.feature';
 import { WishlistEffects } from './ngrx/wishlist/wishlist.effects';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     NavComponent,
-    DialogComponent,
-    PageNotFoundComponent
+    DialogComponent
   ],
   imports: [
     BrowserModule,
@@ -55,6 +52,7 @@ import { WishlistEffects } from './ngrx/wishlist/wishlist.effects';
     CheckoutModule,
     OrdersModule,
     MaterialModule,
+    SearchComponent,
     NgLetModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreModule.forFeature(categoriesFeature),
