@@ -1,36 +1,49 @@
 main
-  margin-top: 50px
+  //margin-top: 0
+  //margin-bottom: 100px
+
+h2
+  margin: 0
+
+.subtitle
+  margin: 30px 30px 20px
+  display: flex
+  align-items: center
+  gap: 20px
 
 .bg
   background: url('/assets/products.png')
   display: block
-  padding-top: 70px
+  //padding-top: 70px
 
-.bg-overlay:before
-  background: rgba(0, 0, 0, 0.799)
-  height: 550px
+//.bg-overlay:before
+  //background: rgba(0, 0, 0, 0.799)
+  //height: 540px
+  //border-bottom: 1px solid gray
+
+.heading
+  padding: 100px 0 0
 
 .header-flex
   display: flex
   flex-direction: column
   align-items: center
+  border-bottom: 5px solid gray
+
+  img
+    max-width: 500px
+    aspect-ratio: 1.5
+
+.products-header-image
+  max-width: 700px !important
+  aspect-ratio: 2 !important
+
+.negative-margin
+  margin: -20px 0 0
+  scale: 1.2
 
 .heading img
   left: auto
- 
-// .heading
-//   display: flex
-//   justify-content: center
-//   margin: 40px 0
-
-//   img
-//     width: 100%
-//     max-width: 700px
-    
-// .heading img
-//   position: relative
-//   height: 300px
-//   z-index: 1
 
 .heading p
   max-width: 900px
@@ -68,17 +81,18 @@ main
   max-width: 1000px
   border-radius: 0
   transition: all 0.4s ease-in-out
+  box-shadow: 0px 3px 15px rgba(0,0,0,0.4)
 
 .product-card:hover
   scale: 1.03
-  box-shadow: 0 0 6px 0.5px #d500f9
+  box-shadow: 0 3px 15px var(--productCardBoxShadow)
 
 .product-card-overlay
   position: absolute
   top: 0
   left: 100%
   right: 0
-  background-color: #d400f94a
+  background-color: var(--productCardOverlay)
   overflow: hidden
   width: 0
   height: 100%
@@ -87,7 +101,7 @@ main
 
 .foreground
   z-index: 1
-  background-color: #d400f97e
+  background-color: var(--productCardOverlay)
 
 .product-card:hover .product-card-overlay
   width: 100%
@@ -129,6 +143,9 @@ main
   background-color: black
   color: whitesmoke
 
+.black
+  color: #212121
+
 .product-card-content
   flex-grow: 1
   display: flex
@@ -159,7 +176,7 @@ main
 
 .product-title:hover
   text-decoration: underline
-  color: #5aecff
+  color: var(--headingHoverColor)
 
 .product-image
   max-width: 300px
@@ -205,11 +222,6 @@ main
 
 .bold
   margin: 7px 10px
-
-.negative-margin
-  height: 100% !important
-  max-height: 400px
-  margin: -70px 0 -20px
 
 @media (max-width: 500px)
   .product-grid

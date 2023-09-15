@@ -14,9 +14,11 @@ import {
   selectUpdateStatus as selectWishlistUpdateStatus
 } from 'src/app/ngrx/wishlist/wishlist.feature';
 import { selectCategories, selectSuppliers } from 'src/app/ngrx/categories/categories.feature';
-import { selectLoadStatus, selectProducts } from 'src/app/ngrx/products/products.feature';
-import { resetWishlistStatus, updateActiveId, updateWishlist } from 'src/app/ngrx/wishlist/wishlist.actions';
+import { selectLoadStatus, selectPagination, selectProducts, selectSearchTerm } from 'src/app/ngrx/products/products.feature';
+import { resetWishlistStatus } from 'src/app/ngrx/wishlist/wishlist.actions';
 import { selectWishlist } from 'src/app/ngrx/wishlist/wishlist.feature';
+import { WishlistService } from 'src/app/wishlist/wishlist.service';
+import { loadProducts, setSearchTerm } from 'src/app/ngrx/products/products.actions';
 
 @Component({
   selector: 'app-product-list',
@@ -28,6 +30,8 @@ export class ProductListComponent implements OnInit {
   products$: Observable<Product[] | null> = this._store.select(selectProducts);
   categories$: Observable<Category[] | null> = this._store.select(selectCategories);
   suppliers$: Observable<Supplier[] | null> = this._store.select(selectSuppliers);
+  searchTerm$: Observable<string | null> = this._store.select(selectSearchTerm);
+  pagination$: Observable<Pagination> = this._store.select(selectPagination);
   productLoadStatus$: Observable<Status> = this._store.select(selectLoadStatus);
   cartUpdateStatus$: Observable<Status> = this._store.select(selectCartUpdateStatus);
   wishlistUpdateStatus$: Observable<Status> = this._store.select(selectWishlistUpdateStatus)
@@ -50,7 +54,8 @@ export class ProductListComponent implements OnInit {
     private _store: Store<AppState>,
     private _route: ActivatedRoute,
     private _breakPointObserver: BreakpointObserver,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _wishlistService: WishlistService
   ) {}
 
   ngOnInit() {
@@ -113,32 +118,23 @@ export class ProductListComponent implements OnInit {
     };
   }
 
+  get lightModeEnabled() {
+    return document.body.classList.contains("light-mode");
+  }
+
+  reloadResults() {
+    this._store.dispatch(setSearchTerm({ searchTerm: null }));
+    this._store.dispatch(loadProducts({}));
+  }
+
   productIsInWishlist(productId: number, wishlist: Wishlist) {
     return wishlist.wishlistItems.find(item => item.product.id === productId);
   }
 
-  updateWishlist(productId: number, wishlist: Wishlist, operation: "add" | "remove") {
+  updateWishlist(operation: "add" | "remove", wishlist: Wishlist, productId: number) {
     this._wishlistOperation = operation;
-    this._store.dispatch(updateActiveId({ activeId: productId }));
-    let wishlistArray: WishlistItem[] | [] = [];
-    const transformWishlistArray = (item: { product: Product }) => ({ 
-      customerId: wishlist.id,
-      productId: item.product.id
-    });
-
-    if (operation === "add") {
-      wishlistArray = wishlist.wishlistItems.map(transformWishlistArray);
-      wishlistArray.unshift({ customerId: wishlist.id, productId });
-    } else {
-      wishlistArray = wishlist.wishlistItems
-      .filter(item => item.product.id !== productId)
-      .map(transformWishlistArray);
-    }
-      
-    this._store.dispatch(updateWishlist({
-      updatedWishlist: wishlistArray,
-      customerId: wishlist.id
-    }));
+    this._wishlistService
+      .dispatchWishlistActions(operation, wishlist, productId);
   }
 
   toggleStyle(e: MatButtonToggleChange) {
