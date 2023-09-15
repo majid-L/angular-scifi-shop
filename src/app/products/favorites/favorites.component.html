@@ -22,9 +22,48 @@
       <p class="name">{{ customer?.name }}</p>
       <mat-divider></mat-divider>
 
-      <div class="grid">
-        <mat-card *ngFor="let favorite of favorites">
-            <h2>{{ favorite.product!.name }}</h2>
+      <div class="container">
+        <mat-card [ngClass]="{'favorite-card': true, 'weak-shadow': lightModeEnabled}" *ngFor="let favorite of favorites">
+          <img class="product-image" [routerLink]="['/products', favorite.product!.id]" [src]="'assets/icons/black/' + favorite.product!.thumbnail" [alt]="favorite.product!.name">
+          <div>
+            <mat-card-header>
+              <mat-card-title>
+                <h2 [class.hover-dark]="lightModeEnabled" [routerLink]="['/products', favorite.product!.id]" matTooltip="Go to product page" matTooltipPosition="above">{{ favorite.product!.name }}</h2>
+              </mat-card-title>
+              <app-chips [product]="favorite.product"></app-chips>
+              <mat-chip class="price">
+                <p>{{ (favorite.product!.price | currency: "£") }}</p>
+              </mat-chip>
+            </mat-card-header>
+            <mat-divider></mat-divider>
+              
+            <mat-card-content>
+              <mat-expansion-panel 
+                *ngLet="showDescription[favorite.product!.id] as show" 
+                (opened)="toggleDescription(favorite.product!.id, true)" 
+                (closed)="toggleDescription(favorite.product!.id, false)"
+              >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>{{ show ? 'Hide' : 'Show' }} description</mat-panel-title>
+                </mat-expansion-panel-header>
+                <p class="description">{{ favorite.product!.description }}</p>
+              </mat-expansion-panel>
+
+              <h3>You reviewed this product on {{ favorite.addedAt | date: "short" }}</h3>
+              <h4 *ngIf="favorite.recommend">
+                <mat-icon color="primary">thumb_up_alt</mat-icon>
+                You've recommended this product.
+              </h4>
+              <app-rating [review]="favorite"></app-rating>
+              <br>
+              <blockquote>
+                <mat-icon color="primary">rate_review</mat-icon>
+                <p>{{ favorite.body }}</p>
+              </blockquote>
+            </mat-card-content>
+          </div>
+          
+
         </mat-card>
           <!-- <mat-card [ngClass]="{'item-card': true, 'weak-shadow': lightModeEnabled}" *ngFor="let item of wishlist.wishlistItems">
             <mat-card-header>
