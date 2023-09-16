@@ -12,7 +12,7 @@ import { NgLetModule } from 'ng-let';
 import { AppRoutingModule } from '../app-routing.module';
 import { CartPageComponent } from './cart-page/cart-page.component';
 import { SpinnerModule } from '../spinner/spinner.module';
-import { ProductsModule } from '../products/products.module';
+import { ChipsComponent } from '../chips/chips.component';
 
 @NgModule({
   imports: [
@@ -22,7 +22,7 @@ import { ProductsModule } from '../products/products.module';
     NgLetModule,
     AppRoutingModule,
     SpinnerModule,
-    ProductsModule,
+    ChipsComponent,
     StoreModule.forFeature(cartFeature),
     EffectsModule.forFeature(CartEffects)
   ],

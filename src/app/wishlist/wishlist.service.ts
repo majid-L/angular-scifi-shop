@@ -27,7 +27,7 @@ export class WishlistService {
   }
 
   updateWishlist(updatedWishlist: WishlistBasic, customerId: number) {
-    return this._http.put<{ wishlist: Wishlist }>(
+    return this._http.put<{ wishlist: Wishlist | [] }>(
       `${this.baseUrl}/${customerId}/wishlist`,
       updatedWishlist,
       { withCredentials: true }
@@ -38,6 +38,7 @@ export class WishlistService {
     this._store.dispatch(resetWishlistStatus());
 
     if (operation === "removeAll") {
+      this._store.dispatch(updateActiveId({ activeId: -1 }));
       this._store.dispatch(updateWishlist({
         updatedWishlist: [],
         customerId: wishlist.id

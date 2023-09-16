@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
-type Res = {
-
-}
 
 @Injectable({
   providedIn: 'root'
@@ -19,23 +14,20 @@ export class AuthService {
     withCredentials: true
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private _http: HttpClient) { }
 
-  signup(x: any) {
-    console.log(x)
-  }
-
-  login(requestBody: AuthCredentials) {
-    const response = this.http.post<{ customer: Customer }>(
-      this.baseUrl + '/login', 
+  loginOrSignup(requestBody: AuthCredentials, endpoint: "/login" | "/signup") {
+    const response = this._http.post<{ customer: Customer }>(
+      this.baseUrl + endpoint, 
       requestBody,
       this.httpOptions
     );
+
     return response;
   }
 
   logout() {
-    const response = this.http.post<{ msg: string }>(
+    const response = this._http.post<{ msg: string }>(
       this.baseUrl + '/logout',
       {},
       { withCredentials: true }

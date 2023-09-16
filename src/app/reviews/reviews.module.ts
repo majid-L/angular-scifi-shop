@@ -12,12 +12,18 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ReviewsPageComponent } from './reviews-page/reviews-page.component';
 import { SpinnerModule } from '../spinner/spinner.module';
 import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
+import { ReviewsPaginationComponent } from './reviews-pagination/reviews-pagination.component';
+import { RatingComponent } from './rating/rating.component';
+import { ChipsComponent } from '../chips/chips.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
     ReviewsComponent,
     ReviewDialogComponent,
-    ReviewsPageComponent
+    ReviewsPageComponent,
+    ReviewsPaginationComponent,
+    RatingComponent
   ],
   imports: [
     CommonModule,
@@ -26,11 +32,14 @@ import { PageNotFoundComponent } from '../page-not-found/page-not-found.componen
     ReactiveFormsModule,
     SpinnerModule,
     PageNotFoundComponent,
+    RouterModule,
+    ChipsComponent,
     StoreModule.forFeature(reviewsFeature),
     EffectsModule.forFeature(ReviewsEffects)
   ],
   exports: [
-    ReviewsComponent
+    ReviewsComponent,
+    RatingComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

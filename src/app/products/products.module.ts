@@ -14,14 +14,14 @@ import { productsFeature } from '../ngrx/products/products.feature';
 import { ActionButtonsComponent } from './action-buttons/action-buttons.component';
 import { NgLetModule } from 'ng-let';
 import { ReviewsModule } from '../reviews/reviews.module';
-import { PaginationComponent } from './pagination/pagination.component';
+import { ProductsPaginationComponent } from './products-pagination/products-pagination.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { wishlistFeature } from '../ngrx/wishlist/wishlist.feature';
 import { WishlistEffects } from '../ngrx/wishlist/wishlist.effects';
-import { ChipsComponent } from './chips/chips.component';
 import { FavoritesComponent } from './favorites/favorites.component';
 import { reviewsFeature } from '../ngrx/reviews/reviews.feature';
 import { ReviewsEffects } from '../ngrx/reviews/reviews.effects';
+import { ChipsComponent } from '../chips/chips.component';
 
 @NgModule({
   declarations: [
@@ -29,8 +29,7 @@ import { ReviewsEffects } from '../ngrx/reviews/reviews.effects';
     ProductDialogComponent, 
     SingleProductComponent, 
     ActionButtonsComponent,
-    PaginationComponent,
-    ChipsComponent,
+    ProductsPaginationComponent,
     FavoritesComponent
   ],
   imports: [
@@ -41,15 +40,13 @@ import { ReviewsEffects } from '../ngrx/reviews/reviews.effects';
     FormsModule,
     NgLetModule,
     ReviewsModule,
+    ChipsComponent,
     StoreModule.forFeature(productsFeature),
     StoreModule.forFeature(reviewsFeature),
     StoreModule.forFeature(wishlistFeature),
     EffectsModule.forFeature(ProductsEffects),
     EffectsModule.forFeature(ReviewsEffects),
     EffectsModule.forFeature(WishlistEffects)
-  ],
-  exports: [
-    ChipsComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -11,15 +11,31 @@ export class ReviewsService {
     private _http: HttpClient
   ) { }
 
-  getProductReviews(productId: number) {
+  getAllReviews(queryParams: { page: number, limit: number }) {
     return this._http.get<ReviewsResponse>(
-      `${this._baseUrl}/products/${productId}/reviews`
+      `${this._baseUrl}/reviews`,
+      { params: new HttpParams().appendAll(queryParams) }
     );
   }
 
-  getCustomerReviews(customerId: number) {
+  getProductReviews(productId: number, queryParams: { page: number, limit: number }) {
     return this._http.get<ReviewsResponse>(
-      `${this._baseUrl}/customers/${customerId}/reviews`
+      `${this._baseUrl}/products/${productId}/reviews`,
+      { params: new HttpParams().appendAll(queryParams) }
+    );
+  }
+
+  getCustomerReviews(customerId: number, queryParams: { page: number, limit: number }) {
+    return this._http.get<CustomerReviewsResponse>(
+      `${this._baseUrl}/customers/${customerId}/reviews`,
+      { params: new HttpParams().appendAll(queryParams) }
+    );
+  }
+
+  getFavorites(customerId: number) {
+    return this._http.get<FavoritesResponse>(
+      `${this._baseUrl}/customers/${customerId}/favorites`,
+      { withCredentials: true }
     );
   }
 

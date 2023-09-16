@@ -8,8 +8,8 @@ import { WishlistEffects } from '../ngrx/wishlist/wishlist.effects';
 import { MaterialModule } from '../material/material.module';
 import { SpinnerModule } from '../spinner/spinner.module';
 import { NgLetModule } from 'ng-let';
-import { ProductsModule } from '../products/products.module';
 import { AppRoutingModule } from '../app-routing.module';
+import { ChipsComponent } from '../chips/chips.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +20,7 @@ import { AppRoutingModule } from '../app-routing.module';
     MaterialModule,
     SpinnerModule,
     NgLetModule,
-    ProductsModule,
+    ChipsComponent,
     AppRoutingModule,
     StoreModule.forFeature(wishlistFeature),
     EffectsModule.forFeature(WishlistEffects)
