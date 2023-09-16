@@ -9,10 +9,9 @@
 <main>
   <section>
     <ng-container *ngIf="(accountData$ | async) as customer">
-      <h1 class="username">{{ customer.username }}</h1>
+      <h1 class="username">{{ customer.username }}'s cart</h1>
       <p class="name">{{ customer.name }}</p>
       <mat-divider></mat-divider>
-      <!-- <h2 [class.light-bg]="lightModeEnabled">Cart items</h2> -->
     </ng-container>
     
     <div class="cart-component">

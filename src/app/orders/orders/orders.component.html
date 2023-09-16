@@ -12,8 +12,17 @@
         <h1 class="username">{{ data.username }}</h1>
         <p class="name">{{ data.name }}</p>
         <mat-divider></mat-divider>
-        <h2>Order history</h2>
-        <ng-container *ngIf="data.orders.length > 0; else noOrders">
+
+        <ng-container *ngIf="data.orders.length === 0">
+          <div class="empty">
+            <p class="bold">You have no orders to display.</p>
+            <p>It looks like your order histroy is empty.</p>
+            <img src="assets/empty-5.svg">
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="data.orders.length > 0">
+          <h2>Order history</h2>
           <mat-list>
             <mat-list-item class="order-item" [class.light-border]="lightModeEnabled" *ngFor="let order of data.orders; last as last">
               <div class="header">
@@ -96,10 +105,6 @@
             </mat-list-item>
           </mat-list>
         </ng-container>
-
-        <ng-template #noOrders>
-          <p class="no-orders"><mat-icon>mood_bad</mat-icon>You have no orders.</p>
-        </ng-template>
       </section>
     </main>
   </ng-container>

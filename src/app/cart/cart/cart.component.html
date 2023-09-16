@@ -19,6 +19,16 @@
     </ng-container>
 
     <ng-template #cartIsEmpty>
+      <ng-container *ngIf="component === 'cart-page'; else sidebarEmptyMessage">
+        <div class="empty">
+          <p class="bold">Your cart is currently empty.</p>
+          <p>Nothing else to see here.</p>
+          <img class="filter" src="assets/empty-3.svg">
+        </div>
+      </ng-container>
+    </ng-template>
+
+    <ng-template #sidebarEmptyMessage>
       <div class="empty-cart">
         <p>Your cart is empty.</p>
         <mat-icon>local_mall</mat-icon>

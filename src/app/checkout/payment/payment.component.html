@@ -11,8 +11,19 @@
       <mat-divider></mat-divider>
     </mat-card-title>
     <mat-card-subtitle *ngIf="paymentMethod === 'Card'" matTooltip="Instead of using real card details, this feature uses mock transactions to simulate real-world payments." matTooltipPosition="above">
-      <mat-icon class="icon">help</mat-icon>
-      <p>Use card number <span class="bold">4000 0082 6000 0000</span></p>
+      <p class="subtitle">
+        <span class="icon"><mat-icon>info</mat-icon></span>
+        <span>Use any one of the following card numbers:</span>
+      </p>
+      <ul>
+        <li *ngFor="let card of testCardNumbers">
+          <p>{{ card.type }}: <strong>{{ card.number }}</strong></p>
+          <button mat-stroked-button [id]="card.number" color="primary" [cdkCopyToClipboard]="card.number" (click)="copyCardNumber(card.number)">
+            <mat-icon>file_copy</mat-icon>
+            Copy to clipboard
+          </button>
+        </li>
+      </ul>
     </mat-card-subtitle>
     <mat-card-subtitle *ngIf="paymentMethod === 'Klarna'">
       <mat-icon class="icon">help</mat-icon>
@@ -37,7 +48,7 @@
       <ng-container *ngIf="elementsOptions.clientSecret">
         <ngx-stripe-payment
           (change)="handlePaymentMethodChange($event)"
-          [appearance]="appearance"
+          [appearance]="lightModeEnabled ? lightAppearance : darkAppearance"
           [options]="paymentElementOptions"
           [clientSecret]="elementsOptions.clientSecret"
         ></ngx-stripe-payment>
