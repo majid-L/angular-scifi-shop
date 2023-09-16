@@ -1,0 +1,112 @@
+<ng-container *ngLet="products$ | async as products">
+  <ng-container *ngIf="(productsLoadStatus$ | async) === 'loading'">
+    <app-spinner></app-spinner>
+  </ng-container>
+
+  <section *ngIf="products">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <p class="bold">Sort/filter results</p>
+          <mat-icon>sort</mat-icon>
+          <mat-icon>filter_list</mat-icon>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-divider></mat-divider>
+  
+      <div class="controls">
+        <ng-container *ngIf="showFilters">
+          <div class="header">
+            <mat-label>Active filters</mat-label>
+            <button (click)="clearAllFilters()" mat-stroked-button color="accent">Clear all filters</button>
+          </div>
+       <mat-chip-set>
+        <mat-chip-row
+        *ngFor="let param of activeFilters | keyvalue" 
+        (removed)="removeFilter(param.key)"
+        class="active-filter">
+          {{ formatParamKey(param.key) }} {{ param.key !== 'hideOutOfStock' ? formatParamValue(param.value) : '' }}
+          <button matChipRemove aria-label="remove filter">
+            <mat-icon>cancel</mat-icon>
+          </button>
+      </mat-chip-row>
+      </mat-chip-set>
+      <mat-divider></mat-divider>
+        </ng-container>
+        
+      <div class="controls-container">
+        <div class="orderby">
+          <!-- Order by select menu -->
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Order by:</mat-label>
+          <mat-select [(value)]="orderBy" (selectionChange)="setOrderBy($event)">
+            <mat-option value="id">Product ID</mat-option>
+            <mat-option value="name">Product name</mat-option>
+            <mat-option value="price">Price</mat-option>
+            <mat-option value="avgRating">Average rating</mat-option>
+            <mat-option value="bestsellers">Bestsellers</mat-option>
+            <mat-option value="stock">Stock</mat-option>
+            <mat-option *ngIf="!category" value="categoryName">Category</mat-option>
+            <mat-option *ngIf="!supplier" value="supplierName">Supplier</mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <!-- asc/desc controls -->
+        <mat-radio-group (change)="setOrder($event)" [color]="accentColor" [selected]="asc" aria-label="Select sort order">
+          <mat-radio-button #asc value="ASC">Ascending</mat-radio-button>
+          <mat-radio-button value="DESC">Descending</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    
+        <!-- price range -->
+        <form (ngSubmit)="setPriceRange()">
+          <mat-form-field subscriptSizing="dynamic" floatLabel="always">
+            <mat-label>Min price</mat-label>
+            <input matInput [(ngModel)]="minPrice" name="minPrice" type="number" min="0" class="price" placeholder="0">
+            <span matTextPrefix>£&nbsp;</span>
+          </mat-form-field>
+          <mat-form-field subscriptSizing="dynamic" floatLabel="always">
+            <mat-label>Max price</mat-label>
+            <input matInput [(ngModel)]="maxPrice" name="maxPrice" type="number" class="price" placeholder="10000">
+            <span matTextPrefix>£&nbsp;</span>
+          </mat-form-field>
+          <button type="submit" class="submit" mat-stroked-button [color]="accentColor">Go</button>
+        </form>
+    
+        <!-- out of stock toggle -->
+        <mat-slide-toggle (change)="setHideOutOfStock($event)">Hide out of stock</mat-slide-toggle>
+            
+        <!-- display toggle -->
+        <div *ngIf="showDisplayToggle" class="toggle-display">
+          <!-- <mat-chip>Toggle display</mat-chip> -->
+        <mat-button-toggle-group  
+          name="listDisplayStyle" 
+          (change)="emitStyleEvent($event)" 
+          aria-label="List display style">
+            <mat-button-toggle value="grid">
+              <mat-icon>grid_on</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="list">
+              <mat-icon>list_alt</mat-icon>
+            </mat-button-toggle>
+        </mat-button-toggle-group>
+        <button mat-stroked-button color="accent" disabled>Toggle display</button>
+        </div>
+    
+      </div>
+      </div>
+  
+    </mat-expansion-panel>
+  
+    <!-- pagination -->
+    <mat-paginator id="paginator" *ngIf="(pagination$ | async) as pagination" 
+    (page)="handlePageEvent($event)"
+    [length]="pagination.totalResults"
+    [pageIndex]="currentPage - 1"
+    [pageSize]="currentLimit"
+    showFirstLastButtons="true"
+    [pageSizeOptions]="[25, 50, 75, 100]"
+    aria-label="Select product page">
+  </mat-paginator>
+  </section>
+</ng-container>
