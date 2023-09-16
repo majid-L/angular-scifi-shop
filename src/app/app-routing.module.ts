@@ -12,6 +12,7 @@ import { SingleProductComponent } from './products/single-product/single-product
 import { WishlistComponent } from './wishlist/wishlist/wishlist.component';
 import { CartPageComponent } from './cart/cart-page/cart-page.component';
 import { FavoritesComponent } from './products/favorites/favorites.component';
+import { ReviewsPageComponent } from './reviews/reviews-page/reviews-page.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent},
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: "cart", component: CartPageComponent},
   { path: "wishlist", component: WishlistComponent },
   { path: "favorites", component: FavoritesComponent },
+  { path: "reviews", component: ReviewsPageComponent },
   { path: "orders", component: OrdersComponent },
   { path: "orders/new", component: NewOrderRedirectComponent },
   { path: "orders/:id", component: SingleOrderComponent },

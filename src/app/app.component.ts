@@ -23,14 +23,15 @@ export class AppComponent {
     this._store.select(selectData);
   private readonly _loggedInUserId$: Observable<string | number | null> = 
     this._store.select(selectLoggedInUserId);
-  private readonly _showLoginDialog$: Observable<boolean> = this._store.select(selectShowOverlay);
+  public readonly showLoginDialog$: Observable<boolean> = this._store.select(selectShowOverlay);
   private readonly _dataStream$ = combineLatest([
-    this._showDialog$, this._loggedInUserId$, this._showLoginDialog$
-  ]).pipe(map(([showDialog, loggedInUserId, showLoginDialog]) => ({
-    showDialog, loggedInUserId, showLoginDialog
+    this._showDialog$, this.showLoginDialog$
+  ]).pipe(map(([showDialog, showLoginDialog]) => ({
+    showDialog, showLoginDialog
   })));
   private _snackBarRef: MatSnackBarRef<TextOnlySnackBar> | undefined;
-  private _subscription: Subscription | null = null;
+  private _dialogSubscription = Subscription.EMPTY;
+  private _loggedInUserIdSubscription = Subscription.EMPTY;
 
   constructor(
     private _store: Store<AppState>, 
@@ -41,25 +42,24 @@ export class AppComponent {
   ngOnInit() {
     this._store.dispatch(loadCategories());
     this._store.dispatch(loadSuppliers());
-    this._subscription = this._dataStream$.subscribe(({ showDialog, loggedInUserId, showLoginDialog }) => {
+    this._dialogSubscription = this._dataStream$.subscribe(({ showDialog, showLoginDialog }) => {
       if (showDialog) {
         this.dialog.open(DialogComponent, { 
           disableClose: showDialog,
           data: this._dialogContent$
         });
       }
-
-      if (loggedInUserId) {
-        this._store.dispatch(loadAccount());
-        this._store.dispatch(loadCart({ customerId: Number(loggedInUserId) }));
-        this._store.dispatch(loadWishlist({ 
-          customerId: Number(loggedInUserId),
-          format: "full"
-        }));
-      }
-
       if (showLoginDialog) {
         this._snackBarRef?.dismiss();
+      }
+    });
+
+    this._loggedInUserIdSubscription = this._loggedInUserId$.subscribe(id => {
+      if (id) {
+        const customerId = Number(id);
+        this._store.dispatch(loadAccount({ customerId }));
+        this._store.dispatch(loadCart({ customerId }));
+        this._store.dispatch(loadWishlist({ customerId, format: "full" }));
       }
     });
 
@@ -73,6 +73,7 @@ export class AppComponent {
   }
 
   ngOnDestroy() {
-    this._subscription!.unsubscribe();
+    this._dialogSubscription.unsubscribe();
+    this._loggedInUserIdSubscription.unsubscribe();
   }
 }

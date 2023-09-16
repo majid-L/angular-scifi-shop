@@ -11,6 +11,7 @@ interface ImportMetaEnv {
   // Add your environment variables below
   // readonly NG_APP_API_URL: string;
   readonly NG_APP_STRIPE_KEY: string;
+  readonly GOOGLE_CLIENT_ID: string;
   [key: string]: any;
 }
 

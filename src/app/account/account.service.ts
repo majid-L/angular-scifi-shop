@@ -90,9 +90,14 @@ export class AccountService {
   matchValidator(password: AbstractControl, passwordConfirm: AbstractControl)
   : ValidatorFn {
     return () => {
-      return password.value !== passwordConfirm.value
-        ? { matchError: "Passwords do not match." }
-        : null;
+      if (password.value !== passwordConfirm.value) {
+        const error = { matchError: 'Value does not match' };
+        passwordConfirm.setErrors(error);
+        return error;
+      } else {
+        passwordConfirm.setErrors(null);
+        return null;
+      }
     };
   }
 }
