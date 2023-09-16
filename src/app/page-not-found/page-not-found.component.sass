@@ -1,50 +1,45 @@
-main
-  overflow: hidden
-  margin: 0
+.page-not-found-section
+  margin: 70px 0 50px
 
-.title
+.page-not-found-header
   width: fit-content
-  margin: 50px auto 30px
-  position: relative
-  top: 30px
+  margin: 0 auto
 
-h1
+.page-not-found-header h1
   text-align: center
 
-button
+.page-not-found-header button
   display: block
   font-size: 20px
   height: 50px !important
   font-weight: 700
   width: 100%
 
-img
-  width: 120%
-  max-width: 1300px
-  position: relative
-  right: -30px
+.svg-404
+  max-width: 900px
   display: block
-  margin: 0 auto
-
-
-@media (max-width: 1400px)
-  img
-    right: 15px
+  margin: 20px auto
     
 @media (max-width: 1000px)
-  .title
-    margin: 50px auto
+  .page-not-found-section
+    margin: 40px 0
 
-  h1
+  .page-not-found-header
+    margin-bottom: 40px
+
+  .page-not-found-header h1
     font-size: 20px
 
-  button
+  .page-not-found-header button
     font-size: 16px
     height: 40px !important 
 
 @media (max-width: 350px)
-  img
-    right: 5px
+  .page-not-found-section
+    margin: 30px 0 0
 
-  .title
-    margin-top: 10px
+  .page-not-found-header
+    margin-bottom: 0
+
+  .page-not-found-section *
+    font-size: 16px !important

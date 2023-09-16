@@ -1,8 +1,10 @@
+@use '../../_variables.sass'
+
 .active
-  background-color: #9c27b0
+  background-color: var(--activeAnchorBg)
   
   *
-    color: whitesmoke
+    color: var(--textColor)
 
 .light
   background: lightgray
@@ -15,21 +17,19 @@
 
 .sidenav 
   width: 210px
-  //background: #37474F
 
 .topnav
-  background-color: #212121
+  background-color: var(--mainNavToolbarBg)
+  backdrop-filter: blur(7px)
   position: absolute
-  z-index: 2 !important
+  z-index: 3 !important
 
 .mdc-list-item.mdc-list-item--with-one-line
   height: 45px
 
 .mat-toolbar
   position: relative
-  //background-color: #212121
   justify-content: space-between
-  //color: whitesmoke
   padding: 35px 15px
 
 .nav-header
@@ -37,9 +37,6 @@
 
 .mat-mdc-nav-list
   padding: 0
-
-.sidenav .mat-toolbar
-  //background: inherit
 
 .mat-toolbar.mat-primary
   position: sticky
@@ -80,6 +77,7 @@
   img
     height: 100%
     width: 100%
+    object-fit: cover
     border-radius: 50%
 
 .progress-bar
@@ -104,7 +102,7 @@
 @media (max-width: 580px)
   .logo
     width: 100px
-    margin: 0 0 -5px -5px
+    margin: 0 0 -5px 5px
 
 @media (max-width: 480px)
   .theme-toggle
