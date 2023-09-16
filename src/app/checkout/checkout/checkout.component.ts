@@ -1,6 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
 import { StepperOrientation } from '@angular/material/stepper';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable, Subscription } from 'rxjs';
@@ -11,16 +10,8 @@ import { loadCart } from 'src/app/ngrx/cart/cart.actions';
 import { selectExpressCheckoutItem, selectNewOrder } from 'src/app/ngrx/orders/orders.feature';
 import { selectCartItemsCount } from 'src/app/ngrx/cart/cart.feature';
 import { Router } from '@angular/router';
-
-const addressFields = {
-  addressLine1: ['', Validators.required],
-  addressLine2: [''],
-  city: ['', Validators.required],
-  county: [''],
-  postcode: ['', Validators.required]
-};
-const addressFieldsCopy: typeof addressFields =
-  JSON.parse(JSON.stringify(addressFields));
+import { AccountService } from '../../account/account.service';
+import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
 
 @Component({
   selector: 'app-checkout',
@@ -45,31 +36,34 @@ export class CheckoutComponent {
     this._store.select(selectCartItemsCount);
   readonly newOrder$: Observable<NewOrderResponse | null> = 
     this._store.select(selectNewOrder);
+  private readonly _loggedInUserId$: Observable<string | number | null> = 
+    this._store.select(selectLoggedInUserId);
     
   dataStream$ = combineLatest([
-    this.expressCheckoutItem$, this.cartItemCount$, this.newOrder$
-  ]).pipe(map(([expressCheckoutItem, cartItemCount, newOrder]) => {
-      return { expressCheckoutItem, cartItemCount, newOrder };
+    this.expressCheckoutItem$, this.cartItemCount$, this.newOrder$, this._loggedInUserId$
+  ]).pipe(map(([expressCheckoutItem, cartItemCount, newOrder, loggedInUserId]) => {
+      return { expressCheckoutItem, cartItemCount, newOrder, loggedInUserId };
     })
   );
+  private _loggedInUserId: string | number | undefined;
   private _subscription = Subscription.EMPTY;
   loading = true;
   orderStatus: "pending" | "completed" | undefined;
 
   private expressCheckoutItem: ExpressCheckoutItem | null | undefined;
   stepperOrientation$: Observable<StepperOrientation>;
-  billingAddressFormGroup = this._formBuilder.group(addressFields);
-  shippingAddressFormGroup = this._formBuilder.group(addressFieldsCopy);
+  billingAddressFormGroup = this._accountService.createAddressForm();
+  shippingAddressFormGroup = this._accountService.createAddressForm();
   billingAddress: Address | null | undefined;
   shippingAddress: Address | null | undefined;
   visitedSteps: string[] = ["Billing address"];
   useExisting = { billingAddress: false, shippingAddress: false };
 
   constructor(
-    private _formBuilder: FormBuilder,
     private _breakpointObserver: BreakpointObserver,
     private _router: Router,
-    private _store: Store<AppState>) {
+    private _store: Store<AppState>,
+    private _accountService: AccountService) {
     this.stepperOrientation$ = this._breakpointObserver
       .observe('(min-width: 900px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
@@ -77,7 +71,10 @@ export class CheckoutComponent {
 
   ngOnInit() {
     this._subscription = this.dataStream$
-      .subscribe(({ expressCheckoutItem, cartItemCount, newOrder }) => {
+      .subscribe(({ expressCheckoutItem, cartItemCount, newOrder, loggedInUserId }) => {
+        if (loggedInUserId) {
+          this._loggedInUserId = loggedInUserId;
+        }
         if (newOrder && this.orderStatus === "completed") {
           this._router.navigateByUrl(`/orders/${newOrder.id}`);
         }
@@ -92,7 +89,8 @@ export class CheckoutComponent {
   }
 
   useAddress(data: AddressEmitData) {
-    this.useExisting[data.type!] = true;
+    this.useExisting[data.type!] = data.useExisting;
+    //this.useExisting[data.type!] = true;
     this[data.type!] = data.address;
   }
   
@@ -101,11 +99,10 @@ export class CheckoutComponent {
   }
 
   createOrder({ status, paymentMethod, total }: PaymentEvent) {
-   // if (paymentEvent.status === "success") {
     this.orderStatus = status;
     const requestBody = {
-      shippingAddress: this.shippingAddress!,
-      billingAddress: this.billingAddress!,
+      shippingAddress: this._accountService.removeEmptyFields<Address>(this.shippingAddress!),
+      billingAddress: this._accountService.removeEmptyFields<Address>(this.billingAddress!),
       status,
       paymentMethod,
       total
@@ -117,9 +114,11 @@ export class CheckoutComponent {
       ).item = this.expressCheckoutItem!;
     }
 
-    this._store.dispatch(createOrder(requestBody));
-    this._store.dispatch(loadCart());
-    //}
+    this._store.dispatch(createOrder({ 
+      newOrder: requestBody,
+      customerId: Number(this._loggedInUserId)
+    }));
+    this._store.dispatch(loadCart({ customerId: Number(this._loggedInUserId) }));
   }
 
   ngOnDestroy() {

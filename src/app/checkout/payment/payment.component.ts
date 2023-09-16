@@ -10,6 +10,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { selectAccount } from 'src/app/ngrx/account/account.feature';
 import { CheckoutService } from '../checkout.service';
 import { selectExpressCheckoutItem } from 'src/app/ngrx/orders/orders.feature';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-payment',
@@ -27,21 +28,24 @@ export class PaymentComponent implements OnInit {
     this._store.select(selectAccount);
   private readonly _cartTotal$: Observable<number> = 
     this._store.select(selectCartTotal);
-  private readonly expressCheckoutItem$: Observable<ExpressCheckoutItem | null> =
+  private readonly _expressCheckoutItem$: Observable<ExpressCheckoutItem | null> =
     this._store.select(selectExpressCheckoutItem);
-  private _subscription = Subscription.EMPTY;
+  private _accountDataSubscription = Subscription.EMPTY;
+  private _checkoutSubscription = Subscription.EMPTY;
   private _paymentSubscription = Subscription.EMPTY;
-  //private _confirmPaymentIntent$: Observable<PaymentIntentResult> | undefined;
   private readonly _dataStream$ = combineLatest([
-    this._accountData$, this._cartTotal$, this.expressCheckoutItem$
-  ]).pipe(map(([accountData, cartTotal, expressCheckoutItem]) => {
-    return { accountData, cartTotal, expressCheckoutItem }
+    this._cartTotal$, this._expressCheckoutItem$
+  ]).pipe(map(([cartTotal, expressCheckoutItem]) => {
+    return { cartTotal, expressCheckoutItem }
   }));
 
   orderTotal = 0;
   elementsOptions: StripeElementsOptions = { locale: 'en' };
   paymentElementOptions: StripePaymentElementOptions = {
-    business: { name: "Earl's Black Market" }
+    business: { name: "Boom's Black Market" },
+    defaultValues: {
+
+    }
   };
   paymentMethod: "Card" | "Klarna" | "PayPal" | undefined;
   paying = false;
@@ -52,40 +56,63 @@ export class PaymentComponent implements OnInit {
     email: ['', [Validators.email]]
   });
 
-  appearance: Appearance = {
-    theme: 'stripe',
-    labels: 'floating',
+  lightAppearance: Appearance = {
+    theme: "stripe",
+    labels: "floating",
     variables: {
-      colorPrimary: '#673ab7',
+      colorPrimary: "#9c27b0"
     },
   };
+
+  darkAppearance: Appearance = {
+    theme: "night",
+    labels: "floating",
+    variables: {
+      colorPrimary: "#18ffff",
+      colorBackground: "#424242",
+      colorDanger: "orange"
+    },
+  };
+
+  testCardNumbers = [
+    { type: "Visa", number: "4000 0082 6000 0000" },
+    { type: "Visa (debit)", number: "4000 0582 6000 0005" },
+    { type: "Mastercard", number: "5555 5582 6555 4449" }
+  ];
+
+  get lightModeEnabled() {
+    return document.body.classList.contains("light-mode");
+  }
 
   constructor(
     private _checkoutService: CheckoutService,
     private _formBuilder: FormBuilder,
     private _stripeService: StripeService,
     private _store: Store<AppState>,
+    private _snackBar: MatSnackBar,
     @Inject(LOCALE_ID) private locale: string
   ) {}
 
   ngOnInit() {
     this.status = "loading";
-    this._subscription = this._dataStream$
-      .subscribe(({ accountData, cartTotal, expressCheckoutItem }) => {
-        if (accountData) {
-          this.paymentElementForm.patchValue({ 
+    this._accountDataSubscription = this._accountData$.subscribe(accountData => {
+      if (accountData) {
+        this.paymentElementForm.patchValue({ 
+          name: accountData.name,
+          email: accountData.email || ''
+        });
+        
+        this.paymentElementOptions.defaultValues = {
+          billingDetails: {
             name: accountData.name,
-            email: accountData.email || ''
-          });
-          
-          this.paymentElementOptions.defaultValues = {
-            billingDetails: {
-              name: accountData.name,
-              email: accountData.email
-            }
+            email: accountData.email
           }
         }
+      }
+    });
 
+    this._checkoutSubscription = this._dataStream$
+      .subscribe(({ cartTotal, expressCheckoutItem }) => {
         if (cartTotal || expressCheckoutItem) {
           if (cartTotal) {
             this.orderTotal = cartTotal;
@@ -119,16 +146,17 @@ export class PaymentComponent implements OnInit {
 
   pay() {
     if (!this.shippingAddress || !this.billingAddress) {
-      return this._store.dispatch(notify({ 
+      this._store.dispatch(notify({ 
         title: "Address information is missing.", 
         content: "Billing and shipping addresses are required to complete your order." 
-      }))
-    }
-    this.paying = true;
-    if (this.paymentMethod !== "Card") {
-      this.processNonCardPayment();
-    } else if (this.paymentElementForm.valid) {
-      this.processCardPayment();
+      }));
+    } else {
+      this.paying = true;
+      if (this.paymentMethod !== "Card") {
+        this.processNonCardPayment();
+      } else if (this.paymentElementForm.valid) {
+        this.processCardPayment();
+      }
     }
   }
 
@@ -207,8 +235,17 @@ export class PaymentComponent implements OnInit {
     return messages;
   }
 
+  copyCardNumber(cardNumber: string) {
+    this._snackBar.open(`Copied to clipboard: ${cardNumber}.`, 'Dimiss', {
+      horizontalPosition: "start",
+      verticalPosition: "top",
+      duration: 8000
+    });
+  }
+
   ngOnDestroy() {
-    this._subscription.unsubscribe();
+    this._accountDataSubscription.unsubscribe();
+    this._checkoutSubscription.unsubscribe();
     this._paymentSubscription.unsubscribe();
   }
 }

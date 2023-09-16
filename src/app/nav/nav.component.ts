@@ -36,25 +36,23 @@ export class NavComponent {
   rippleRadius = 30;
   eventsSubject = new Subject<void>();
 
+  largeViewport$: Observable<boolean> = this._breakpointObserver
+  .observe('(min-width: 1000px)')
+  .pipe( map(result => result.matches), shareReplay());
+
   mediumViewport$: Observable<boolean> = this._breakpointObserver
     .observe('(max-width: 800px)')
-    .pipe(
-      map(result => result.matches),
-      shareReplay()
-    );
+    .pipe(map(result => result.matches), shareReplay());
 
   mobileViewport$: Observable<boolean> = this._breakpointObserver
   .observe('(max-width: 380px)')
-  .pipe(
-    map(result => result.matches),
-    shareReplay()
-  );
+  .pipe(map(result => result.matches), shareReplay());
 
   dataStream$ = combineLatest([
-    this.logoutStatus$, this.authIsLoading$, this.mediumViewport$, this.mobileViewport$, this.currentUser$, this.loggedInUserId$, this.cartItemsCount$
-  ]).pipe(map(([logoutStatus, authIsLoading, mediumViewport, mobileViewport, currentUser, loggedInUserId, cartItemsCount]) => {
+    this.logoutStatus$, this.authIsLoading$, this.mobileViewport$, this.mediumViewport$, this.largeViewport$, this.currentUser$, this.loggedInUserId$, this.cartItemsCount$
+  ]).pipe(map(([logoutStatus, authIsLoading, mobileViewport, mediumViewport, largeViewport, currentUser, loggedInUserId, cartItemsCount]) => {
     return {
-      logoutStatus, authIsLoading, mediumViewport, mobileViewport, currentUser, loggedInUserId, cartItemsCount
+      logoutStatus, authIsLoading, mobileViewport, mediumViewport, largeViewport, currentUser, loggedInUserId, cartItemsCount
     }
   }));
 
@@ -89,11 +87,15 @@ export class NavComponent {
     return document.body.classList.contains("light-mode");
   }
 
+  get activeLink() { return "active"; }
+
   toggleTheme(e: MatSlideToggleChange) {
     if (e.checked === true) {
+      document.body.classList.remove("dark-mode");
       document.body.classList.add("light-mode");
     } else {
       document.body.classList.remove("light-mode");
+      document.body.classList.add("dark-mode");
     }
   }
   
