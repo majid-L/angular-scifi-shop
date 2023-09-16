@@ -1,0 +1,13 @@
+<mat-paginator *ngIf="(pagination$ | async) as pagination" 
+  (page)="handlePageEvent($event)"
+  [length]="pagination.totalResults"
+  [pageIndex]="currentPage - 1"
+  [pageSize]="currentLimit"
+  showFirstLastButtons="true"
+  [pageSizeOptions]="[25, 50, 75, 100]"
+  aria-label="Select reviews page">
+</mat-paginator>
+
+<ng-container *ngIf="(loadStatus$ | async) === 'loading'">
+  <app-spinner></app-spinner>
+</ng-container>
