@@ -18,8 +18,10 @@ h2 span
   height: fit-content
   padding: 0
 
-  img
+  img:not(.review-product-info img)
     height: 40px
+    width: 40px
+    object-fit: cover
     border-radius: 50%
 
 .mat-mdc-card
@@ -29,6 +31,7 @@ h2 span
   display: flex
   flex-direction: column-reverse
   gap: 10px
+  padding-top: 10px
 
 .mat-mdc-card-actions
   margin: 10px
@@ -42,6 +45,7 @@ h2 span
 .list-item-subtitle, .reviews-tab-header, .customer-info, .mat-mdc-card-title
   display: flex
   flex-wrap: wrap
+  flex-direction: row
   align-items: center
   gap: 30px
 
@@ -53,10 +57,43 @@ h2 span
 
 .reviews-tab-header
   justify-content: space-between
-  gap: 10px
-  margin-bottom: 10px
 
-.reviews-tab-header div
+.reviews-tab-header, .review-product-info
+  flex-wrap: nowrap
+  gap: 20px
+  margin: 10px 0
+  align-items: center
+
+.review-product-info
+  display: flex
+  padding: 10px 16px
+  gap: 15px
+
+  img
+    cursor: pointer
+    transition: all 0.3s ease
+    border: 1px solid gray
+  
+  img:hover
+    scale: 1.04
+    border: 1px solid var(--primaryColor)
+
+  h3
+    cursor: pointer
+    text-decoration: underline
+    transition: all 0.3s ease
+
+  h3:hover
+    color: var(--headingHoverColor)
+
+.review-product-info-heading
+  font-style: italic
+  margin: 15px 16px -5px
+
+.review-product-info-divider
+  margin-top: 15px
+
+.reviews-tab-header div, .review-product-info div
   display: flex
   flex-direction: column
   gap: 10px
@@ -69,9 +106,9 @@ h2 span
 .review-date
   margin: 5px 0 0
 
-blockquote *
+blockquote *, .review-product-info *
   margin: 0
-  word-break: break-all
+  word-break: normal
   white-space: normal
 
 .review-mat-icon
@@ -89,14 +126,18 @@ h3
   font-weight: 100
   margin: 0
 
-.stars
-  color: #ffc72c
-  scale: 1.2
-  padding: 5px
+.disabled
+  pointer-events: none
+  cursor: default
 
-.rating-chip .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled)
-    background-color: #4527a0
+.paginator
+  margin: 10px 0
 
 @media (max-width: 500px)
   .reviews-tab
     padding: 5px 0
+
+@media (max-width: 580px)
+  .review-product-info, .reviews-tab-header
+    flex-wrap: wrap
+    gap: 10px
