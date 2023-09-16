@@ -1,0 +1,59 @@
+// Dark mode variables
+$darkPrimary: #ffab00
+$darkMainNavbarBg: #212121
+$darkActiveAnchorBg: $darkPrimary
+$darkActiveAnchorColor: #212121
+$darkProductCardOverlay: #ffaa004a
+$darkProductCardBoxShadow: #ffaa00aa
+$darkHeadingHoverColor: $darkPrimary
+$darkCartTotalColor: $darkPrimary
+$darkProductCardBg: black
+$darkSuccessColor: #53f91c
+$darkHintBg: #ffdc1c
+$darkHeadingColor: #212121
+
+// mixin that enables css variables in dark mode
+@mixin dark()
+  --primaryColor: #{$darkPrimary}
+  --mainNavToolbarBg: #{$darkMainNavbarBg}
+  --activeAnchorBg: #{$darkActiveAnchorBg}
+  --textColor: #{$darkActiveAnchorColor}
+  --productCardOverlay: #{$darkProductCardOverlay}
+  --productCardBoxShadow: #{$darkProductCardBoxShadow}
+  --headingHoverColor: #{$darkHeadingHoverColor}
+  --cartTotalColor: #{$darkCartTotalColor}
+  --productCardBg: #{$darkProductCardBg}
+  --successColor: #{$darkSuccessColor}
+  --hintBg: #{$darkHintBg}
+  --headingColor: #{$darkHeadingColor}
+
+/**************************************************************/
+
+// Light mode variables
+$lightPrimary: #D500F9
+$lightMainNavbarBg: #21212176
+$lightActiveAnchorBg: #D500F9
+$lightActiveAnchorColor: whitesmoke
+$lightProductCardOverlay: #d400f94a
+$lightProductCardBoxShadow: #D500F9aa
+$lightHeadingHoverColor: #e150fa
+$lightCartTotalColor: #e150fa
+$lightProductCardBg: #212121
+$lightSuccessColor: green
+$lightHintBg: #ec96fb
+$lightHeadingColor: whitesmoke
+
+// mixin that enables css variables in light mode
+@mixin light()
+  --primaryColor: #{$lightPrimary}
+  --mainNavToolbarBg: #{$lightMainNavbarBg}
+  --activeAnchorBg: #{$lightActiveAnchorBg}
+  --textColor: #{$lightActiveAnchorColor}
+  --productCardOverlay: #{$lightProductCardOverlay}
+  --productCardBoxShadow: #{$lightProductCardBoxShadow}
+  --headingHoverColor: #{$lightHeadingHoverColor}
+  --cartTotalColor: #{$lightCartTotalColor}
+  --productCardBg: #{$lightProductCardBg}
+  --successColor: #{$lightSuccessColor}
+  --hintBg: #{$lightHintBg}
+  --headingColor: #{$lightHeadingColor}
