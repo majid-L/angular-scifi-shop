@@ -116,16 +116,7 @@
             </div>
 
             <div class="product-information">
-              <mat-chip-listbox aria-label="Product information">
-                <mat-chip>
-                  <mat-icon matChipAvatar>category</mat-icon>
-                  {{ product.categoryName }}
-                </mat-chip>
-                <mat-chip>
-                  <mat-icon matChipAvatar>business</mat-icon>
-                  Sold by <strong>{{ product.supplierName }}</strong>
-                </mat-chip>
-              </mat-chip-listbox>
+              <app-chips [product]="product"></app-chips>
               
               <p>{{ product.description }}</p>
               <mat-chip class="price mat-elevation-z3">{{ product.price | currency: '£' }}</mat-chip>
@@ -138,7 +129,9 @@
 
           <!-- Reviews tab -->
           <mat-tab label="Reviews">
-            <app-reviews 
+            <app-reviews
+               component="product"
+               [productId]="product.id"
               [showCreateReviewButton]="showCreateReviewButton"
               [newReviewTemplate]="newReviewTemplate(product)"
             ></app-reviews>

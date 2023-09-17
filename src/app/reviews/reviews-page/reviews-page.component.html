@@ -1,0 +1,49 @@
+<ng-container *ngIf="show404; else no404">
+  <app-page-not-found></app-page-not-found>
+</ng-container>
+
+<ng-template #no404>
+  <div class="heading">
+    <img src="assets/reviews.svg">
+  </div>
+
+  <main>
+    <ng-container *ngIf="dataStream$ | async as data">
+      <section>
+        <ng-container *ngIf="data?.customer">
+          <div class="load-reviews-button">
+            <button mat-raised-button (click)="loadAllReviews()" color="primary">Load all reviews</button>
+            <p>Click here to show reviews for all customers and products.</p>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="data.reviews?.length === 0; else customerReviews">
+          <div class="empty">
+            <p class="bold">{{ data.customer?.username }} has not published any product reviews.</p>
+            <p>Nothing else to see here.</p>
+            <img class="filter" src="assets/empty-2.svg">
+          </div>
+        </ng-container>
+  
+        <ng-template #customerReviews>
+          <ng-container *ngIf="data.customer?.username; else allReviews">
+            <h1 class="username">{{ data.customer!.username }}'s reviews.</h1>
+            <p class="name">Currently viewing {{ data.pagination.totalResults }} reviews posted by {{ data.customer!.username }}<span>({{ data.customer!.name }})</span></p>
+          </ng-container>
+        </ng-template>
+
+        <ng-template #allReviews>
+          <h1 class="username">All reviews</h1>
+          <p class="name">Currently viewing all {{ data.pagination.totalResults }} reviews (all products/customers).</p>
+        </ng-template>
+
+        <mat-divider></mat-divider>
+
+      </section>
+    </ng-container>
+
+    <section>
+      <app-reviews component="reviews"></app-reviews>
+    </section>
+  </main>
+</ng-template>

@@ -9,6 +9,10 @@
 <ng-container *ngIf="wishlist$ | async as wishlist">
   <main>
     <section *ngLet="(updateStatus$ | async) as updateStatus">
+      <h1 class="username">{{ wishlist.username }}'s wishlist</h1>
+      <p class="name">{{ wishlist.name }}</p>
+      <mat-divider></mat-divider>
+      
       <ng-container *ngIf="wishlist.wishlistItems.length === 0; else wishlistItems">
         <div class="empty">
           <p class="bold">Your wishlist is currently empty.</p>
@@ -18,11 +22,7 @@
       </ng-container>
 
       <ng-template #wishlistItems>
-        <h1 class="username">{{ wishlist.username }}'s wishlist</h1>
-      <p class="name">{{ wishlist.name }}</p>
-      <mat-divider></mat-divider>
-
-      <mat-progress-bar *ngIf="updateStatus === 'loading' && operation === 'removeAll'"></mat-progress-bar>
+      <mat-progress-bar *ngIf="updateStatus === 'loading' && operation === 'removeAll'" mode="indeterminate"></mat-progress-bar>
 
       <div class="remove">
         <button  mat-fab extended (click)="updateWishlist('removeAll', wishlist, -1)" color="warn">
@@ -44,6 +44,8 @@
               <img [src]="'assets/icons/transparent/' + item.product.thumbnail" [routerLink]="['/products', item.product.id]" [alt]="item.product.name" matTooltip="Go to product page">
               <p>{{ item.product.description }}</p>
             </mat-card-content>
+
+            <mat-divider></mat-divider>
 
             <mat-action-row>
               <app-chips [product]="item.product"></app-chips>

@@ -19,10 +19,10 @@
     </ng-container>
     </div>
 
-    <app-pagination
-    (toggleStyleEvent)="toggleStyle($event)" 
-    [showDisplayToggle]="showDisplayToggle">
-  </app-pagination>
+    <app-products-pagination
+      (toggleStyleEvent)="toggleStyle($event)" 
+      [showDisplayToggle]="showDisplayToggle">
+    </app-products-pagination>
   </div>
 
   <main *ngLet="(searchTerm$ | async) as searchTerm">
@@ -70,7 +70,7 @@
                 </span>
               </div>
     
-              <img *ngIf="listDisplayStyle === 'grid'" [routerLink]="['/products', product.id]" class="product-image" mat-card-image [src]="'assets/icons/black/' + product.thumbnail">
+              <img *ngIf="listDisplayStyle === 'grid'" [routerLink]="['/products', product.id]" class="product-image" mat-card-image [src]="productImgSrc(product)">
   
               <ng-container *ngIf="(wishlist$ | async) as wishlist">
                 <div class="product-card-overlay" [class.foreground]="listDisplayStyle === 'list'">

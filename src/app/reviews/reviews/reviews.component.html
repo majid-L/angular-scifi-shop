@@ -1,25 +1,36 @@
 <section class="reviews-tab">
+
+  <div class="paginator">
+    <app-reviews-pagination [productId]="productId"></app-reviews-pagination>
+  </div>
+
   <ng-container *ngIf="(reviews$ | async) as reviews; else loading">
-    <h2>Reviews <span>({{ reviews.length }})</span></h2>
+    <h2>Reviews <span *ngIf="(pagination$ | async) as pagination">({{ pagination.totalResults }})</span></h2>
     <mat-divider></mat-divider>
+
     <ng-container *ngIf="reviews.length > 0; else noReviews">
-      <div class="reviews-tab-header" *ngLet="reviews[0].product! as product">
-        <div>
-          <h3>{{ product.name }}</h3>
-          <mat-chip-listbox aria-label="Product information">
-            <mat-chip>
-              <mat-icon matChipAvatar>category</mat-icon>
-              {{ product.categoryName }}
-            </mat-chip>
-            <mat-chip>
-              <mat-icon matChipAvatar>business</mat-icon>
-              Sold by <strong>{{ product.supplierName }}</strong>
-            </mat-chip>
-          </mat-chip-listbox>
-          <h4 class="product-description">{{ product.description }}</h4>
-        </div>
-        <img class="product-image" [src]="'assets/icons/black/' + reviews[0].product!.thumbnail">
-      </div>
+      
+      <ng-container *ngIf="component === 'product'">
+        <ng-container *ngTemplateOutlet="productInfo; context: { product: reviews[0].product!, class: 'reviews-tab-header' }"></ng-container>
+        
+        <!-- <div class="reviews-tab-header" *ngLet="reviews[0].product! as product">
+          <div>
+            <h3>{{ product.name }}</h3>
+            <mat-chip-listbox aria-label="Product information">
+              <mat-chip>
+                <mat-icon matChipAvatar>category</mat-icon>
+                {{ product.categoryName }}
+              </mat-chip>
+              <mat-chip>
+                <mat-icon matChipAvatar>business</mat-icon>
+                Sold by <strong>{{ product.supplierName }}</strong>
+              </mat-chip>
+            </mat-chip-listbox>
+            <h4 class="product-description">{{ product.description }}</h4>
+          </div>
+          <img class="product-image" [src]="'assets/icons/black/' + reviews[0].product!.thumbnail">
+        </div> -->
+      </ng-container>
 
       <mat-divider></mat-divider>
 
@@ -33,7 +44,6 @@
       <mat-list>
         <mat-list-item *ngFor="let review of reviews">
           <mat-card>
-
             <mat-card-header>
               <div class="customer-info">
                 <img [src]="review.customer!.avatar">
@@ -41,11 +51,7 @@
               </div>
 
               <mat-card-title>
-                <span [matBadge]="review.rating" matBadgeColor="accent" class="rating-chip">
-                  <mat-chip>
-                    <igc-rating class="stars" [value]="review.rating" min="0" max="5" disabled></igc-rating>
-                  </mat-chip>
-                </span>
+                <app-rating [review]="review"></app-rating>
                 <h4 class="review-title">{{ review.title }}</h4>
               </mat-card-title>
 
@@ -73,21 +79,39 @@
               </button>
             </mat-card-actions>
             <mat-progress-bar *ngIf="(reviewStatus$ | async) === 'loading' && (activeId$ | async) === review.id" mode="indeterminate"></mat-progress-bar>
-            </mat-card>
+          
+            <ng-container *ngIf="component === 'reviews'">
+              <mat-divider class="review-product-info-divider"></mat-divider>
+              <h4 class="review-product-info-heading">Product details:</h4>
+              <ng-container *ngTemplateOutlet="productInfo; context: { product: review.product!, class: 'review-product-info' }"></ng-container>
+            </ng-container>
+
+          </mat-card>
         </mat-list-item>
       </mat-list>
     </ng-container>
     
     <ng-template #noReviews>
-      <p>There are no reviews for this product.</p>
+      <p>There are no reviews for this {{ component === "product" ? "product" : "customer" }}.</p>
     </ng-template>
     
   </ng-container>
 
   <ng-template #loading>
-    <ng-container *ngIf="(loadStatus$ | async) === 'loading'">
+    <ng-container *ngIf="(loadStatus$ | async) === 'loading' && component === 'product'">
       <mat-progress-spinner class="spinner" mode="indeterminate"></mat-progress-spinner>
       <p class="italic">Loading reviews</p>
     </ng-container>
   </ng-template>
 </section>
+
+<ng-template let-product="product" let-class="class" #productInfo>
+  <div [ngClass]="class">
+    <img [routerLink]="['/products', product.id]" [ngClass]="{'product-image': true, 'disabled': component === 'product'}" [src]="'assets/icons/black/' + product.thumbnail">
+    <div>
+      <h3 [routerLink]="['/products', product.id]" [class.disabled]="component === 'product'">{{ product.name }}</h3>
+      <app-chips [product]="product"></app-chips>
+      <h4 class="product-description">{{ product.description }}</h4>
+    </div>
+  </div>
+</ng-template>

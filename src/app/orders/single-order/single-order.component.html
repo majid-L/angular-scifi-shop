@@ -62,7 +62,11 @@
         </mat-action-row>
       </mat-card>
       <div>
-        <app-addresses></app-addresses>
+        <app-addresses
+           component="singleOrder"
+          [shippingAddress]="order.shippingAddress"
+          [billingAddress]="order.billingAddress"
+        ></app-addresses>
       </div>
       </div>
     </section>      

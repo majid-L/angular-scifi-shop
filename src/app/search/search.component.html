@@ -1,0 +1,11 @@
+<header class="headroom">
+  <form #searchForm="ngForm" (ngSubmit)="search(searchForm)">
+    <mat-form-field class="form-field">
+        <mat-label>Search products</mat-label>
+        <input matInput type="text" [(ngModel)]="productName" name="productName" placeholder="Enter product name">
+        <button type="submit" mat-icon-button matSuffix [attr.aria-label]="'Search products'">
+          <mat-icon color="primary">search</mat-icon>
+        </button>
+      </mat-form-field>
+  </form>
+</header>
