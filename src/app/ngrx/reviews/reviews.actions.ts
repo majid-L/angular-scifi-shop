@@ -1,8 +1,20 @@
 import { createAction, props } from "@ngrx/store";
 
+export const loadAllReviews = createAction(
+  "[Reviews Component] Load All Reviews",
+  props<{ page: number, limit: number }>()
+);
+export const loadAllReviewsSuccess = createAction(
+  "[Reviews Component] Load All Reviews - Success",
+  props<ReviewsResponse>()
+);
+
 export const loadProductReviews = createAction(
   "[Reviews Component] Load Product Reviews",
-  props<{ productId: number }>()
+  props<{ 
+    productId: number, 
+    queryParams: { page: number, limit: number } 
+  }>()
 );
 export const loadProductReviewsSuccess = createAction(
   "[Reviews Component] Load Product Reviews - Success",
@@ -11,11 +23,14 @@ export const loadProductReviewsSuccess = createAction(
 
 export const loadCustomerReviews = createAction(
   "[Reviews Component] Load Customer Reviews",
-  props<{ customerId: number }>()
+  props<{ 
+    customerId: number,
+    queryParams: { page: number, limit: number }
+   }>()
 );
 export const loadCustomerReviewsSuccess = createAction(
   "[Reviews Component] Load Customer Reviews - Success",
-  props<ReviewsResponse>()
+  props<CustomerReviewsResponse>()
 );
 
 export const loadFavorites = createAction(

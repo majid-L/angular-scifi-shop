@@ -8,8 +8,8 @@ export const initialState: NotificationState = {
 
 export const notificationReducer = createReducer(
   initialState,
-  on(showDialog, state => ({...state, showDialog: true})),
-  on(hideDialog, state => ({...state, showDialog: false})),
+  on(showDialog, state => ({ ...state, showDialog: true })),
+  on(hideDialog, state => ({ ...state, showDialog: false, data: null })),
   on(httpError, (state, { error }) => {
     return {
       showDialog: true,

@@ -8,6 +8,8 @@ import {
     createReviewSuccess, 
     deleteReview, 
     deleteReviewSuccess, 
+    loadAllReviews, 
+    loadAllReviewsSuccess, 
     loadCustomerReviews, 
     loadCustomerReviewsSuccess, 
     loadFavorites, 
@@ -20,9 +22,23 @@ import {
 
 @Injectable()
 export class ReviewsEffects {
+  $loadAllReviews = createEffect(() => this._actions$.pipe(
+    ofType(loadAllReviews),
+    exhaustMap(queryParams => {
+      return this._reviewsService.getAllReviews(queryParams)
+      .pipe(
+        map(reviewsResponse => {
+          return loadAllReviewsSuccess(reviewsResponse);
+        }),
+        catchError(dispatchErrorAction)
+      )
+    })
+  ));
+
   $loadProductReviews = createEffect(() => this._actions$.pipe(
     ofType(loadProductReviews),
-    exhaustMap(({ productId }) => this._reviewsService.getProductReviews(productId)
+    exhaustMap(({ productId, queryParams }) => 
+      this._reviewsService.getProductReviews(productId, queryParams)
       .pipe(
         map(reviewsResponse => {
           return loadProductReviewsSuccess(reviewsResponse);
@@ -34,7 +50,8 @@ export class ReviewsEffects {
 
   $loadCustomerReviews = createEffect(() => this._actions$.pipe(
     ofType(loadCustomerReviews),
-    exhaustMap(({ customerId }) => this._reviewsService.getCustomerReviews(customerId)
+    exhaustMap(({ customerId, queryParams }) => 
+      this._reviewsService.getCustomerReviews(customerId, queryParams)
       .pipe(
         map(reviewsResponse => {
           return loadCustomerReviewsSuccess(reviewsResponse);
