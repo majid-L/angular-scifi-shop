@@ -1,6 +1,4 @@
-<ng-container *ngIf="(showOverlay$ | async) as showOverlay">
-  <!-- <ng-container> -->
-  <section id="loginOverlay" class="overlay" (click)="hideOverlayOnBodyClick($event)"
+<section id="loginOverlay" class="overlay" (click)="hideOverlayOnBodyClick($event)"
   *ngLet="(authIsLoading$ | async) as isLoading"
   >
     <div [ngClass]="{'content': true, 'dark-bg': !lightModeEnabled}">
@@ -8,7 +6,8 @@
       <mat-progress-bar *ngIf="isLoading" mode="indeterminate" color="primary"></mat-progress-bar>
       <div class="padding">
         <mat-icon class="close" (click)="hideOverlay()">close</mat-icon>
-        <mat-tab-group (selectedTabChange)="tabChange($event)">
+        <mat-tab-group (selectedTabChange)="tabChange($event)"
+        selectedIndex="2">
           
           <mat-tab label="Login">
             <app-auth-form [formType]="formType"></app-auth-form>
@@ -20,8 +19,17 @@
           </mat-tab>
 
           <mat-tab label="Login with Google">
-            <p>Use single sign-on (SSO) to access the app.</p>
-            <button>Continue with SSO</button>
+            <div>
+              <p>Use single sign-on (SSO) to access the app.</p>
+              <div id="google-login">
+                <asl-google-signin-button 
+                  text="continue_with"
+                  type="standard" 
+                  size="large"
+                  [theme]="theme">
+                </asl-google-signin-button>
+              </div>
+            </div>
           </mat-tab>
 
           </mat-tab-group>
@@ -35,4 +43,4 @@
       </div>
     </div>
   </section>
-</ng-container>
+

@@ -3,7 +3,7 @@
 </div>
 
 <ng-container *ngLet="accountData$ | async as accountData">
-  <ng-container *ngIf="(accountStatus$ | async) === 'loading' && !accountData">
+  <ng-container *ngIf="(accountLoadStatus$ | async) === 'loading' && !accountData">
     <div class="loading">
       <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
       <p class="italic">Loading account data</p>
@@ -15,15 +15,37 @@
       <h1 class="username">{{ accountData.username }}</h1>
       <p class="name">{{ accountData.name }}</p>
       <mat-divider></mat-divider>
+
+      <div class="hint" *ngIf="accountData.username === 'alexnes'">
+        <p class="subtitle">
+          <span class="icon"><mat-icon>info</mat-icon></span>
+          <span>You are currently logged in as the sample customer and will not be able to modify his username or password.</span>
+        </p>
+      </div>
+
       <div class="container">
         <div class="avatar-div">
-          <p class="email">{{ accountData.email }}</p>
-          <p class="join-date">Joined {{ accountData.joinDate | date }}</p>
+          <p class="date">
+            <mat-icon>date_range</mat-icon>
+            Joined <strong>{{ accountData.joinDate | date }}</strong>
+          </p>
+          <p class="email">
+            <mat-icon>alternate_email</mat-icon>
+            {{ accountData.email }}
+          </p>
+          <p class="tel" *ngIf="accountData.phone">
+            <mat-icon>local_phone</mat-icon>
+            {{ accountData.phone }}
+          </p>
           <br>
-          <img class="avatar-image" [src]="accountData.avatar">
+          <img #avatar class="avatar-image" [src]="accountData.avatar" (error)="avatar.src = '/assets/anonymous.webp'">
         </div>
         <div class="addresses">
-          <app-addresses></app-addresses>
+          <app-addresses
+            component="account"
+            [billingAddress]="accountData.billingAddress"
+            [shippingAddress]="accountData.shippingAddress"
+          ></app-addresses>
         </div>
 
         <div class="account-panel">
@@ -34,8 +56,8 @@
                 Update as many or as few field as you would like.
               </mat-panel-description>
             </mat-expansion-panel-header>
-            <form [formGroup]="accountForm!" (ngSubmit)="updateAccountData()">
 
+            <form [formGroup]="accountForm">
               <mat-form-field floatLabel="always">
                 <mat-label>Name</mat-label>
                 <input matInput type="text" formControlName="name" placeholder="Enter your name">
@@ -47,19 +69,29 @@
               </mat-form-field>
   
               <mat-form-field floatLabel="always">
-                <mat-label>Enter your password</mat-label>
-                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" placeholder="Enter your password">
-                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                </button>
+                <mat-label>Email</mat-label>
+                <input matInput type="email" formControlName="email" placeholder="Enter your email">
+                <mat-error></mat-error>
+              </mat-form-field>
+
+              <mat-form-field floatLabel="always">
+                <mat-label>Phone</mat-label>
+                <input matInput type="tel" formControlName="phone" placeholder="Enter your phone number">
+                <mat-error *ngIf="phone?.errors?.['pattern']">Phone number cannot contain letters.</mat-error>
+              </mat-form-field>
+
+              <mat-form-field floatLabel="always">
+                <mat-label>Avatar URL</mat-label>
+                <input matInput type="url" formControlName="avatar" placeholder="Enter avatar URL">
               </mat-form-field>
             
-             <button mat-stroked-button type="submit" color="primary">
+             <button mat-stroked-button type="button" (click)="updateAccountData()" class="update" [disabled]="accountForm.invalid" color="primary">
               <mat-icon>edit</mat-icon>
               Update details
             </button>
             </form>
           </mat-expansion-panel>
+          <mat-progress-bar *ngIf="(updateStatus === 'loading' || deleteStatus === 'loading') && activeItem === 'account'" mode="indeterminate"></mat-progress-bar>
         </div>
 
         <div class="password-panel">
@@ -67,25 +99,41 @@
             <mat-expansion-panel-header>
               <mat-panel-title>Change password</mat-panel-title>
               <mat-panel-description>
-                Choose a new password.
+                Choose a new password
               </mat-panel-description>
             </mat-expansion-panel-header>
-            <form [formGroup]="accountForm!" (ngSubmit)="updateAccountData()">
-    
+
+            <form [formGroup]="passwordForm">
               <mat-form-field floatLabel="always">
-                <mat-label>Enter your password</mat-label>
-                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" placeholder="Enter your password">
-                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <mat-label>Enter new password</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" placeholder="Enter password">
+                <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                  <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
+                <mat-hint>Password must be at least 6 characters long and contain at least 1 capital letter and 1 number.</mat-hint>
+                <mat-error *ngIf="passwordForm.invalid">{{ showErrorMessage('password') }}</mat-error>
               </mat-form-field>
-            
-             <button mat-stroked-button type="submit" color="primary">
+
+              <mat-form-field floatLabel="always">
+                <mat-label>Confirm new password</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" formControlName="passwordConfirm" placeholder="Confirm password">
+                <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                  <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-error *ngIf="passwordForm.invalid">{{ showErrorMessage('passwordConfirm') }}</mat-error>
+              </mat-form-field>
+             
+             <button mat-stroked-button type="button" (click)="updatePassword()" class="update" color="primary" [disabled]="passwordForm.invalid || accountData.id === 1">
               <mat-icon>edit</mat-icon>
               Update password
             </button>
+            <mat-hint *ngIf="accountData.id === 1" class="warn">
+              <mat-icon>error</mat-icon>
+              You won't be able to update the sample customer's password.
+            </mat-hint>
             </form>
           </mat-expansion-panel>
+          <mat-progress-bar *ngIf="updateStatus === 'loading' && activeItem === 'password'" mode="indeterminate"></mat-progress-bar>
         </div>
       </div>
     </section>

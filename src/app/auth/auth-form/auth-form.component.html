@@ -1,35 +1,85 @@
 <h2>{{ formType }}</h2>
-<form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="login-form">
-  <ng-container *ngIf="formType === 'Signup'">
+
+<!-- Login tab -->
+<ng-container *ngIf="formType === 'Login'">
+  <div class="hint">
+    <p class="subtitle">
+      <span class="icon"><mat-icon>info</mat-icon></span>
+      <span>Tip: you can login as a sample customer using the details below. This customer already has various orders, reviews, wishlist, cart and favorites that you can explore.</span>
+    </p>
+    <div class="sample-data">
+      <p>Username: <strong>alexnes</strong></p>
+      <p>Password: <strong>password</strong></p>
+      <button mat-raised-button color="primary" (click)="loginAsSampleCustomer()">Login as sample customer</button>
+    </div>
+  </div>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+    <ng-container *ngTemplateOutlet="usernameTemplate; context: { form: loginForm }"></ng-container>
+    <ng-container *ngTemplateOutlet="passwordTemplate; context: { form: loginForm, label: 'password', description: 'Enter password' }"></ng-container>
+    <ng-container [ngTemplateOutlet]="dialogFooter"></ng-container>
+  </form>
+</ng-container>
+
+<!-- Signup tab -->
+<ng-container *ngIf="formType === 'Signup'">
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="login-form">
+    <ng-container *ngTemplateOutlet="nameTemplate; context: { form: signupForm }"></ng-container>
+    <ng-container *ngTemplateOutlet="emailTemplate; context: { form: signupForm }"></ng-container>
+    <ng-container *ngTemplateOutlet="usernameTemplate; context: { form: signupForm }"></ng-container>
+    <ng-container *ngTemplateOutlet="passwordTemplate; context: { form: signupForm, label: 'password', description: 'Enter password' }"></ng-container>
+    <ng-container *ngTemplateOutlet="passwordTemplate; context: { form: signupForm, label: 'passwordConfirm', description: 'Confirm password' }"></ng-container>
+    <ng-container [ngTemplateOutlet]="dialogFooter"></ng-container>
+  </form>
+</ng-container>
+ 
+
+<!-- ******************* Templates ************************** -->
+<ng-template let-form="form" #usernameTemplate>
+  <ng-container [formGroup]="form">
     <mat-form-field>
-        <mat-label>Name</mat-label>
-        <input matInput placeholder="Enter name" formControlName="name">
-        <mat-error *ngIf="authForm.controls.name.invalid">{{ showErrorMessage("name") }}</mat-error>
-      </mat-form-field>
-    
-      <mat-form-field>
-        <mat-label>Email</mat-label>
-        <input matInput placeholder="Enter email" formControlName="email">
-        <mat-error *ngIf="authForm.controls.email.invalid">{{ showErrorMessage("email") }}</mat-error>
-      </mat-form-field>
+      <mat-label>Username</mat-label>
+      <input matInput placeholder="Enter username" formControlName="username" required>
+      <mat-error *ngIf="form.controls.username.invalid">{{ showErrorMessage("username") }}</mat-error>
+    </mat-form-field>
   </ng-container>
+</ng-template>
 
-  <mat-form-field>
-    <mat-label>Username</mat-label>
-    <input matInput placeholder="Enter username" formControlName="username">
-    <mat-error *ngIf="authForm.controls.username.invalid">{{ showErrorMessage("username") }}</mat-error>
-  </mat-form-field>
+<ng-template let-form="form" #nameTemplate>
+  <ng-container [formGroup]="form">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Enter name" formControlName="name" [required]="form === signupForm">
+      <mat-error *ngIf="form.controls.name.invalid">{{ showErrorMessage("name") }}</mat-error>
+    </mat-form-field>
+  </ng-container>
+</ng-template>
 
-  <mat-form-field>
-    <mat-label>Password</mat-label>
-    <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" placeholder="Enter password">
-    <mat-error *ngIf="authForm.controls.password.invalid">{{ showErrorMessage("password") }}</mat-error>
-    <button mat-icon-button matSuffix (click)="togglePasswordField($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-    </button>
-  </mat-form-field>
-  
-  <button type="submit" [disabled]="!authForm.valid" color="primary" class="login-button" mat-raised-button>{{ formType }}</button>
-</form>
+<ng-template let-form="form" #emailTemplate>
+  <ng-container [formGroup]="form">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput placeholder="Enter email" formControlName="email" [required]="form === signupForm">
+      <mat-error *ngIf="form.controls.email.invalid">{{ showErrorMessage("email") }}</mat-error>
+    </mat-form-field>
+  </ng-container>
+</ng-template>
 
-<mat-spinner *ngIf="(status$ | async) === 'loading'" class="spinner" color="primary"></mat-spinner>
+<ng-template let-form="form" let-label="label" let-description="description" #passwordTemplate>
+  <ng-container [formGroup]="form">
+    <mat-form-field>
+      <mat-label>{{ label === "password" ? "Password" : "Confirm password" }}</mat-label>
+      <input matInput [formControlName]="label" [type]="hide ? 'password' : 'text'" [placeholder]="description" required>
+      <mat-error *ngIf="form.controls[label].invalid">{{ showErrorMessage(label) }}</mat-error>
+      <button mat-icon-button matSuffix (click)="togglePasswordField($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
+  </ng-container>
+</ng-template>
+
+<ng-template #dialogFooter>
+  <ng-container *ngLet="(authIsLoading$ | async) as authIsLoading">
+    <button type="submit" [class.italic]="authIsLoading" [disabled]="!currentForm.valid || authIsLoading" color="primary" class="login-button" mat-raised-button>{{ !authIsLoading ? formType : formType === 'Login' ? 'Logging in' : 'Creating account' }}</button>
+  </ng-container>
+</ng-template>

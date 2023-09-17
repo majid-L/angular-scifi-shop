@@ -16,11 +16,13 @@
         [hasError]="!billingAddress && visitedSteps.includes('Billing address')" 
         errorMessage="Billing address is required." >
         <app-address-step
+          view="checkout"
           type="billingAddress"
           [addressFormGroup]="billingAddressFormGroup"
           [existingAddress]="billingAddress$ | async"
           [useExisting]="useExisting"
-          (addressEvent)="useAddress($event)"></app-address-step>
+          (addressEvent)="useAddress($event)">
+        </app-address-step>
       </mat-step>
   
       <mat-step 
@@ -30,6 +32,7 @@
       errorMessage="Shipping address is required." 
       >
       <app-address-step
+        view="checkout"
         type="shippingAddress"
         [addressFormGroup]="shippingAddressFormGroup"
         [existingAddress]="shippingAddress$ | async"
@@ -49,14 +52,6 @@
         [newOrderId]="(newOrder$ | async)?.id"
       ></app-payment>
     </mat-step>
-  
-      <!-- <mat-step>
-        <ng-template matStepLabel>Done</ng-template>
-        <p>You are now done.</p>
-        <div>
-          <button mat-button matStepperPrevious>Back</button>
-        </div>
-      </mat-step> -->
   
   </mat-stepper>
       </section>

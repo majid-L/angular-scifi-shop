@@ -6,9 +6,9 @@
         [opened]="dataStream.mediumViewport === false">
       <mat-toolbar class="menu-toolbar" [class.light]="lightModeEnabled"><strong>Pages</strong></mat-toolbar>
       <mat-nav-list>
-        <a mat-list-item routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page"><span>Home</span></a>
-        <a mat-list-item routerLink="/products" routerLinkActive="active" ariaCurrentWhenActive="page"><span>Products</span></a>
-        <a mat-list-item routerLink="/orders" routerLinkActive="active"><span>Orders</span></a>
+        <a mat-list-item routerLink="/" [routerLinkActive]="activeLink" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page"><span>Home</span></a>
+        <a mat-list-item routerLink="/products" [routerLinkActive]="activeLink" ariaCurrentWhenActive="page"><span>Products</span></a>
+        <a mat-list-item routerLink="/orders" [routerLinkActive]="activeLink"><span>Orders</span></a>
       </mat-nav-list>
   
       <mat-toolbar class="nav-header" [class.light]="lightModeEnabled">
@@ -20,7 +20,7 @@
       </ng-container>
       <mat-nav-list *ngIf="categories$ | async as categories; else break">
         <ng-container *ngFor="let category of categories">
-          <a mat-list-item routerLink="/products" [queryParams]="{category: category.name}" routerLinkActive="active" ariaCurrentWhenActive="page"><span>{{ category.name }}</span></a>
+          <a mat-list-item routerLink="/products" [queryParams]="{category: category.name}" [routerLinkActive]="activeLink" ariaCurrentWhenActive="page"><span>{{ category.name }}</span></a>
         </ng-container>
       </mat-nav-list>
       <ng-template #break><br><br></ng-template>
@@ -34,7 +34,7 @@
       </ng-container>
       <mat-nav-list *ngIf="suppliers$ | async as suppliers">
         <ng-container *ngFor="let supplier of suppliers">
-          <a mat-list-item routerLink="/products" [queryParams]="{supplier: supplier.name}" routerLinkActive="active" ariaCurrentWhenActive="page"><span>{{ supplier.name }}</span></a>
+          <a mat-list-item routerLink="/products" [queryParams]="{supplier: supplier.name}" [routerLinkActive]="activeLink" ariaCurrentWhenActive="page"><span>{{ supplier.name }}</span></a>
         </ng-container>
       </mat-nav-list>
   
@@ -53,6 +53,8 @@
         </button>
         <img class="logo" src="assets/logo-alt.svg">
         </div>
+
+        <app-search *ngIf="dataStream.largeViewport === true"></app-search>
         
         <div class="active-user-controls">
           <ng-container *ngIf="dataStream.currentUser || dataStream.loggedInUserId; else showLogin">
@@ -80,7 +82,7 @@
           
             <ng-container *ngTemplateOutlet="themeToggle"></ng-container>
   
-            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="icon-button with a menu">
+            <button mat-icon-button [matMenuTriggerFor]="menu" color="primary" aria-label="icon-button with a menu">
               <mat-icon>more_vert</mat-icon>
             </button>
             
@@ -93,7 +95,7 @@
                 <mat-icon>person</mat-icon>
                 <span>Account</span>
               </button>
-              <button mat-menu-item>
+              <button mat-menu-item routerLink="/cart">
                 <mat-icon>shopping_cart</mat-icon>
                 <span>Cart</span>
               </button>
@@ -105,11 +107,11 @@
                 <mat-icon>list</mat-icon>
                 <span>Wishlist</span>
               </button>
-              <button mat-menu-item>
+              <button mat-menu-item routerLink="/favorites">
                 <mat-icon>favorite</mat-icon>
                 <span>Favorites</span>
               </button>
-              <button mat-menu-item>
+              <button mat-menu-item routerLink="/reviews" [queryParams]="{ customerId: dataStream.loggedInUserId }">
                 <mat-icon>rate_review</mat-icon>
                 <span>Reviews</span>
               </button>
@@ -135,14 +137,12 @@
         <mat-progress-bar color="accent" class="progress-bar" mode="indeterminate"></mat-progress-bar>
       </ng-container>
       <!-- Add Content Here -->
+      <app-search *ngIf="dataStream.largeViewport === false"></app-search>
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
   
-  <app-cart-sidebar
-    [events]="eventsSubject.asObservable()"
-    [loggedInUserId]="dataStream.loggedInUserId">
-  </app-cart-sidebar>
+  <app-cart-sidebar [events]="eventsSubject.asObservable()"></app-cart-sidebar>
 </ng-container>
 
 <ng-template #themeToggle>
