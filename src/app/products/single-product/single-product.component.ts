@@ -80,14 +80,14 @@ export class SingleProductComponent {
         this._isHandset = isHandset;
         this._productId = params["id"];
 
-        if ([createStatus, updateStatus, deleteStatus].some(status => status === "success")) {
+        if (loggedInUserId && [createStatus, updateStatus, deleteStatus].some(status => status === "success")) {
           const snackBarMessage = createStatus === "success" ? "Your review has been published."
           : updateStatus === "success" ? "Review successfully updated."
           : deleteStatus === "success" ? "Your review has been deleted."
           : "Done";
           this._store.dispatch(searchOrderHistory({ 
-            customerId: this._customerId!,
-            productId: this._productId! 
+            customerId: Number(loggedInUserId),
+            productId: params["id"] 
           }));
           this._snackBar.open(snackBarMessage, 'Dismiss', {
             horizontalPosition: "start",
@@ -97,7 +97,7 @@ export class SingleProductComponent {
         }
 
         if (loggedInUserId) {
-          this._customerId = loggedInUserId as number;
+          this._customerId = Number(loggedInUserId);
         }
     });
     
@@ -108,7 +108,7 @@ export class SingleProductComponent {
       }));
     }
     this._store.dispatch(loadSingleProduct({ productId: this._productId! }));
-    this._store.dispatch(loadProductReviews({ productId: this._productId! }));
+    //this._store.dispatch(loadProductReviews({ productId: this._productId! }));
   }
 
   get lightModeEnabled() {
@@ -145,6 +145,7 @@ export class SingleProductComponent {
   }
 
   ngOnDestroy() {
+    this._store.dispatch(resetReviewsStatus());
     this._subscription.unsubscribe();
     this._searchResultSubscription.unsubscribe();
   }

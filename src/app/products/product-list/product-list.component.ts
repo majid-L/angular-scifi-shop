@@ -122,6 +122,10 @@ export class ProductListComponent implements OnInit {
     return document.body.classList.contains("light-mode");
   }
 
+  productImgSrc(product: Product) {
+    return `assets/icons/${this.lightModeEnabled ? "transparent" : "black"}/${product.thumbnail}`;
+  }
+
   reloadResults() {
     this._store.dispatch(setSearchTerm({ searchTerm: null }));
     this._store.dispatch(loadProducts({}));

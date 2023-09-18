@@ -16,6 +16,7 @@ export class FavoritesComponent {
   accountData$: Observable<Customer | null> = 
     this._store.select(selectAccount);
   private _subscription = Subscription.EMPTY;
+  public showDescription: { [productId: number]: boolean } = {};
 
   constructor(
     private _store: Store<AppState>
@@ -27,6 +28,14 @@ export class FavoritesComponent {
         this._store.dispatch(loadFavorites({ customerId: customer.id }));
       }
     });
+  }
+
+  get lightModeEnabled() {
+    return document.body.classList.contains("light-mode"); 
+  }
+
+  toggleDescription(productId: number, show: boolean) {
+    this.showDescription[productId] = show;
   }
 
   ngOnDestroy() {

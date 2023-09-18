@@ -4,7 +4,18 @@ import { Store } from '@ngrx/store';
 import { hideAuthOverlay, resetStatus } from 'src/app/ngrx/auth/auth.actions';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { selectAuthIsLoading, selectAuthIsSuccess, selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
-import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider, SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
+
+const response = {
+  email: "jiyyprjj@gmail.com",
+  firstName: "Isbdippo",
+  id: "100115001971272750195",
+  idToken: "super_long_string",
+  lastName: "Plisnhudssw",
+  name: "Isbdippo Plisnhudssw",
+  photoUrl: "https://lh3.googleusercontent.com/a/ACg8ocIzKjGFNDHcPX8oBQzPAf7WXGMHeOJr7aQNcqWPRbwA=s96-c",
+  provider: "GOOGLE"
+}
 
 @Component({
   selector: 'app-auth',
@@ -23,6 +34,17 @@ export class AuthComponent {
     private _authService: SocialAuthService
   ) { }
 
+  ngOnInit() {
+    this._authService.authState.subscribe((user: SocialUser) => {
+      this.
+      console.log(user);
+    });
+  }
+
+  get theme() {
+    return document.body.classList.contains("light-mode") ? "outline" : "filled_black";
+  }
+
   get lightModeEnabled() {
     return document.body.classList.contains("light-mode");
   }
@@ -40,7 +62,7 @@ export class AuthComponent {
   }
 
   googleLogin() {
-    this._authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+    //this._authService.signIn(GoogleLoginProvider.PROVIDER_ID);
   }
 
   hideOverlay() {

@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
 import { deleteReview, resetReviewsStatus, updateActiveId } from 'src/app/ngrx/reviews/reviews.actions';
-import { selectReviews, selectLoadStatus, selectReviewStatus, selectActiveId } from 'src/app/ngrx/reviews/reviews.feature';
+import { selectReviews, selectLoadStatus, selectReviewStatus, selectActiveId, selectPagination } from 'src/app/ngrx/reviews/reviews.feature';
 import { ReviewDialogComponent } from '../review-dialog/review-dialog.component';
 
 @Component({
@@ -13,10 +13,14 @@ import { ReviewDialogComponent } from '../review-dialog/review-dialog.component'
   styleUrls: ['./reviews.component.sass']
 })
 export class ReviewsComponent {
+  @Input() component: "reviews" | "product" | undefined;
+  @Input() productId: number | undefined;
   @Input() showCreateReviewButton = false;
   @Input() newReviewTemplate: NewReviewRequest & { product: Product } | undefined;
-  readonly reviews$: Observable<Review[] | null> = 
+  readonly reviews$: Observable<Review[] | [] | null> = 
     this._store.select(selectReviews);
+  readonly pagination$: Observable<Pagination> = 
+    this._store.select(selectPagination);
   readonly loadStatus$: Observable<Status> = 
     this._store.select(selectLoadStatus);
   readonly reviewStatus$: Observable<Status> = this._store.select(selectReviewStatus);

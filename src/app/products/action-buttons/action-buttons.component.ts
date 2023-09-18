@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
-import { addToCart, removeCartItem, updateActiveId } from 'src/app/ngrx/cart/cart.actions';
+import { addToCart, removeCartItem, resetStatus, updateActiveId } from 'src/app/ngrx/cart/cart.actions';
 import { selectCartItems } from 'src/app/ngrx/cart/cart.feature';
 import { ProductDialogComponent } from '../product-dialog/product-dialog.component';
 
@@ -56,6 +56,7 @@ export class ActionButtonsComponent {
   }
 
   addToCart() {
+    this._store.dispatch(resetStatus());
     this._store.dispatch(updateActiveId({ activeId: this.product!.id }));
     this._store.dispatch(addToCart({
       productId: this.product!.id,
@@ -65,6 +66,7 @@ export class ActionButtonsComponent {
   }
 
   removeFromCart() {
+    this._store.dispatch(resetStatus());
     this._store.dispatch(updateActiveId({ activeId: this.product!.id }));
     this._store.dispatch(removeCartItem({ 
       productId: this.product!.id, 
