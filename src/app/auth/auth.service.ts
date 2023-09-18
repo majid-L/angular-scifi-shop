@@ -26,6 +26,10 @@ export class AuthService {
     return response;
   }
 
+  authenticateWithSSO(requestBody: AuthCredentials) {
+    const response = this._http.post<>
+  }
+
   logout() {
     const response = this._http.post<{ msg: string }>(
       this.baseUrl + '/logout',

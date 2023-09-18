@@ -7,15 +7,13 @@ import { AddressesComponent } from './addresses/addresses.component';
 import { MaterialModule } from '../material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgLetModule } from 'ng-let';
-import { AddressFormComponent } from './address-form/address-form.component';
 import { CheckoutModule } from '../checkout/checkout.module';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
     AccountComponent,
-    AddressesComponent,
-    AddressFormComponent
+    AddressesComponent
   ],
   imports: [
     CommonModule,
