@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
+import { resetWishlistStatus } from 'src/app/ngrx/wishlist/wishlist.actions';
 import { selectActiveId, selectLoadStatus, selectUpdateStatus, selectWishlist } from 'src/app/ngrx/wishlist/wishlist.feature';
 import { WishlistService } from '../wishlist.service';
 
@@ -48,6 +49,7 @@ export class WishlistComponent {
   }
 
   ngOnDestroy() {
+    this._store.dispatch(resetWishlistStatus());
     this._subscription.unsubscribe();
   }
 }

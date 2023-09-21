@@ -1,11 +1,12 @@
+import { SocialUser } from '@abacritt/angularx-social-login';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable, Subscription } from 'rxjs';
-import { loadAccount, resetStatus, updateAccount, updateActiveItem } from 'src/app/ngrx/account/account.actions';
+import { resetStatus, updateAccount, updateActiveItem } from 'src/app/ngrx/account/account.actions';
 import { selectAccount, selectLoadStatus, selectUpdateStatus, selectDeleteStatus, selectActiveItem } from 'src/app/ngrx/account/account.feature';
-import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
+import { selectLoggedInUserId, selectSocialUser } from 'src/app/ngrx/auth/auth.feature';
 import { AccountService } from '../account.service';
 
 @Component({
@@ -18,6 +19,8 @@ export class AccountComponent implements OnInit {
     this._store.select(selectLoggedInUserId);
   readonly accountData$: Observable<Customer | null> = 
     this._store.select(selectAccount);
+  readonly socialUser$: Observable<SocialUser | null> = 
+    this._store.select(selectSocialUser);
   readonly accountLoadStatus$: Observable<Status> = 
     this._store.select(selectLoadStatus);
   readonly updateStatus$: Observable<Status> = 
@@ -50,10 +53,11 @@ export class AccountComponent implements OnInit {
     phone: [""],
     avatar: [""]
   });
-  passwordField = ["", [Validators.required, Validators.minLength(6), Validators.pattern(/[A-Z]+/), Validators.pattern(/\d+/)]];
+  validators = [Validators.required, Validators.minLength(6), Validators.pattern(/[A-Z]+/), Validators.pattern(/\d+/)];
+  passwordFields = ["", [Validators.required, Validators.minLength(6), Validators.pattern(/[A-Z]+/), Validators.pattern(/\d+/)]];
   passwordForm = this._formBuilder.group({
-    password: this.passwordField,
-    passwordConfirm: this.passwordField
+    password: ["", this.validators],
+    passwordConfirm: ["", this.validators]
   });
   public hide = true;
 
@@ -64,13 +68,24 @@ export class AccountComponent implements OnInit {
     private _snackBar: MatSnackBar
   ) { }
 
+  get name() { return this.accountForm.get("email"); }
+  get username() { return this.accountForm.get("email"); }
+  get avatar() { return this.accountForm.get("avatar"); }
+  get phone() { return this.accountForm.get("phone"); }
+  get password() { return this.passwordForm.get("password"); }
+  get passwordConfirm() { return this.passwordForm.get("passwordConfirm"); }
+
   ngOnInit() {
+     this.passwordForm.addValidators(this._accountService.matchValidator(
+      this.passwordForm.get("password")!, this.passwordForm.get("passwordConfirm")!
+    ));
+    this.passwordForm.updateValueAndValidity();
+
     this._subscription = this.dataStream$.subscribe(({
       loggedInUserId, accountData, activeItem
     }) => {
       if (loggedInUserId) {
         this._loggedInUserId = Number(loggedInUserId);
-        //this._store.dispatch(loadAccount({ customerId: Number(loggedInUserId) }));
       }
 
       if (accountData) {
@@ -104,23 +119,14 @@ export class AccountComponent implements OnInit {
             verticalPosition: "top",
             duration: 8000
           });
+          this.passwordForm.reset();
         }
       });
   }
 
-  get name() { return this.accountForm.get("email"); }
-  get username() { return this.accountForm.get("email"); }
-  get avatar() { return this.accountForm.get("avatar"); }
-  get phone() { return this.accountForm.get("phone"); }
-  get password() { return this.passwordForm.get("password"); }
-  get passwordConfirm() { return this.passwordForm.get("passwordConfirm"); }
-
   showErrorMessage(field: "password" | "passwordConfirm") {
-    if (field === "passwordConfirm") {
-      if (this.passwordForm.touched && 
-        this.password!.value !== this.passwordConfirm!.value) {
-          return "Passwords do not match";
-        }
+    if (this[field]!.errors?.["matchError"]) {
+      return "Passwords do not match.";
     }
     if (this[field]!.errors?.["required"]) {
       return field === "password" ? "Password is required." : "Password confirmation is required.";
@@ -137,7 +143,8 @@ export class AccountComponent implements OnInit {
   updateAccountData() {
     const requestBody = this._accountService
     .removeEmptyFields<UpdateCustomerRequest>(
-      this.accountForm.value as UpdateCustomerRequest
+      this.accountForm.value as UpdateCustomerRequest,
+      this._loggedInUserId!
     );
     this._store.dispatch(resetStatus());
     this._store.dispatch(updateActiveItem({ activeItem: "account" }));
@@ -157,6 +164,7 @@ export class AccountComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this._store.dispatch(resetStatus());
     this._subscription.unsubscribe();
     this._statusSubscription.unsubscribe();
   }

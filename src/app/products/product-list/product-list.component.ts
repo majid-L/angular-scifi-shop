@@ -96,13 +96,7 @@ export class ProductListComponent implements OnInit {
         }
       });
   }
-
-  ngOnDestroy() {
-    this._breakpointSubscription.unsubscribe();
-    this._streamSubscription.unsubscribe();
-    this._store.dispatch(resetWishlistStatus());
-  }
-
+  
   get headerImageSrc() {
     return this.category ? 
       `assets/categories/${this.category.thumbnail}.svg` 
@@ -143,5 +137,11 @@ export class ProductListComponent implements OnInit {
 
   toggleStyle(e: MatButtonToggleChange) {
     this.listDisplayStyle = e.value;
+  }
+
+  ngOnDestroy() {
+    this._store.dispatch(resetWishlistStatus());
+    this._breakpointSubscription.unsubscribe();
+    this._streamSubscription.unsubscribe();
   }
 }

@@ -10,6 +10,8 @@ import { loadCategories, loadSuppliers } from './ngrx/categories/categories.acti
 import { loadWishlist } from './ngrx/wishlist/wishlist.actions';
 import { selectLoggedInUserId, selectShowOverlay } from './ngrx/auth/auth.feature';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
+import { SocialAuthService } from '@abacritt/angularx-social-login';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -32,9 +34,12 @@ export class AppComponent {
   private _snackBarRef: MatSnackBarRef<TextOnlySnackBar> | undefined;
   private _dialogSubscription = Subscription.EMPTY;
   private _loggedInUserIdSubscription = Subscription.EMPTY;
+  private _socialAuthSubscription = Subscription.EMPTY;
 
   constructor(
     private _store: Store<AppState>, 
+    private _authService: AuthService,
+    private _socialAuthService: SocialAuthService,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar 
   ) { }
@@ -56,24 +61,44 @@ export class AppComponent {
 
     this._loggedInUserIdSubscription = this._loggedInUserId$.subscribe(id => {
       if (id) {
+        this._snackBarRef?.dismiss();
         const customerId = Number(id);
         this._store.dispatch(loadAccount({ customerId }));
         this._store.dispatch(loadCart({ customerId }));
         this._store.dispatch(loadWishlist({ customerId, format: "full" }));
+      } else {
+        this._snackBarRef = this._snackBar.open('Log in or sign up to fully explore the app.', 'Dismiss', {
+          horizontalPosition: "right",
+          verticalPosition: "bottom",
+          panelClass: "login-prompt"
+        });
       }
     });
 
-    if (!window.localStorage.getItem("userId")) {
+    this._socialAuthSubscription = this._socialAuthService.authState.subscribe(user => {
+      if (user) {
+        this._authService.dispatchSocialLoginAction(user);
+      }
+    });
+
+    /*if (!window.localStorage.getItem("userId")) {
       this._snackBarRef = this._snackBar.open('Log in or sign up to fully explore the app.', 'Dismiss', {
         horizontalPosition: "center",
         verticalPosition: "top",
         panelClass: "login-prompt"
       });
-    }
+    } else {
+      this._snackBarRef?.dismiss();
+    }*/
+  }
+
+  get googleClinetId() {
+    return import.meta.env.NG_APP_GOOGLE_CLIENT_ID;
   }
 
   ngOnDestroy() {
     this._dialogSubscription.unsubscribe();
     this._loggedInUserIdSubscription.unsubscribe();
+    this._socialAuthSubscription.unsubscribe();
   }
 }

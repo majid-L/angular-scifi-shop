@@ -1,21 +1,11 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { hideAuthOverlay, resetStatus } from 'src/app/ngrx/auth/auth.actions';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { selectAuthIsLoading, selectAuthIsSuccess, selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
-import { GoogleLoginProvider, SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
-
-const response = {
-  email: "jiyyprjj@gmail.com",
-  firstName: "Isbdippo",
-  id: "100115001971272750195",
-  idToken: "super_long_string",
-  lastName: "Plisnhudssw",
-  name: "Isbdippo Plisnhudssw",
-  photoUrl: "https://lh3.googleusercontent.com/a/ACg8ocIzKjGFNDHcPX8oBQzPAf7WXGMHeOJr7aQNcqWPRbwA=s96-c",
-  provider: "GOOGLE"
-}
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -28,16 +18,21 @@ export class AuthComponent {
   loggedInUserId$: Observable<number | string | null> 
     = this._store.select(selectLoggedInUserId);
   formType = "Login";
+  socialUser: SocialUser | undefined;
+  private _subscription = Subscription.EMPTY;
 
   constructor(
     private _store: Store<AppState>,
-    private _authService: SocialAuthService
+    private _authService: AuthService,
+    private _socialAuthService: SocialAuthService
   ) { }
 
   ngOnInit() {
-    this._authService.authState.subscribe((user: SocialUser) => {
-      this.
-      console.log(user);
+    this._subscription = this._socialAuthService.authState.subscribe((user: SocialUser) => {
+      this.socialUser = user;
+      if (user) {
+        this._authService.dispatchSocialLoginAction(user);
+      }
     });
   }
 
@@ -61,10 +56,6 @@ export class AuthComponent {
     this._store.dispatch(resetStatus());
   }
 
-  googleLogin() {
-    //this._authService.signIn(GoogleLoginProvider.PROVIDER_ID);
-  }
-
   hideOverlay() {
     this._store.dispatch(hideAuthOverlay());
   }
@@ -74,5 +65,10 @@ export class AuthComponent {
     if (elementId === "loginOverlay") {
       this.hideOverlay();
     }
+  }
+
+  ngOnDestroy() {
+    this._store.dispatch(resetStatus());
+    this._subscription.unsubscribe();
   }
 }

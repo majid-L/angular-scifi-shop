@@ -11,6 +11,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { selectCategories, selectCategoriesLoadStatus, selectSuppliers, selectSuppliersLoadStatus } from '../ngrx/categories/categories.feature';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDrawer } from '@angular/material/sidenav';
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-nav',
@@ -31,14 +32,16 @@ export class NavComponent {
   logoutStatus$: Observable<Status> = this._store.select(selectLogoutStatus);
   currentUser$: Observable<Customer | null> = this._store.select(selectAccount);
   cartItemsCount$: Observable<number | undefined> = this._store.select(selectCartItemsCount);
-  private _subscription = Subscription.EMPTY;
+  private _socialLoginUser: SocialUser | undefined;
+  private _logoutSubscription = Subscription.EMPTY;
+  private _socialLoginSubscription = Subscription.EMPTY;
   private _routerEvents = Subscription.EMPTY;
   rippleRadius = 30;
   eventsSubject = new Subject<void>();
 
-  largeViewport$: Observable<boolean> = this._breakpointObserver
-  .observe('(min-width: 1000px)')
-  .pipe( map(result => result.matches), shareReplay());
+  // largeViewport$: Observable<boolean> = this._breakpointObserver
+  // .observe('(min-width: 1000px)')
+  // .pipe( map(result => result.matches), shareReplay());
 
   mediumViewport$: Observable<boolean> = this._breakpointObserver
     .observe('(max-width: 800px)')
@@ -49,10 +52,10 @@ export class NavComponent {
   .pipe(map(result => result.matches), shareReplay());
 
   dataStream$ = combineLatest([
-    this.logoutStatus$, this.authIsLoading$, this.mobileViewport$, this.mediumViewport$, this.largeViewport$, this.currentUser$, this.loggedInUserId$, this.cartItemsCount$
-  ]).pipe(map(([logoutStatus, authIsLoading, mobileViewport, mediumViewport, largeViewport, currentUser, loggedInUserId, cartItemsCount]) => {
+    this.logoutStatus$, this.authIsLoading$, this.mobileViewport$, this.mediumViewport$, this.currentUser$, this.loggedInUserId$, this.cartItemsCount$
+  ]).pipe(map(([logoutStatus, authIsLoading, mobileViewport, mediumViewport, currentUser, loggedInUserId, cartItemsCount]) => {
     return {
-      logoutStatus, authIsLoading, mobileViewport, mediumViewport, largeViewport, currentUser, loggedInUserId, cartItemsCount
+      logoutStatus, authIsLoading, mobileViewport, mediumViewport, currentUser, loggedInUserId, cartItemsCount
     }
   }));
 
@@ -61,13 +64,20 @@ export class NavComponent {
 
   constructor(
     private _store: Store<AppState>,
-    private _router: Router
+    private _router: Router,
+    private _authService: SocialAuthService
   ) { }
 
   ngOnInit() {
-    this._subscription = this.logoutStatus$.subscribe(status => {
+    this._logoutSubscription = this.logoutStatus$.subscribe(status => {
       if (status === "success") {
         this._router.navigate(['/']);
+      }
+    });
+
+    this._socialLoginSubscription = this._authService.authState.subscribe(user => {
+      if (user) {
+        this._socialLoginUser = user;
       }
     });
 
@@ -76,11 +86,6 @@ export class NavComponent {
         this.drawer!.close();
       }
     });
-  }
-
-  ngOnDestroy() {
-    this._subscription.unsubscribe();
-    this._routerEvents.unsubscribe();
   }
 
   get lightModeEnabled() {
@@ -105,9 +110,19 @@ export class NavComponent {
 
   handleLogout() {
     this._store.dispatch(logoutRequest());
+    if (this._socialLoginUser) {
+      console.log(this._socialLoginUser);
+      this._authService.signOut();
+    }
   }
 
   emitEventToChild() {
     this.eventsSubject.next();
+  }
+
+  ngOnDestroy() {
+    this._logoutSubscription.unsubscribe();
+    this._socialLoginSubscription.unsubscribe();
+    this._routerEvents.unsubscribe();
   }
 }

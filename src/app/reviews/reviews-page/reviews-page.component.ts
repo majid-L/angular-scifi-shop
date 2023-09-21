@@ -14,7 +14,6 @@ import { selectCustomer, selectPagination, selectReviews } from 'src/app/ngrx/re
 export class ReviewsPageComponent {
   readonly accountData$: Observable<Customer | null> = 
     this._store.select(selectAccount);
-
   readonly reviews$: Observable<Review[] | [] | null> = 
     this._store.select(selectReviews);
   readonly customer$: Observable<Customer | null> = 
@@ -46,6 +45,12 @@ export class ReviewsPageComponent {
 
   loadAllReviews() {
     this._router.navigate([]);
+  }
+
+  loadMyReviews(customerId: number) {
+    this._router.navigate([], {
+      queryParams: { customerId }
+    });
   }
 
   ngOnDestroy() {
