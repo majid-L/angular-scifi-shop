@@ -39,7 +39,11 @@ import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
         {
           id: GoogleLoginProvider.PROVIDER_ID,
           provider: new GoogleLoginProvider(
-            import.meta.env.NG_APP_GOOGLE_CLIENT_ID
+            import.meta.env.NG_APP_GOOGLE_CLIENT_ID,
+            { 
+              oneTapEnabled: window.localStorage.getItem("userId") ? false : true,
+              prompt_parent_id: "google-login-prompt"
+            }
           )
         }
       ],

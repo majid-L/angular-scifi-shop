@@ -1,4 +1,5 @@
 import { createFeature, createReducer, on } from "@ngrx/store"
+import { clearCurrentUser } from "../account/account.actions";
 import { httpError } from "../notification/notification.actions";
 import { loadWishlist, loadWishlistSuccess, resetWishlistStatus, updateActiveId, updateWishlist, updateWishlistSuccess } from "./wishlist.actions";
 
@@ -36,6 +37,7 @@ export const wishlistReducer = createReducer(
     updateStatus: "pending" as const
   })),
   on(updateActiveId, (state, { activeId }) => ({ ...state, activeId })),
+  on(clearCurrentUser, state => ({ ...state, wishlist: null })),
   on(httpError, state => ({ 
     ...state, 
     loadStatus: "error" as const,

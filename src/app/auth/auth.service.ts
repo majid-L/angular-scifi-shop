@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Store } from '@ngrx/store';
+import { authenticateWithSSO } from '../ngrx/auth/auth.actions';
+import { SocialUser } from '@abacritt/angularx-social-login';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +17,10 @@ export class AuthService {
     withCredentials: true
   };
 
-  constructor(private _http: HttpClient) { }
+  constructor(
+    private _http: HttpClient,
+    private _store: Store<AppState>
+  ) { }
 
   loginOrSignup(requestBody: AuthCredentials, endpoint: "/login" | "/signup") {
     const response = this._http.post<{ customer: Customer }>(
@@ -26,8 +32,27 @@ export class AuthService {
     return response;
   }
 
-  authenticateWithSSO(requestBody: AuthCredentials) {
-    const response = this._http.post<>
+  authenticateWithSSO(requestBody: OAuthCredentials) {
+    const response = this._http.post<{ customer: Customer }>(
+      this.baseUrl + "/sso", 
+      requestBody,
+      this.httpOptions
+    );
+
+    return response;
+  }
+
+  dispatchSocialLoginAction(user: SocialUser) {
+    this._store.dispatch(authenticateWithSSO({
+      requestBody: {
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email,
+        authId: user.id,
+        provider: `${user.provider[0].toUpperCase()}${user.provider.slice(1).toLowerCase()}`,
+        thumbnail: user.photoUrl
+      },
+      socialUser: user
+    }));
   }
 
   logout() {

@@ -9,7 +9,9 @@ import {
   loginSuccess,
   resetStatus,
   signupSuccess,
-  signupRequest
+  signupRequest,
+  authenticateWithSSO,
+  authenticateWithSSOSuccess
 } from './auth.actions';
 
 const initialState: AuthState = {
@@ -19,7 +21,8 @@ const initialState: AuthState = {
   loginStatus: "pending",
   logoutStatus: "pending",
   signupStatus: "pending",
-  logoutMsg: null
+  logoutMsg: null,
+  socialUser: null
 };
 
 export const authReducer = createReducer(
@@ -27,8 +30,13 @@ export const authReducer = createReducer(
   on(showAuthOverlay, state => ({...state, showOverlay: true})),
   on(hideAuthOverlay, state => ({...state, showOverlay: false})),
   on(loginRequest, state => ({ ...state, loginStatus: "loading" as const })),
+  on(authenticateWithSSO, (state, payload) => ({ 
+    ...state,
+    socialUser: payload.socialUser,
+    loginStatus: "loading" as const 
+  })),
   on(signupRequest, state => ({ ...state, signupStatus: "loading" as const })),
-  on(loginSuccess, (state, payload) => {
+  on(loginSuccess, authenticateWithSSOSuccess, (state, payload) => {
     return { 
       ...state, 
       loggedInUserId: payload.customer.id,
@@ -36,9 +44,11 @@ export const authReducer = createReducer(
       loginStatus: "success" as const
      };
   }),
-  on(signupSuccess, state => {
+  on(signupSuccess, (state, payload) => {
     return { 
       ...state,
+      loggedInUserId: payload.customer.id,
+      currentUser: payload.customer,
       signupStatus: "success" as const
      };
   }),
@@ -106,5 +116,6 @@ export const {
   selectAnyLoadingState,
   selectAuthIsLoading,
   selectAuthIsSuccess,
-  selectLogoutMsg
+  selectLogoutMsg,
+  selectSocialUser
 } = authFeature;

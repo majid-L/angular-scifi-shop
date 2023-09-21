@@ -3,14 +3,14 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, exhaustMap, catchError } from 'rxjs/operators';
 import { AuthService } from "src/app/auth/auth.service";
-import { loginRequest, loginSuccess, logoutRequest, logoutSuccess, signupRequest, signupSuccess } from "./auth.actions";
+import { authenticateWithSSO, authenticateWithSSOSuccess, loginRequest, loginSuccess, logoutRequest, logoutSuccess, signupRequest, signupSuccess } from "./auth.actions";
 import { httpError, notify } from "../notification/notification.actions";
 import { Router } from "@angular/router";
 import { clearCurrentUser } from "../account/account.actions";
 
 @Injectable()
 export class AuthEffects {
-  login$ = createEffect(() => this.actions$.pipe(
+  loginOrSignup$ = createEffect(() => this.actions$.pipe(
     ofType(loginRequest, signupRequest),
     exhaustMap(({ requestBody, endpoint }) => {
       return this.authService.loginOrSignup(requestBody, endpoint)
@@ -19,6 +19,21 @@ export class AuthEffects {
             const res = response.body as { customer: Customer };
             window.localStorage.setItem('userId', String(res.customer.id));
             return endpoint === "/login" ? loginSuccess(res) : signupSuccess(res);
+          }),
+          catchError(({ error }: { error: ApiError }) => of(httpError(error)))
+        )
+      })
+  ));
+
+  authenticateWithSSO$ = createEffect(() => this.actions$.pipe(
+    ofType(authenticateWithSSO),
+    exhaustMap(({ requestBody }) => {
+      return this.authService.authenticateWithSSO(requestBody)
+        .pipe(
+          map(response => {
+            const res = response.body as { customer: Customer };
+            window.localStorage.setItem('userId', String(res.customer.id));
+            return authenticateWithSSOSuccess(res);
           }),
           catchError(({ error }: { error: ApiError }) => of(httpError(error)))
         )

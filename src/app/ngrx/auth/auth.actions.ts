@@ -1,3 +1,4 @@
+import { SocialUser } from '@abacritt/angularx-social-login';
 import { createAction, props } from '@ngrx/store';
 
 export const showAuthOverlay = createAction("[Login Component] Show Overlay");
@@ -25,6 +26,18 @@ export const signupRequest = createAction(
 );
 export const signupSuccess = createAction(
   "[Auth Component] Signup Success",
+  props<{ customer: Customer }>()
+);
+
+export const authenticateWithSSO = createAction(
+  "[Auth Component] Authenticate With SSO",
+  props<{ 
+    requestBody: OAuthCredentials, 
+    socialUser: SocialUser 
+  }>()
+);
+export const authenticateWithSSOSuccess = createAction(
+  "[Auth Component] Authenticate With SSO - Success",
   props<{ customer: Customer }>()
 );
 
