@@ -1,4 +1,6 @@
+import { SocialUser } from "@abacritt/angularx-social-login"
 import { HttpHeaders } from "@angular/common/http"
+import { FormControl, FormGroup } from "@angular/forms"
 
 export {}
 
@@ -12,7 +14,10 @@ declare global {
     categoryName: string
     supplierName: string
     thumbnail: string
-    numOfTimesOrdered?: number
+    numOfTimesOrdered: number
+    totalUnitsOrdered?: number | null
+    numOfReviews: number
+    averageRating: string | null
   }
 
   type SingleProduct = Product & { 
@@ -55,10 +60,18 @@ declare global {
   }
 
   type AuthCredentials = {
-    name: string
-    email: string
+    name?: string
+    email?: string
     username: string
     password: string
+  }
+
+  type OAuthCredentials = {
+    name: string
+    email: string
+    authId: string
+    provider: string
+    thumbnail: string
   }
 
   type AddressEmitData = { 
@@ -66,6 +79,14 @@ declare global {
     type: "billingAddress" | "shippingAddress" | undefined
     useExisting: boolean 
   }
+
+  type AddressFormGroup = FormGroup<{
+    addressLine1: FormControl<string | null>;
+    addressLine2: FormControl<string | null>;
+    city: FormControl<string | null>;
+    county: FormControl<string | null>;
+    postcode: FormControl<string | null>;
+  }>
 
   type NewOrderRequest = {
     billingAddress: Address
@@ -82,7 +103,7 @@ declare global {
     billingAddressId: number
     shippingAddressId: number
     status: string
-    paymentMethoid: string
+    paymentMethod: string
     total: string
     createdAt: string
     shippingAddress: Address
@@ -97,6 +118,7 @@ declare global {
   type NewReviewRequest = {
     customerId: number
     productId: number
+    orderId: number
     title: string
     body: string
     rating: Rating
@@ -110,10 +132,20 @@ declare global {
     rating?: Rating
   }
 
+  type UpdateCustomerRequest = {
+    username?: string
+    password?: string
+    name?: string
+    email?: string
+    phone?: string | null
+    avatar?: string | null
+  }
+
   type Review = NewReviewRequest & {
     id: number
     recommend: boolean | null
-    createdAt: string
+    createdAt?: string
+    addedAt?: string
     product?: Product
     customer?: {
       username: string
@@ -125,8 +157,32 @@ declare global {
     reviews: Review[] | []
   }
 
+  type CustomerReviewsResponse = Pagination & {
+    customer: Customer,
+    reviews: Review[] | []
+  }
+
+  type FavoritesResponse = Pagination & {
+    favorites: Review[] | []
+  }
+
   type NewOrderResponse = Order & {
     billingAddress: Address
+  }
+
+  type CustomerNewAddress = {
+    newAddress: Address,
+    customer: Customer
+  }
+
+  type DeleteUserResponse = {
+    msg: string,
+    deletedUser: {
+      id: number
+      name: string
+      username: string
+      email: string
+    }
   }
 
   type SingleOrderResponse = NewOrderResponse;
@@ -136,6 +192,19 @@ declare global {
     name: string
     username: string
     orders: Order[] | []
+  }
+
+  type Category = {
+    id: number
+    name: string
+    description: string
+    thumbnail: string
+    products: number
+  }
+
+  type Supplier = Category & {
+    location: string,
+    establishYear: number
   }
 
   type ExpressCheckoutItem = {
@@ -169,12 +238,22 @@ declare global {
     logoutStatus: Status
     signupStatus: Status
     logoutMsg: string | null
+    socialUser: SocialUser | null
   }
 
   type ApiError = {
     error?: {
       status: number
       info: string
+      message?: string
+      stack?: string
+    }
+  }
+
+  type StacktraceError = {
+    error: {
+      message: string
+      stack: string
     }
   }
 
@@ -183,6 +262,12 @@ declare global {
     content?: string
     buttons?: {
       newOrder?: string
+    },
+    deletedUser?: {
+      id: number
+      name: string
+      username: string
+      email: string
     }
   }
 
@@ -192,24 +277,39 @@ declare global {
   }
 
   type Status = "pending" | "loading" | "success" | "error";
+  type AddressId = "billingAddressId" | "shippingAddressId";
 
   type ProductsState = {
-    page: number | null
-    count: number | null
-    totalResults: number | null
-    products: Product[] | null
+    pagination: Pagination
+    products: Product[] | [] | null
     singleProduct: SingleProduct | null
+    searchTerm: string | null
     orderSearchResult: OrderSearchResponse | null
     loadStatus: Status
     searchStatus: Status
   }
 
+  type ProductsUrlParams = {
+    page?: string | number
+    limit?: string | number
+    minPrice?: string | number
+    maxPrice?: string | number
+    category?: string
+    supplier?: string
+    product?: string
+    hideOutOfStock?: boolean
+    orderBy?: string
+    order?: string
+    avgRating?: string | number
+  }
+
   type ReviewsState = {
-    page: number | null
-    count: number | null
-    totalResults: number | null
-    reviews: Review[] | null
+    pagination: Pagination
+    reviews: Review[] | [] | null
+    customer: Customer | null
+    favorites: Review[] | [] | null
     singleReview: Review | null
+    activeId: number
     loadStatus: Status
     createStatus: Status
     updateStatus: Status
@@ -241,9 +341,35 @@ declare global {
     cart: Cart | null
   }
 
+  type WishlistItem = {
+    productId: number
+    customerId: number
+  }
+
+  type WishlistBasic = WishlistItem[] | []
+
+  type Wishlist = {
+    id: number
+    name: string
+    username: string
+    wishlistItems: { product: Product }[] | []
+  }
+
+  type WishlistState = {
+    loadStatus: Status
+    updateStatus: Status
+    activeId: number
+    wishlist: Wishlist | null
+  }
+
+  type AccountActiveItem = "billingAddress" | "shippingAddress" | "password" | "account" | null;
+
   type AccountState = {
     account: Customer | null
-    status: Status
+    loadStatus: Status
+    updateStatus: Status
+    deleteStatus: Status
+    activeItem: AccountActiveItem
   }
 
   type OrdersState = {
@@ -257,10 +383,19 @@ declare global {
     deleteStatus: Status
   }
 
+  type CategoriesState = {
+    categories: Category[] | null
+    suppliers: Supplier[] | null
+    categoriesLoadStatus: Status
+    suppliersLoadStatus: Status
+  }
+
   type AppState = {
     authSlice: AuthState
     accountSlice: AccountState
+    categoriesSlice: CategoriesState
     cartSlice: CartState
+    wishlistSlice: WishlistState
     productsSlice: ProductsState
     ordersSlice: OrdersState
     reviewsSlice: ReviewsState
