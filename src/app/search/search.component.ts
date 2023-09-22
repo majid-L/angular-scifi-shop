@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { loadProducts, setSearchTerm } from '../ngrx/products/products.actions';
+import { Router } from '@angular/router';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { map, Observable, shareReplay, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-search',
@@ -17,11 +20,40 @@ import { loadProducts, setSearchTerm } from '../ngrx/products/products.actions';
   styleUrls: ['./search.component.sass']
 })
 export class SearchComponent {
+  @HostListener("window:scroll", ["event"]) onScroll() {
+    if (!this.isMediumViewport) return;
+    if (window.scrollY > this.scrollY) {
+      this.hideSearchbar = true;
+    } else {
+      this.hideSearchbar = false;
+    }
+    this.scrollY = window.scrollY;
+  }
   productName = "";
+  scrollY = 0;
+  hideSearchbar = false;
+  isMediumViewport: boolean | undefined;
+
+  private readonly _mediumViewport$: Observable<boolean> = this._breakpointObserver
+    .observe('(max-width: 800px)')
+    .pipe(map(result => result.matches), shareReplay());
+  private _subscription = Subscription.EMPTY;
 
   constructor(
-    private _store: Store<AppState>
+    private _store: Store<AppState>,
+    private _router: Router,
+    private _breakpointObserver: BreakpointObserver
   ) { }
+
+  ngOnInit() {
+    this._subscription = this._mediumViewport$.subscribe(matches => {
+      this.isMediumViewport = matches;
+    });
+  }
+
+  get lightModeEnabled() {
+    return document.body.classList.contains("light-mode");
+  }
 
   search(searchForm: NgForm) {
     if (!this.productName?.trim()) return;
@@ -30,5 +62,12 @@ export class SearchComponent {
       product: this.productName
     }));
     searchForm.reset();
+    this._router.navigate(["/products"], {
+      queryParamsHandling: "merge"
+    });
+  }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
   }
 }
