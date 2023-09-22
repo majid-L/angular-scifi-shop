@@ -1,0 +1,69 @@
+a, a:hover, a:visited, a:focus, a:active
+  text-decoration: none
+  color: inherit
+  outline: 0
+
+.footer
+  background: var(--bgColor)
+  padding: 50px 0
+  border-top: 1px solid var(--footerBorderColor)
+
+p
+  margin: 0
+  text-align: center
+
+section
+  padding: 0 20px
+  display: flex
+  flex-wrap: wrap
+  justify-content: center
+  align-items: stretch
+  gap: 50px
+
+button
+  margin: -50px 0 50px
+  width: 100%
+
+.section
+  display: flex
+  justify-content: space-between
+  flex-direction: column
+  gap: 20px
+  align-items: center
+
+.info
+  display: flex
+  justify-content: center
+  flex-direction: row-reverse
+  align-items: center
+  gap: 10px
+
+.dev
+  flex-direction: column
+  gap: 3px
+
+.info svg
+  width: 60px
+  height: fit-content
+
+.repository-link
+  display: flex
+  gap: 10px
+
+.repository-link, .link
+  cursor: pointer
+  transition: 0.3s
+
+.repository-link:hover, .link:hover
+  color: var(--headingHoverColor)
+
+.logo
+  height: 80px
+
+img, .image-link
+  height: 40px
+
+@media (max-width: 540px)
+  section
+    flex-direction: column
+    gap: 20px
