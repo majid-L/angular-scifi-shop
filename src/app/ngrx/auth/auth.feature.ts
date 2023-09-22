@@ -1,4 +1,5 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
+import { deleteUserSuccess } from '../account/account.actions';
 import { httpError } from '../notification/notification.actions';
 import { 
   showAuthOverlay, 
@@ -61,6 +62,10 @@ export const authReducer = createReducer(
       logoutStatus: "success" as const
     };
   }),
+  on(deleteUserSuccess, state => ({
+    ...state,
+    loggedInUserId: null
+  })),
   on(resetStatus, state => ({ 
     ...state, 
     loginStatus: "pending" as const, 
