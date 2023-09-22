@@ -10,12 +10,22 @@
   <main>
     <ng-container *ngIf="dataStream$ | async as data">
       <section>
-        <ng-container *ngIf="data?.customer">
+        <ng-container *ngIf="data?.customer; else altButton">
           <div class="load-reviews-button">
             <button mat-raised-button (click)="loadAllReviews()" color="primary">Load all reviews</button>
             <p>Click here to show reviews for all customers and products.</p>
           </div>
         </ng-container>
+
+        <ng-template #altButton>
+          <ng-container *ngIf="(accountData$ | async) as accountData">
+            <div class="load-reviews-button">
+              <button mat-raised-button (click)="loadMyReviews(accountData.id)" color="primary">Load my reviews</button>
+              <p>Click here to load your own reviews.</p>
+            </div>
+          </ng-container>
+        </ng-template>
+
 
         <ng-container *ngIf="data.reviews?.length === 0; else customerReviews">
           <div class="empty">

@@ -11,9 +11,9 @@
     <section *ngLet="(accountData$ | async) as customer">
       <ng-container *ngIf="favorites.length === 0; else favoritesList">
         <div class="empty">
-          <p class="bold">Your wishlist is currently empty.</p>
+          <p class="bold">You haven't recommended any products yet.</p>
           <p>Nothing else to see here.</p>
-          <img class="filter" src="assets/empty.svg">
+          <img src="assets/empty-6.svg">
         </div>
       </ng-container>
 

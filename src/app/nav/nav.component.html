@@ -8,7 +8,8 @@
       <mat-nav-list>
         <a mat-list-item routerLink="/" [routerLinkActive]="activeLink" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page"><span>Home</span></a>
         <a mat-list-item routerLink="/products" [routerLinkActive]="activeLink" ariaCurrentWhenActive="page"><span>Products</span></a>
-        <a mat-list-item routerLink="/orders" [routerLinkActive]="activeLink"><span>Orders</span></a>
+        <a mat-list-item routerLink="/reviews" [routerLinkActive]="activeLink" ariaCurrentWhenActive="page"><span>Reviews</span></a>
+        <a *ngIf="dataStream.loggedInUserId" mat-list-item routerLink="/orders" [routerLinkActive]="activeLink"><span>Orders</span></a>
       </mat-nav-list>
   
       <mat-toolbar class="nav-header" [class.light]="lightModeEnabled">
@@ -54,7 +55,7 @@
         <img class="logo" src="assets/logo-alt.svg">
         </div>
 
-        <app-search *ngIf="dataStream.largeViewport === true"></app-search>
+        <app-search *ngIf="dataStream.mediumViewport === false"></app-search>
         
         <div class="active-user-controls">
           <ng-container *ngIf="dataStream.currentUser || dataStream.loggedInUserId; else showLogin">
@@ -137,8 +138,14 @@
         <mat-progress-bar color="accent" class="progress-bar" mode="indeterminate"></mat-progress-bar>
       </ng-container>
       <!-- Add Content Here -->
-      <app-search *ngIf="dataStream.largeViewport === false"></app-search>
+      <app-search *ngIf="dataStream.mediumViewport === true"></app-search>
       <router-outlet></router-outlet>
+      <!-- <footer class="footer">
+        <div>
+          <p>2023</p>
+          <p>Developed by 3782291211 using Angular</p>
+        </div>
+      </footer> -->
     </mat-sidenav-content>
   </mat-sidenav-container>
   

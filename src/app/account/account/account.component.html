@@ -10,12 +10,14 @@
     </div>
   </ng-container>
 
-  <main *ngIf="accountData">
-    <section>
+ 
+  <main>
+    <section *ngIf="accountData">
       <h1 class="username">{{ accountData.username }}</h1>
       <p class="name">{{ accountData.name }}</p>
       <mat-divider></mat-divider>
-
+      <p *ngIf="(socialUser$ | async) as social">Currently signed in via {{ social.provider }}.</p>
+      
       <div class="hint" *ngIf="accountData.username === 'alexnes'">
         <p class="subtitle">
           <span class="icon"><mat-icon>info</mat-icon></span>
@@ -47,7 +49,9 @@
             [shippingAddress]="accountData.shippingAddress"
           ></app-addresses>
         </div>
+      </div>
 
+      <div class="container">
         <div class="account-panel">
           <mat-expansion-panel>
             <mat-expansion-panel-header>
@@ -97,9 +101,9 @@
         <div class="password-panel">
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title>Change password</mat-panel-title>
+              <mat-panel-title>{{ accountData.password ? "Change password" : "Set password" }}</mat-panel-title>
               <mat-panel-description>
-                Choose a new password
+                {{ accountData.password ? "Choose a new password." : "Add a password to your account." }}
               </mat-panel-description>
             </mat-expansion-panel-header>
 
@@ -136,6 +140,11 @@
           <mat-progress-bar *ngIf="updateStatus === 'loading' && activeItem === 'password'" mode="indeterminate"></mat-progress-bar>
         </div>
       </div>
+
+      <div>
+        <button mat-raised-button color="warn" (click)="openDialog(accountData.id)">Delete account</button>
+      </div>
+
     </section>
   </main>
 </ng-container>

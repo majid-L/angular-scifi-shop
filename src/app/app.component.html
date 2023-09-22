@@ -1,4 +1,7 @@
 <app-nav></app-nav>
-<app-login></app-login>
+<app-auth *ngIf="showLoginDialog$ | async"></app-auth>
+
+<div id="google-login-prompt"></div>
+
 <!-- The routed views render in the <router-outlet>-->
 <router-outlet></router-outlet>

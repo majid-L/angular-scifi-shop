@@ -1,46 +1,51 @@
-<section id="loginOverlay" class="overlay" (click)="hideOverlayOnBodyClick($event)"
+<section 
+  id="loginOverlay" 
+  class="overlay" 
+  (click)="hideOverlayOnBodyClick($event)"
   *ngLet="(authIsLoading$ | async) as isLoading"
-  >
-    <div [ngClass]="{'content': true, 'dark-bg': !lightModeEnabled}">
-      <p class="subtitle">Sign in or create a new account.</p>
-      <mat-progress-bar *ngIf="isLoading" mode="indeterminate" color="primary"></mat-progress-bar>
-      <div class="padding">
-        <mat-icon class="close" (click)="hideOverlay()">close</mat-icon>
-        <mat-tab-group (selectedTabChange)="tabChange($event)"
-        selectedIndex="2">
-          
-          <mat-tab label="Login">
-            <app-auth-form [formType]="formType"></app-auth-form>
-          </mat-tab>
+>
+  <div [ngClass]="{'content': true, 'dark-bg': !lightModeEnabled}">
+    <p class="subtitle">Sign in or create a new account.</p>
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate" color="primary"></mat-progress-bar>
+    <div class="padding">
+      <mat-icon class="close" (click)="hideOverlay()">close</mat-icon>
 
-          <mat-tab label="Signup">
-            <app-auth-form [formType]="formType"></app-auth-form>
-            <mat-spinner *ngIf="isLoading" class="spinner" color="primary"></mat-spinner>
-          </mat-tab>
+      <mat-tab-group (selectedTabChange)="tabChange($event)" selectedIndex="2">
+        <mat-tab label="Login">
+          <app-auth-form [formType]="formType"></app-auth-form>
+          <ng-container [ngTemplateOutlet]="confirmation"></ng-container>
+        </mat-tab>
 
-          <mat-tab label="Login with Google">
-            <div>
-              <p>Use single sign-on (SSO) to access the app.</p>
-              <div id="google-login">
-                <asl-google-signin-button 
-                  text="continue_with"
-                  type="standard" 
-                  size="large"
-                  [theme]="theme">
-                </asl-google-signin-button>
-              </div>
+        <mat-tab label="Signup">
+          <app-auth-form [formType]="formType"></app-auth-form>
+          <mat-spinner *ngIf="isLoading" class="spinner" color="primary"></mat-spinner>
+          <ng-container [ngTemplateOutlet]="confirmation"></ng-container>
+        </mat-tab>
+
+        <mat-tab label="Login with Google">
+          <div>
+            <p>Use single sign-on (SSO) to access the app.</p>
+            <div id="google-login">
+              <asl-google-signin-button 
+                text="continue_with"
+                type="standard" 
+                size="large"
+                [theme]="theme">
+              </asl-google-signin-button>
             </div>
-          </mat-tab>
-
-          </mat-tab-group>
-          <!-- <ng-container *ngIf="(authIsSuccess$ | async) && (loggedInUserId$ | async)"> -->
-          <ng-container *ngIf="authIsSuccess$ | async">
-            <p class="confirmation-text">
-              <mat-icon class="confirmation-icon">check_circle</mat-icon>
-              Successfully {{ formType === 'Login' ? 'logged in.' : 'signed up. You can now log in to your account.' }}
-            </p>
-          </ng-container>
-      </div>
+            <ng-container [ngTemplateOutlet]="confirmation"></ng-container>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
     </div>
-  </section>
+  </div>
+</section>
 
+<ng-template #confirmation>
+  <ng-container *ngIf="authIsSuccess$ | async">
+    <p class="confirmation-text">
+      <mat-icon class="confirmation-icon">check_circle</mat-icon>
+      Successfully {{ socialUser ? 'looged in via ' + socialUser.provider : formType === 'Login' ? 'logged in.' : 'signed up. You have also been logged in to your account.' }}
+    </p>
+  </ng-container>
+</ng-template>
