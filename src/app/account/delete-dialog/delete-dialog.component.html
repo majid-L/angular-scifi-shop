@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>
+  <mat-icon color="warn">warning</mat-icon>  
+  You're about to delete your account.
+</h1>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+  <p>This action will permanently delete all your account data, including your orders, reviews, cart, wishlist and favorites.</p>
+  <strong>Are you sure you wish to delete your account?</strong>
+</div>
+<mat-divider></mat-divider>
+<div mat-dialog-actions>
+  <button mat-stroked-button (click)="onNoClick()" cdkFocusInitial>No Thanks</button>
+  <button mat-raised-button color="warn" (click)="deleteAccount()">Confirm</button>
+</div>
+<mat-progress-bar *ngIf="deleteStatus === 'loading'" mode="indeterminate"></mat-progress-bar>
