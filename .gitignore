@@ -43,3 +43,7 @@ Thumbs.db
 
 # Extras
 angular.md
+
+*.spec.ts
+scrap
+.env
