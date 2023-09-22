@@ -1,13 +1,16 @@
 .addresses
   display: flex
-  flex-direction: column
+  flex-wrap: wrap
   gap: 13px
   margin-bottom: 15px
+  width: fit-content
+  justify-content: space-between
 
 .flex-row
   flex-direction: row
 
 .address
+  width: 48%
   min-width: 250px
   height: fit-content
 
@@ -41,3 +44,7 @@ h2
 .spinner
   margin: 10px auto 15px !important
   height: 50px !important
+
+@media (max-width: 550px)
+  .address
+    width: 100%

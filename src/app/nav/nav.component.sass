@@ -18,10 +18,14 @@
 .sidenav 
   width: 210px
 
+.mat-drawer-content
+  position: static
+
 .topnav
-  background-color: var(--mainNavToolbarBg)
+  background: var(--mainNavToolbarBg)
   backdrop-filter: blur(7px)
-  position: absolute
+  position: fixed !important
+  left: 0
   z-index: 3 !important
 
 .mdc-list-item.mdc-list-item--with-one-line

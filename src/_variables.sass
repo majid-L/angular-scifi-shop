@@ -11,6 +11,10 @@ $darkProductCardBg: black
 $darkSuccessColor: #53f91c
 $darkHintBg: #ffdc1c
 $darkHeadingColor: #212121
+$darkAuthBg: #2e2d2d
+$darkBg: #212121
+$darkFooterBorder: #504f4f
+$darkHeaderBorder: $darkPrimary
 
 // mixin that enables css variables in dark mode
 @mixin dark()
@@ -26,12 +30,16 @@ $darkHeadingColor: #212121
   --successColor: #{$darkSuccessColor}
   --hintBg: #{$darkHintBg}
   --headingColor: #{$darkHeadingColor}
+  --authBg: #{$darkAuthBg}
+  --bgColor: #{$darkBg}
+  --footerBorderColor: #{$darkFooterBorder}
+  --headerBorderColor: #{$darkHeaderBorder}
 
 /**************************************************************/
 
 // Light mode variables
 $lightPrimary: #D500F9
-$lightMainNavbarBg: #21212176
+$lightMainNavbarBg: linear-gradient(90deg, #212121 0, #D500F9 50%, #212121 100%)
 $lightActiveAnchorBg: #D500F9
 $lightActiveAnchorColor: whitesmoke
 $lightProductCardOverlay: #d400f94a
@@ -42,6 +50,10 @@ $lightProductCardBg: #212121
 $lightSuccessColor: green
 $lightHintBg: #ec96fb
 $lightHeadingColor: whitesmoke
+$lightAuthBg: whitesmoke
+$lightBg: lightgray
+$lightFooterBorder: gray
+$lightHeaderBorder: $lightPrimary
 
 // mixin that enables css variables in light mode
 @mixin light()
@@ -57,3 +69,7 @@ $lightHeadingColor: whitesmoke
   --successColor: #{$lightSuccessColor}
   --hintBg: #{$lightHintBg}
   --headingColor: #{$lightHeadingColor}
+  --authBg: #{$lightAuthBg}
+  --bgColor: #{$lightBg}
+  --footerBorderColor: #{$lightFooterBorder}
+  --headerBorderColor: #{$lightHeaderBorder}

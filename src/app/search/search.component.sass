@@ -1,14 +1,23 @@
-header
-  position: sticky
-  z-index: 2
-  top: 70px
+.searchbar
+  transition: 0.4s
 
-::ng-deep .mat-mdc-text-field-wrapper
-  //border-radius: 0 !important
+.hide
+  transform: translateY(-60px)
 
-.mat-mdc-input-element
-  //background: rgba(0, 0, 0, 0) !important
+.show
+  transform: translate(0)
 
 @media(max-width: 1000px)
   .form-field
     width: 100%
+
+@media(max-width: 800px)
+  .searchbar
+    width: 100%
+    position: fixed
+    top: 70px
+    z-index: 2
+
+  ::ng-deep .mdc-text-field
+    border-radius: 0 !important
+
