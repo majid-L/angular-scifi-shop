@@ -69,7 +69,7 @@ export class AppComponent {
       } else {
         this._snackBarRef = this._snackBar.open('Log in or sign up to fully explore the app.', 'Dismiss', {
           horizontalPosition: "right",
-          verticalPosition: "bottom",
+          verticalPosition: "top",
           panelClass: "login-prompt"
         });
       }
@@ -80,16 +80,6 @@ export class AppComponent {
         this._authService.dispatchSocialLoginAction(user);
       }
     });
-
-    /*if (!window.localStorage.getItem("userId")) {
-      this._snackBarRef = this._snackBar.open('Log in or sign up to fully explore the app.', 'Dismiss', {
-        horizontalPosition: "center",
-        verticalPosition: "top",
-        panelClass: "login-prompt"
-      });
-    } else {
-      this._snackBarRef?.dismiss();
-    }*/
   }
 
   get googleClinetId() {

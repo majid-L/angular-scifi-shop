@@ -9,11 +9,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgLetModule } from 'ng-let';
 import { CheckoutModule } from '../checkout/checkout.module';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 @NgModule({
   declarations: [
     AccountComponent,
-    AddressesComponent
+    AddressesComponent,
+    DeleteDialogComponent
   ],
   imports: [
     CommonModule,

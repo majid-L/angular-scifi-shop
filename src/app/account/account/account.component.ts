@@ -1,6 +1,7 @@
 import { SocialUser } from '@abacritt/angularx-social-login';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable, Subscription } from 'rxjs';
@@ -8,6 +9,7 @@ import { resetStatus, updateAccount, updateActiveItem } from 'src/app/ngrx/accou
 import { selectAccount, selectLoadStatus, selectUpdateStatus, selectDeleteStatus, selectActiveItem } from 'src/app/ngrx/account/account.feature';
 import { selectLoggedInUserId, selectSocialUser } from 'src/app/ngrx/auth/auth.feature';
 import { AccountService } from '../account.service';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-account',
@@ -65,7 +67,8 @@ export class AccountComponent implements OnInit {
     private _store: Store<AppState>,
     private _formBuilder: FormBuilder,
     private _accountService: AccountService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) { }
 
   get name() { return this.accountForm.get("email"); }
@@ -161,6 +164,12 @@ export class AccountComponent implements OnInit {
       requestBody:this.passwordForm.value as UpdateCustomerRequest,
       customerId: this._loggedInUserId!
     }));
+  }
+
+  openDialog(customerId: number) {
+    this.dialog.open(DeleteDialogComponent, {
+      data: { customerId }
+    });
   }
 
   ngOnDestroy() {

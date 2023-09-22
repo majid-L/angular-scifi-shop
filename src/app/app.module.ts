@@ -29,12 +29,14 @@ import { WishlistModule } from './wishlist/wishlist.module';
 import { wishlistFeature } from './ngrx/wishlist/wishlist.feature';
 import { WishlistEffects } from './ngrx/wishlist/wishlist.effects';
 import { SearchComponent } from './search/search.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     NavComponent,
+    FooterComponent,
     DialogComponent
   ],
   imports: [
@@ -64,6 +66,6 @@ import { SearchComponent } from './search/search.component';
     EffectsModule.forRoot([])
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent, FooterComponent]
 })
 export class AppModule { }
