@@ -12,7 +12,7 @@ h2
   display: block
 
 .heading
-  padding: 100px 0 0
+  padding: 80px 0 0
 
 .header-flex
   display: flex
@@ -85,16 +85,12 @@ h2
   top: 0
   left: 100%
   right: 0
-  background-color: var(--productCardOverlay)
+  background: var(--productCardOverlay)
   overflow: hidden
   width: 0
   height: 100%
   transition: .5s ease
   pointer-events: none
-
-.foreground
-  z-index: 1
-  background-color: var(--productCardOverlay)
 
 .product-card:hover .product-card-overlay
   width: 100%
@@ -215,6 +211,19 @@ h2
 
 .bold
   margin: 7px 10px
+
+.not-logged-in
+  display: flex
+  justify-content: center
+  align-items: center
+  gap: 10px
+  width: 100%
+  position: absolute
+  bottom: 0
+  z-index: 1
+  background: #212121e8
+  text-align: center
+  color: var(--promptTextColor)
 
 @media (max-width: 500px)
   .product-grid

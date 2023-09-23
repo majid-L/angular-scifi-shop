@@ -3,3 +3,14 @@
 
 ::ng-deep .mat-mdc-paginator-page-size
   margin: 10px 0 10px !important
+
+.mat-mdc-paginator
+  position: relative
+
+@media (max-width: 380px)
+  ::ng-deep .mat-mdc-paginator-range-actions
+    margin-bottom: 30px
+
+  ::ng-deep div.mat-mdc-paginator-range-label
+    top: 40px !important
+    left: 60px

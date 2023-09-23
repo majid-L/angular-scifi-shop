@@ -1,9 +1,10 @@
 // Dark mode variables
 $darkPrimary: #ffab00
 $darkMainNavbarBg: #212121
+$darkSidenavBg: #424242
 $darkActiveAnchorBg: $darkPrimary
 $darkActiveAnchorColor: #212121
-$darkProductCardOverlay: #ffaa004a
+$darkProductCardOverlay: linear-gradient(#ffaa0015, #ffab00aa)
 $darkProductCardBoxShadow: #ffaa00aa
 $darkHeadingHoverColor: $darkPrimary
 $darkCartTotalColor: $darkPrimary
@@ -15,11 +16,14 @@ $darkAuthBg: #2e2d2d
 $darkBg: #212121
 $darkFooterBorder: #504f4f
 $darkHeaderBorder: $darkPrimary
+$darkButtonBg: #202124
+$darkButtonBorder: none
 
 // mixin that enables css variables in dark mode
 @mixin dark()
   --primaryColor: #{$darkPrimary}
   --mainNavToolbarBg: #{$darkMainNavbarBg}
+  --sidenavBgColor: #{$darkSidenavBg}
   --activeAnchorBg: #{$darkActiveAnchorBg}
   --textColor: #{$darkActiveAnchorColor}
   --productCardOverlay: #{$darkProductCardOverlay}
@@ -32,17 +36,21 @@ $darkHeaderBorder: $darkPrimary
   --headingColor: #{$darkHeadingColor}
   --authBg: #{$darkAuthBg}
   --bgColor: #{$darkBg}
+  --promptTextColor: #{$darkPrimary}
   --footerBorderColor: #{$darkFooterBorder}
   --headerBorderColor: #{$darkHeaderBorder}
+  --buttonBg: #{$darkButtonBg}
+  --buttonBorder: #{$darkButtonBorder}
 
 /**************************************************************/
 
 // Light mode variables
 $lightPrimary: #D500F9
 $lightMainNavbarBg: linear-gradient(90deg, #212121 0, #D500F9 50%, #212121 100%)
+$lightSidenavBg: whitesmoke
 $lightActiveAnchorBg: #D500F9
 $lightActiveAnchorColor: whitesmoke
-$lightProductCardOverlay: #d400f94a
+$lightProductCardOverlay: linear-gradient(#D500F915, #D500F9aa)
 $lightProductCardBoxShadow: #D500F9aa
 $lightHeadingHoverColor: #e150fa
 $lightCartTotalColor: #e150fa
@@ -54,11 +62,15 @@ $lightAuthBg: whitesmoke
 $lightBg: lightgray
 $lightFooterBorder: gray
 $lightHeaderBorder: $lightPrimary
+$lightTextColor: #fd26d9
+$lightButtonBg: #fff
+$lightButtonBorder: 1px solid #dadce0
 
 // mixin that enables css variables in light mode
 @mixin light()
   --primaryColor: #{$lightPrimary}
   --mainNavToolbarBg: #{$lightMainNavbarBg}
+  --sidenavBgColor: #{$lightSidenavBg}
   --activeAnchorBg: #{$lightActiveAnchorBg}
   --textColor: #{$lightActiveAnchorColor}
   --productCardOverlay: #{$lightProductCardOverlay}
@@ -71,5 +83,8 @@ $lightHeaderBorder: $lightPrimary
   --headingColor: #{$lightHeadingColor}
   --authBg: #{$lightAuthBg}
   --bgColor: #{$lightBg}
+  --promptTextColor: #{$lightTextColor}
   --footerBorderColor: #{$lightFooterBorder}
   --headerBorderColor: #{$lightHeaderBorder}
+  --buttonBg: #{$lightButtonBg}
+  --buttonBorder: #{$lightButtonBorder}

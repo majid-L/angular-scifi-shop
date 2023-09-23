@@ -49,11 +49,17 @@ h2 span
   align-items: center
   gap: 30px
 
+.mat-mdc-card-title, .list-item-subtitle
+  gap: 10px
+
+.review-rating
+  margin-right: 20px
+
 .list-item-subtitle
-  margin: 8px 0 10px
+  margin: 10px 0
 
   p
-    margin: 0
+    margin: 0 20px 0 0
 
 .reviews-tab-header
   justify-content: space-between
@@ -80,7 +86,6 @@ h2 span
 
   h3
     cursor: pointer
-    text-decoration: underline
     transition: all 0.3s ease
 
   h3:hover
@@ -101,7 +106,15 @@ h2 span
 
 .customer-info
   gap: 10px
-  margin-bottom: -5px
+  width: fit-content
+
+.reviews-link
+  text-decoration: underline
+  transition: 0.3s
+  cursor: pointer
+
+.reviews-link:hover
+  color: var(--headingHoverColor)
 
 .review-date
   margin: 5px 0 0
@@ -120,7 +133,8 @@ h3
 
 .review-title
   margin: 0
-  text-decoration: underline
+  white-space: normal
+  word-wrap: normal
 
 .product-description
   font-weight: 100
