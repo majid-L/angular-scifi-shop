@@ -19,6 +19,7 @@ import { resetWishlistStatus } from 'src/app/ngrx/wishlist/wishlist.actions';
 import { selectWishlist } from 'src/app/ngrx/wishlist/wishlist.feature';
 import { WishlistService } from 'src/app/wishlist/wishlist.service';
 import { loadProducts, setSearchTerm } from 'src/app/ngrx/products/products.actions';
+import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
 
 @Component({
   selector: 'app-product-list',
@@ -26,6 +27,7 @@ import { loadProducts, setSearchTerm } from 'src/app/ngrx/products/products.acti
   styleUrls: ['./product-list.component.sass']
 })
 export class ProductListComponent implements OnInit {
+  loggedInUserId$: Observable<string | number | null> = this._store.select(selectLoggedInUserId);
   wishlist$: Observable<Wishlist | null> = this._store.select(selectWishlist);
   products$: Observable<Product[] | null> = this._store.select(selectProducts);
   categories$: Observable<Category[] | null> = this._store.select(selectCategories);
@@ -59,6 +61,7 @@ export class ProductListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    window.scrollTo({ top: 0 });
     this._breakpointSubscription = this._breakPointObserver
       .observe('(max-width: 880px)')
       .subscribe(({ matches }) => {
@@ -93,6 +96,7 @@ export class ProductListComponent implements OnInit {
             verticalPosition: "top",
             duration: 8000
           });
+          this._store.dispatch(resetWishlistStatus());
         }
       });
   }
@@ -140,7 +144,6 @@ export class ProductListComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this._store.dispatch(resetWishlistStatus());
     this._breakpointSubscription.unsubscribe();
     this._streamSubscription.unsubscribe();
   }

@@ -39,10 +39,6 @@ export class NavComponent {
   rippleRadius = 30;
   eventsSubject = new Subject<void>();
 
-  // largeViewport$: Observable<boolean> = this._breakpointObserver
-  // .observe('(min-width: 1000px)')
-  // .pipe( map(result => result.matches), shareReplay());
-
   mediumViewport$: Observable<boolean> = this._breakpointObserver
     .observe('(max-width: 800px)')
     .pipe(map(result => result.matches), shareReplay());
@@ -111,7 +107,6 @@ export class NavComponent {
   handleLogout() {
     this._store.dispatch(logoutRequest());
     if (this._socialLoginUser) {
-      console.log(this._socialLoginUser);
       this._authService.signOut();
     }
   }

@@ -1,3 +1,4 @@
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
@@ -13,11 +14,14 @@ import { selectDeleteStatus } from 'src/app/ngrx/account/account.feature';
 export class DeleteDialogComponent {
   readonly $deleteStatus: Observable<Status> = this._store.select(selectDeleteStatus);
   public deleteStatus: Status = "pending";
+  private _socialLoginUser: SocialUser | undefined;
   private _subscription = Subscription.EMPTY;
+  private _socialLoginSubscription = Subscription.EMPTY;
 
   constructor(
     public dialogRef: MatDialogRef<DeleteDialogComponent>,
     private _store: Store<AppState>,
+    private _authService: SocialAuthService,
     @Inject(MAT_DIALOG_DATA) public data: { customerId: number }
   ) { }
 
@@ -26,6 +30,12 @@ export class DeleteDialogComponent {
       this.deleteStatus = deleteStatus;
       if (deleteStatus === "success") {
         this.dialogRef.close();
+      }
+    });
+
+    this._socialLoginSubscription = this._authService.authState.subscribe(user => {
+      if (user) {
+        this._socialLoginUser = user;
       }
     });
   }
@@ -38,6 +48,9 @@ export class DeleteDialogComponent {
     this._store.dispatch(deleteUser({ 
       customerId: this.data.customerId 
     }));
+    if (this._socialLoginUser) {
+      this._authService.signOut();
+    }
   }
 
   ngOnDestroy() {

@@ -5,11 +5,13 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { loadProducts } from 'src/app/ngrx/products/products.actions';
 import { selectLoadStatus, selectPagination, selectProducts } from 'src/app/ngrx/products/products.feature';
+import { resetWishlistStatus } from 'src/app/ngrx/wishlist/wishlist.actions';
 
 @Component({
   selector: 'app-products-pagination',
@@ -40,7 +42,8 @@ export class ProductsPaginationComponent {
   constructor(
     private _store: Store<AppState>,
     private _route: ActivatedRoute,
-    private _router: Router
+    private _router: Router,
+    private _titleService: Title
   ) { }
 
   ngOnInit() {
@@ -49,11 +52,20 @@ export class ProductsPaginationComponent {
     });
 
     this._routeSubscription = this._route.queryParamMap.subscribe(queryParamMap => {
+      this._titleService.setTitle("Products - " + queryParamMap.get("category") || queryParamMap.get("supplier") || "Products");
       this.queryParams = Object.create(queryParamMap).params;
       this.activeFilters = this.selectFilters(Object.create(queryParamMap).params);
       this.category = queryParamMap.get("category") || "";
       this.supplier = queryParamMap.get("supplier") || "";
       this._store.dispatch(loadProducts(this.queryParams));
+
+      if (queryParamMap.get("category")) {
+        this._titleService.setTitle("Products - " + queryParamMap.get("category"));
+      } else if (queryParamMap.get("supplier")) {
+        this._titleService.setTitle("Products by " + queryParamMap.get("supplier"));
+      } else {
+        this._titleService.setTitle("Products");
+      }
     });
   }
 

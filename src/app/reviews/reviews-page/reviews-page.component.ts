@@ -36,6 +36,7 @@ export class ReviewsPageComponent {
   ) { }
 
   ngOnInit() {
+    window.scrollTo({ top: 0 });
     this._errorSubscription = this.errorStatus$.subscribe(data => {
       if (data?.error?.status === 404) {
         this.show404 = true;

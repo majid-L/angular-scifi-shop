@@ -7,6 +7,7 @@ import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
 import { notify } from 'src/app/ngrx/notification/notification.actions';
 import { clearSingleOrder, deleteOrder, loadSingleOrder } from 'src/app/ngrx/orders/orders.actions';
 import { selectDeleteStatus, selectLoadStatus, selectNewOrder, selectSingleOrder } from 'src/app/ngrx/orders/orders.feature';
+import { selectData } from '../../ngrx/notification/notification.feature';
 
 @Component({
   selector: 'app-single-order',
@@ -14,8 +15,6 @@ import { selectDeleteStatus, selectLoadStatus, selectNewOrder, selectSingleOrder
   styleUrls: ['./single-order.component.sass', '../orders/orders.component.sass']
 })
 export class SingleOrderComponent {
-  orderId: string | undefined;
-  private _subscription = Subscription.EMPTY;
   readonly singleOrder$: Observable<SingleOrderResponse | null> = 
     this._store.select(selectSingleOrder);
   readonly loadStatus$: Observable<string> = 
@@ -28,25 +27,28 @@ export class SingleOrderComponent {
     this._store.select(selectAccount);
   readonly loggedInUserId$: Observable<number | string | null> = 
     this._store.select(selectLoggedInUserId);
+  readonly errorData$: Observable<DialogContent | null> = 
+    this._store.select(selectData);
   readonly dataStream$ = combineLatest([
-    this._route.params, this.deleteStatus$, this.loggedInUserId$
-  ]).pipe(
-    map(([params, deleteStatus, loggedInUserId]) => ({ 
-      params, deleteStatus, loggedInUserId
-    }))
-  );
+    this._route.params, this.loggedInUserId$
+  ]).pipe(map(([params, loggedInUserId]) => ({ params, loggedInUserId })));
   private _loggedInUserId: number | undefined;
+  public orderId: string | undefined;
   public newOrderId: number | undefined;
+  public render404 = false;
+  private _subscription = Subscription.EMPTY;
+  private _statusSubscription = Subscription.EMPTY;
+  private _404Subscription = Subscription.EMPTY;
 
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
-    private _store: Store
+    private _store: Store,
   ) { }
 
   ngOnInit() {
     this._subscription = this.dataStream$
-      .subscribe(({ params, deleteStatus, loggedInUserId }) => {
+      .subscribe(({ params, loggedInUserId }) => {
         this.orderId = params["id"];
         if (loggedInUserId) {
           this._loggedInUserId = Number(loggedInUserId);
@@ -55,6 +57,10 @@ export class SingleOrderComponent {
             customerId: Number(loggedInUserId)
           }));
         }
+      });
+
+    this._statusSubscription = this.deleteStatus$
+      .subscribe(deleteStatus => {
         if (deleteStatus === "success") {
           this._store.dispatch(notify({
             title: `Order #${this.orderId} deleted.`,
@@ -63,7 +69,12 @@ export class SingleOrderComponent {
           this._router.navigate(['/']);
         }
       });
-    // this._store.dispatch(loadSingleOrder({ orderId: this.orderId! }));
+
+    this._404Subscription = this.errorData$.subscribe(data => {
+      if ([404, 403].includes(data?.error?.status || 0)) {
+        this.render404 = true;
+      }
+    });
   }
 
   get lightModeEnabled() {
@@ -84,5 +95,7 @@ export class SingleOrderComponent {
   ngOnDestroy() {
     this._store.dispatch(clearSingleOrder());
     this._subscription.unsubscribe();
+    this._statusSubscription.unsubscribe();
+    this._404Subscription.unsubscribe();
   }
 }

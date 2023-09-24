@@ -10,8 +10,10 @@ import { selectActiveId, selectUpdateStatus } from 'src/app/ngrx/cart/cart.featu
 import { selectCreateStatus, selectUpdateStatus as selectReviewUpdateStatus, selectDeleteStatus, selectReviewStatus } from 'src/app/ngrx/reviews/reviews.feature';
 import { loadSingleProduct, searchOrderHistory } from 'src/app/ngrx/products/products.actions';
 import { selectSingleProduct, selectLoadStatus, selectOrderSearchResult, selectSearchStatus } from 'src/app/ngrx/products/products.feature';
-import { deleteReview, loadProductReviews, resetReviewsStatus, updateActiveId } from 'src/app/ngrx/reviews/reviews.actions';
+import { deleteReview, resetReviewsStatus, updateActiveId } from 'src/app/ngrx/reviews/reviews.actions';
 import { ReviewDialogComponent } from 'src/app/reviews/review-dialog/review-dialog.component';
+import { selectData } from '../../ngrx/notification/notification.feature';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-single-product',
@@ -36,11 +38,17 @@ export class SingleProductComponent {
     this._store.select(selectSearchStatus);
   readonly loggedInUserId$: Observable<string | number | null> =
     this._store.select(selectLoggedInUserId);
+  readonly errorData$: Observable<DialogContent | null> = 
+    this._store.select(selectData);
   private _customerId: number | undefined;
+  private _singleProduct: Product | undefined;
   private _subscription = Subscription.EMPTY;
   private _searchResultSubscription = Subscription.EMPTY;
+  private _404Subscription = Subscription.EMPTY;
+  private _singleProductSubscription = Subscription.EMPTY;
   private _isHandset = false;
   showCreateReviewButton = false;
+  render404 = false;
   isHandset$: Observable<boolean> = this._breakpointObserver
   .observe('(max-width: 540px)')
   .pipe(
@@ -59,7 +67,8 @@ export class SingleProductComponent {
     private _route: ActivatedRoute,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private _breakpointObserver: BreakpointObserver
+    private _breakpointObserver: BreakpointObserver,
+    private _titleService: Title
   ) { }
 
   ngOnInit() {
@@ -100,6 +109,18 @@ export class SingleProductComponent {
           this._customerId = Number(loggedInUserId);
         }
     });
+
+    this._404Subscription = this.errorData$.subscribe(data => {
+      if ([404, 400].includes(data?.error?.status || 0)) {
+        this.render404 = true;
+      }
+    });
+
+    this._singleProductSubscription = this.singleProduct$.subscribe(product => {
+      if (product) {
+        this._titleService.setTitle(product.name);
+      }
+    });
     
     if (this._customerId) {
       this._store.dispatch(searchOrderHistory({ 
@@ -108,7 +129,6 @@ export class SingleProductComponent {
       }));
     }
     this._store.dispatch(loadSingleProduct({ productId: this._productId! }));
-    //this._store.dispatch(loadProductReviews({ productId: this._productId! }));
   }
 
   get lightModeEnabled() {
@@ -148,5 +168,7 @@ export class SingleProductComponent {
     this._store.dispatch(resetReviewsStatus());
     this._subscription.unsubscribe();
     this._searchResultSubscription.unsubscribe();
+    this._404Subscription.unsubscribe();
+    this._singleProductSubscription.unsubscribe();
   }
 }
