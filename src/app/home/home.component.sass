@@ -1,7 +1,6 @@
 h1
-  max-width: 1000px
   text-align: center
-  margin: 0 auto
+  margin: 0 30px
   position: relative
   z-index: 1
   color: whitesmoke
@@ -9,7 +8,7 @@ h1
 .bg
   position: relative
   background: url('/assets/products.png')
-  padding: 200px 0 100px
+  padding: 170px 0 100px
 
 .bg-alt
   position: relative
@@ -55,7 +54,7 @@ img
   transition: all 0.4s ease-in-out
   
 .mat-mdc-card:hover
-  scale: 1.05
+  scale: 1.04
 
 ::ng-deep span.mdc-evolution-chip__cell.mdc-evolution-chip__cell--primary > span > span
   display: flex
@@ -84,13 +83,24 @@ img
     cursor: pointer
 
 .categories-list img
+    padding: 0
     max-width: 300px
-    margin: 30px 10px 10px 0
+    margin: 45px 10px 0 0
     height: 200px
 
 .dark-bg
   background: #212121
 
 @media (max-width: 700px)
-  .suppliers-list
-    justify-content: center
+  .suppliers-list, .categories-list
+     padding: 0 20px
+     margin: 0 auto 30px
+
+  .slogan
+    margin: 40px 0 0
+
+  .bg
+    padding: 170px 0 60px
+
+  .bg-alt
+    padding: 30px 0

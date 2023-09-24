@@ -1,5 +1,14 @@
+@use '../../_variables.sass'
+
 .text
   margin-left: -8px
+
+.chip
+  transition: 0.2s
+  box-shadow: 0 0 20px 2px inset var(--chipShadow)
+
+.chip:hover
+  scale: 1.02
 
 ::ng-deep .mat-mdc-chip-set .mdc-evolution-chip-set__chips
   min-width: fit-content !important
