@@ -10,7 +10,7 @@ import { AuthEffects } from '../ngrx/auth/auth.effects';
 import { NgLetModule } from 'ng-let';
 import { StoreModule } from '@ngrx/store';
 import { authFeature } from '../ngrx/auth/auth.feature';
-import { GoogleSigninButtonModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { GoogleSigninButtonModule, SocialAuthServiceConfig, FacebookLoginProvider, AmazonLoginProvider } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 
 @NgModule({
@@ -44,6 +44,18 @@ import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
               oneTapEnabled: window.localStorage.getItem("userId") ? false : true,
               prompt_parent_id: "google-login-prompt"
             }
+          )
+        },
+        {
+          id: FacebookLoginProvider.PROVIDER_ID,
+          provider: new FacebookLoginProvider(
+            import.meta.env.NG_APP_FACEBOOK_APP_ID
+          )
+        },
+        {
+          id: AmazonLoginProvider.PROVIDER_ID,
+          provider: new AmazonLoginProvider(
+            import.meta.env.NG_APP_AMAZON_CLIENT_ID
           )
         }
       ],

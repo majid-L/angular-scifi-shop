@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { hideAuthOverlay, resetStatus } from 'src/app/ngrx/auth/auth.actions';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { selectAuthIsLoading, selectAuthIsSuccess, selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
-import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
+import { AmazonLoginProvider, FacebookLoginProvider, SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -42,6 +42,14 @@ export class AuthComponent {
 
   get lightModeEnabled() {
     return document.body.classList.contains("light-mode");
+  }
+
+  loginWithFacebook() {
+    this._socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID);
+  }
+
+  loginWithAmazon() {
+    this._socialAuthService.signIn(AmazonLoginProvider.PROVIDER_ID);
   }
 
   tabChange(e: MatTabChangeEvent) {
