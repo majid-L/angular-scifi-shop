@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, exhaustMap, map, of } from "rxjs";
 import { OrdersService } from "src/app/orders/orders.service";
+import { dispatchErrorAction } from "..";
 import { httpError } from "../notification/notification.actions";
 import { createOrder, createOrderSuccess, deleteOrder, deleteOrderSuccess, loadOrders, loadOrdersSuccess, loadSingleOrder, loadSingleOrderSuccess, updateOrder, updateOrderSuccess } from "./orders.actions";
 
@@ -13,7 +14,7 @@ export class OrdersEffects {
     exhaustMap(({ customerId }) => this._ordersService.getOrders(customerId)
       .pipe(
         map(ordersResponse => loadOrdersSuccess(ordersResponse)),
-        catchError(({ error }: { error: ApiError }) => of(httpError(error)))
+        catchError(dispatchErrorAction)
       )
     )
   ));
@@ -24,7 +25,7 @@ export class OrdersEffects {
       return this._ordersService.getSingleOrder(orderId, customerId)
       .pipe(
         map(singleOrderResponse => loadSingleOrderSuccess(singleOrderResponse)),
-        catchError(({ error }: { error: ApiError }) => of(httpError(error)))
+        catchError(dispatchErrorAction)
       )
     }
     )
@@ -37,7 +38,7 @@ export class OrdersEffects {
         map(newOrderResponse => {
           return createOrderSuccess(newOrderResponse);
         }),
-        catchError(({ error }: { error: ApiError }) => of(httpError(error)))
+        catchError(dispatchErrorAction)
       )
     )
   ));
@@ -47,7 +48,7 @@ export class OrdersEffects {
     exhaustMap(payload => this._ordersService.updateOrder(payload)
       .pipe(
         map(singleOrderResponse => updateOrderSuccess(singleOrderResponse)),
-        catchError(({ error }: { error: ApiError }) => of(httpError(error)))
+        catchError(dispatchErrorAction)
       )
     )
   ));
@@ -57,7 +58,7 @@ export class OrdersEffects {
     exhaustMap(({ orderId, customerId }) => this._ordersService.deleteOrder(orderId, customerId)
       .pipe(
         map(deletedOrderResponse => deleteOrderSuccess(deletedOrderResponse)),
-        catchError(({ error }: { error: ApiError }) => of(httpError(error)))
+        catchError(dispatchErrorAction)
       )
     )
   ));

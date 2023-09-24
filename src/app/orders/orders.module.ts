@@ -13,6 +13,7 @@ import { NewOrderRedirectComponent } from './new-order-redirect/new-order-redire
 import { NgLetModule } from 'ng-let';
 import { AccountModule } from '../account/account.module';
 import { ReviewsModule } from '../reviews/reviews.module';
+import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ReviewsModule } from '../reviews/reviews.module';
     RouterModule,
     AccountModule,
     ReviewsModule,
+    PageNotFoundComponent,
     StoreModule.forFeature(ordersFeature),
     EffectsModule.forFeature(OrdersEffects)
   ]

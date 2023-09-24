@@ -9,7 +9,7 @@
         <a mat-list-item routerLink="/" [routerLinkActive]="activeLink" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page"><span>Home</span></a>
         <a mat-list-item routerLink="/products" [routerLinkActive]="activeLink" ariaCurrentWhenActive="page"><span>Products</span></a>
         <a mat-list-item routerLink="/reviews" [routerLinkActive]="activeLink" ariaCurrentWhenActive="page"><span>Reviews</span></a>
-        <a *ngIf="dataStream.loggedInUserId" mat-list-item routerLink="/orders" [routerLinkActive]="activeLink"><span>Orders</span></a>
+        <a *ngIf="dataStream.loggedInUserId" mat-list-item routerLink="/orders" [routerLinkActive]="activeLink"><span>My orders</span></a>
       </mat-nav-list>
   
       <mat-toolbar class="nav-header" [class.light]="lightModeEnabled">

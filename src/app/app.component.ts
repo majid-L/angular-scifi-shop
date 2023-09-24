@@ -69,7 +69,7 @@ export class AppComponent {
       } else {
         this._snackBarRef = this._snackBar.open('Log in or sign up to fully explore the app.', 'Dismiss', {
           horizontalPosition: "right",
-          verticalPosition: "top",
+          verticalPosition: "bottom",
           panelClass: "login-prompt"
         });
       }

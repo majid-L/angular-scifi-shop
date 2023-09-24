@@ -22,6 +22,7 @@ import { FavoritesComponent } from './favorites/favorites.component';
 import { reviewsFeature } from '../ngrx/reviews/reviews.feature';
 import { ReviewsEffects } from '../ngrx/reviews/reviews.effects';
 import { ChipsComponent } from '../chips/chips.component';
+import { PageNotFoundComponent } from '../page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { ChipsComponent } from '../chips/chips.component';
     NgLetModule,
     ReviewsModule,
     ChipsComponent,
+    PageNotFoundComponent,
     StoreModule.forFeature(productsFeature),
     StoreModule.forFeature(reviewsFeature),
     StoreModule.forFeature(wishlistFeature),
