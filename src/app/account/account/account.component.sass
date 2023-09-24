@@ -1,6 +1,9 @@
 main
   margin: 20px 0 50px
 
+h2
+  margin: 0 0 10px
+
 .hint
   background: #18ffff
   color: #212121
@@ -71,7 +74,12 @@ form
   gap: 50px
 
 .account-panel, .password-panel
-  max-width: 90vw !important
+  width: 100%
+  max-width: 415px
+
+.panels
+  gap: 20px
+  margin: 50px 0 30px
 
 .addresses
   width: fit-content
@@ -97,9 +105,6 @@ form
   display: flex
   flex-direction: column
 
-.password-panel
-  max-width: 350px
-
 ::ng-deep .mat-mdc-form-field-hint, ::ng-deep .mat-mdc-form-field-error
   font-size: 13px
   padding: 5px 0 10px !important
@@ -114,6 +119,13 @@ form
 @media (max-width: 550px)
   .container
     justify-content: center
+    gap: 20px
+
+  .panels
+    margin: -20px 0 30px
+
+  .account-panel, .password-panel
+    max-width: none
 
   .avatar-image
     height: 100px
@@ -123,13 +135,8 @@ form
     margin: 60px auto
     
 @media (max-width: 1200px)
-  .container
-    gap: 20px
-
   .avatar-div
     margin: 0 20px 20px
 
   .account-panel, .password-panel
     flex-grow: 1
-    max-width: 500px
-    

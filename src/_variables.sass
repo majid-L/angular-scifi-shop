@@ -18,6 +18,8 @@ $darkFooterBorder: #504f4f
 $darkHeaderBorder: $darkPrimary
 $darkButtonBg: #202124
 $darkButtonBorder: none
+$darkPriceChipBorder: 2px double #9f9d9d
+$darkChipShadow: #ffaa00b5
 
 // mixin that enables css variables in dark mode
 @mixin dark()
@@ -41,12 +43,14 @@ $darkButtonBorder: none
   --headerBorderColor: #{$darkHeaderBorder}
   --buttonBg: #{$darkButtonBg}
   --buttonBorder: #{$darkButtonBorder}
+  --priceChipBorder: #{$darkPriceChipBorder}
+  --chipShadow: #{$darkChipShadow}
 
 /**************************************************************/
 
 // Light mode variables
 $lightPrimary: #D500F9
-$lightMainNavbarBg: linear-gradient(90deg, #212121 0, #D500F9 50%, #212121 100%)
+$lightMainNavbarBg: linear-gradient(90deg, #212121 0, #8800a0 50%, #212121 100%)
 $lightSidenavBg: whitesmoke
 $lightActiveAnchorBg: #D500F9
 $lightActiveAnchorColor: whitesmoke
@@ -65,6 +69,8 @@ $lightHeaderBorder: $lightPrimary
 $lightTextColor: #fd26d9
 $lightButtonBg: #fff
 $lightButtonBorder: 1px solid #dadce0
+$lightPriceChipBorder: 1px solid #787676
+$lightChipShadow: #ec96fb
 
 // mixin that enables css variables in light mode
 @mixin light()
@@ -88,3 +94,5 @@ $lightButtonBorder: 1px solid #dadce0
   --headerBorderColor: #{$lightHeaderBorder}
   --buttonBg: #{$lightButtonBg}
   --buttonBorder: #{$lightButtonBorder}
+  --priceChipBorder: #{$lightPriceChipBorder}
+  --chipShadow: #{$lightChipShadow}

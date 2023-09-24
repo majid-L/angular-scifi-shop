@@ -51,10 +51,40 @@ h2
 .confirmation-icon
   color: var(--successColor)
 
-
-
 ::ng-deep .mat-mdc-tab-body-content
-  min-height: 100px
+  //min-height: 100px
+
+.sso-button
+  background: var(--buttonBg)
+  border: var(--buttonBorder)
+
+#facebook-login, #amazon-login
+  display: flex
+  justify-content: center
+  align-items: center
+
+  span
+    height: fit-content
+
+  img
+    width: fit-content
+
+#amazon-login img
+  margin: 4px
+  height: 80%
+
+.sso-buttons
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 5px
+  margin: 30px 0 20px
+  width: 100%
+  height: 120px
+
+  *
+    width: 230px
+    height: 40px
 
 @media(max-width: 400px)
   .content
