@@ -1,30 +1,30 @@
-# Angular sci-fi ecommerce app
+# Sci-fi-themed Angular project
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.7.
+This is a sci-fi themed Angular application, brimming with features (including its own fictitious lore).
 
 <img src="src/assets/logo.svg" width=600>
 <br>
 
-## Development server
+## Key product features
+- Built with **Angular Material** components.
+- Reactive state management with NGRX Store.
+- Side-effect-driven architecture implemented via NGRX Effects in response to network requests.
+- Service-based design to isolate core tasks (fetching data and updating state) away from components.
+- Extensive CRUD functionality allowing users to interact with products, cart, wishlist, reviews and user account.
+- Multiple themes implemented with Sass variables and mixins, using Angular Material's theming system.
+- Mock payments processing via Stripe API, allowing for multiple payment options.
+- Authentication via local strategies as well as single sign-on with Facebook, Amazon and Google.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Webpages
+The app contains various pages. Here are the main ones:
+- Products (with pagination and filtering)
+- Single product
+- Orders
+- Single order
+- Cart
+- Wishlist
+- Favorites
+- Reviews (with pagination and filtering)
+- Login/signup
+- Checkout
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

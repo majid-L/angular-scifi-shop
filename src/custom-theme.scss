@@ -39,12 +39,6 @@ $dark-theme: mat.define-dark-theme((
   )
 ));
 
-// $colors: (
-//   notification: #18ffff,
-//   light-cyan: mat.get-color-from-palette($angular-ecommerce-accent, 200)
-// );
-// $angular-ecommerce-theme: map-merge($angular-ecommerce-theme, (colors: $colors));
-
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
