@@ -1,5 +1,6 @@
 <mat-chip-listbox aria-label="Product information">
   <mat-chip
+    class="chip"
     routerLink="/products" [queryParams]="{ category: product!.categoryName}"
     [matTooltip]="'View products in ' + product!.categoryName + ' category'" 
     matTooltipPosition="above">
@@ -7,6 +8,7 @@
     <span class="text">{{ product!.categoryName }}</span>
   </mat-chip>
   <mat-chip
+    class="chip"
     routerLink="/products" [queryParams]="{ supplier: product!.supplierName}"
     [matTooltip]="'View products sold by ' + product!.supplierName" >
     <mat-icon matChipAvatar>business</mat-icon>

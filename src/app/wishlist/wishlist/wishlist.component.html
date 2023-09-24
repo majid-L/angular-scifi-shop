@@ -6,11 +6,12 @@
   <app-spinner></app-spinner>
 </ng-container>
 
-<ng-container *ngIf="wishlist$ | async as wishlist">
+<ng-container *ngIf="(wishlist$ | async) as wishlist">
   <main>
     <section *ngLet="(updateStatus$ | async) as updateStatus">
       <h1 class="username">{{ wishlist.username }}'s wishlist</h1>
-      <p class="name">{{ wishlist.name }}</p>
+      <p class="name" style="margin: 0">{{ wishlist.name }}</p>
+      <p class="name">{{ wishlist.wishlistItems.length }} items</p>
       <mat-divider></mat-divider>
       
       <ng-container *ngIf="wishlist.wishlistItems.length === 0; else wishlistItems">
@@ -36,18 +37,17 @@
             <mat-card-header>
               <mat-card-title>
                 <h2 [class.hover-dark]="lightModeEnabled" [routerLink]="['/products', item.product.id]" matTooltip="Go to product page">{{ item.product.name }}</h2>
+                <mat-divider></mat-divider>
               </mat-card-title>
             </mat-card-header>
-            <mat-divider></mat-divider>
 
             <mat-card-content>
               <img [src]="'assets/icons/transparent/' + item.product.thumbnail" [routerLink]="['/products', item.product.id]" [alt]="item.product.name" matTooltip="Go to product page">
               <p>{{ item.product.description }}</p>
             </mat-card-content>
 
-            <mat-divider></mat-divider>
-
             <mat-action-row>
+              <mat-divider></mat-divider>
               <app-chips [product]="item.product"></app-chips>
               <button mat-fab extended (click)="updateWishlist('remove', wishlist, item.product.id)" color="warn">
                 <mat-icon>delete</mat-icon>

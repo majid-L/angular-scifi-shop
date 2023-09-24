@@ -18,7 +18,7 @@
       <ul>
         <li *ngFor="let card of testCardNumbers">
           <p>{{ card.type }}: <strong>{{ card.number }}</strong></p>
-          <button mat-stroked-button [id]="card.number" color="primary" [cdkCopyToClipboard]="card.number" (click)="copyCardNumber(card.number)">
+          <button mat-raised-button [id]="card.number" color="primary" [cdkCopyToClipboard]="card.number" (click)="copyCardNumber(card.number)">
             <mat-icon>file_copy</mat-icon>
             Copy to clipboard
           </button>

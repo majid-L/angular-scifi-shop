@@ -10,7 +10,6 @@
     </div>
   </ng-container>
 
- 
   <main>
     <section *ngIf="accountData">
       <h1 class="username">{{ accountData.username }}</h1>
@@ -43,6 +42,7 @@
           <img #avatar class="avatar-image" [src]="accountData.avatar" (error)="avatar.src = '/assets/anonymous.webp'">
         </div>
         <div class="addresses">
+          <h2>Addresses</h2>
           <app-addresses
             component="account"
             [billingAddress]="accountData.billingAddress"
@@ -51,8 +51,9 @@
         </div>
       </div>
 
-      <div class="container">
+      <div class="container panels">
         <div class="account-panel">
+          <h2>Account details</h2>
           <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title>Update account details</mat-panel-title>
@@ -99,6 +100,7 @@
         </div>
 
         <div class="password-panel">
+          <h2>Password</h2>
           <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title>{{ accountData.password ? "Change password" : "Set password" }}</mat-panel-title>

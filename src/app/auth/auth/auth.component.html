@@ -22,16 +22,34 @@
           <ng-container [ngTemplateOutlet]="confirmation"></ng-container>
         </mat-tab>
 
-        <mat-tab label="Login with Google">
+        <mat-tab label="Login with SSO">
           <div>
-            <p>Use single sign-on (SSO) to access the app.</p>
-            <div id="google-login">
-              <asl-google-signin-button 
-                text="continue_with"
-                type="standard" 
-                size="large"
-                [theme]="theme">
-              </asl-google-signin-button>
+            <p>Use single sign-on to access the app.</p>
+            <div class="sso-buttons">
+              <div id="google-login">
+                <asl-google-signin-button 
+                  text="continue_with"
+                  type="standard" 
+                  size="large"
+                  width="230"
+                  [theme]="theme">
+                </asl-google-signin-button>
+              </div>
+
+              <button class="sso-button" (click)="loginWithFacebook()" mat-stroked-button>
+                <div id="facebook-login">
+                  <span>Continue with Facebook</span>
+                  <img src="assets/facebook.svg">
+                </div>
+              </button>
+
+              <button class="sso-button" (click)="loginWithAmazon()" mat-stroked-button>
+                <div id="amazon-login">
+                  <span>Continue with Amazon</span>
+                  <img src="assets/amazon.svg">
+                </div>
+              </button>
+
             </div>
             <ng-container [ngTemplateOutlet]="confirmation"></ng-container>
           </div>
@@ -45,7 +63,7 @@
   <ng-container *ngIf="authIsSuccess$ | async">
     <p class="confirmation-text">
       <mat-icon class="confirmation-icon">check_circle</mat-icon>
-      Successfully {{ socialUser ? 'looged in via ' + socialUser.provider : formType === 'Login' ? 'logged in.' : 'signed up. You have also been logged in to your account.' }}
+      Successfully {{ socialUser ? 'logged in via ' + socialUser.provider : formType === 'Login' ? 'logged in.' : 'signed up. You have also been logged in to your account.' }}
     </p>
   </ng-container>
 </ng-template>

@@ -2,12 +2,18 @@
   <app-spinner></app-spinner>
 </ng-container>
 
-<div class="heading">
-  <img src="assets/order.svg">
-  <div>
-    <span class="bold"><mat-chip>Order #{{ orderId }}</mat-chip></span>
+<ng-container *ngIf="render404; else heading">
+  <app-page-not-found></app-page-not-found>
+</ng-container>
+
+<ng-template #heading>
+  <div class="heading">
+    <img src="assets/order.svg">
+    <div>
+      <span class="bold"><mat-chip>Order #{{ orderId }}</mat-chip></span>
+    </div>
   </div>
-</div>
+</ng-template>
 
 <ng-container *ngIf="singleOrder$ | async as order">
   <main>

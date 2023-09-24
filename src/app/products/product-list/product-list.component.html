@@ -73,7 +73,7 @@
               <img *ngIf="listDisplayStyle === 'grid'" [routerLink]="['/products', product.id]" class="product-image" mat-card-image [src]="productImgSrc(product)">
   
               <ng-container *ngIf="(wishlist$ | async) as wishlist">
-                <div class="product-card-overlay" [class.foreground]="listDisplayStyle === 'list'">
+                <div class="product-card-overlay">
                   <ng-container *ngIf="!productIsInWishlist(product.id, wishlist); else alt">
                     <div class="wishlist-button" [class.fit-content]="listDisplayStyle === 'list'">
                       <button mat-fab extended (click)="updateWishlist('add', wishlist, product.id)" color="primary">
@@ -118,6 +118,11 @@
               <mat-card-actions>
                 <app-action-buttons [product]="product"></app-action-buttons>
               </mat-card-actions>
+            </div>
+
+            <div class="not-logged-in" *ngIf="!(loggedInUserId$ | async)">
+              <mat-icon>perm_identity</mat-icon>
+              <p>Log in to buy product or add to cart</p>
             </div>
           
     

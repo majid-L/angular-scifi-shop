@@ -14,6 +14,7 @@
           <div class="load-reviews-button">
             <button mat-raised-button (click)="loadAllReviews()" color="primary">Load all reviews</button>
             <p>Click here to show reviews for all customers and products.</p>
+            <mat-divider></mat-divider>
           </div>
         </ng-container>
 
@@ -22,6 +23,7 @@
             <div class="load-reviews-button">
               <button mat-raised-button (click)="loadMyReviews(accountData.id)" color="primary">Load my reviews</button>
               <p>Click here to load your own reviews.</p>
+              <mat-divider></mat-divider>
             </div>
           </ng-container>
         </ng-template>
@@ -38,7 +40,7 @@
         <ng-template #customerReviews>
           <ng-container *ngIf="data.customer?.username; else allReviews">
             <h1 class="username">{{ data.customer!.username }}'s reviews.</h1>
-            <p class="name">Currently viewing {{ data.pagination.totalResults }} reviews posted by {{ data.customer!.username }}<span>({{ data.customer!.name }})</span></p>
+            <p class="name">Currently viewing {{ data.pagination.totalResults }} {{ data.pagination.totalResults > 1 ? "reviews" : "review" }} posted by <em>{{ data.customer!.username }}</em> ({{ data.customer!.name }})</p>
           </ng-container>
         </ng-template>
 

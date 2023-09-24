@@ -133,19 +133,16 @@
             </ng-container>
           </ng-template>
         </div>
+
+        <ng-container *ngIf="dataStream.authIsLoading">
+          <mat-progress-bar color="accent" class="progress-bar" mode="indeterminate"></mat-progress-bar>
+        </ng-container>
+
       </mat-toolbar>
-      <ng-container *ngIf="dataStream.authIsLoading">
-        <mat-progress-bar color="accent" class="progress-bar" mode="indeterminate"></mat-progress-bar>
-      </ng-container>
+      
       <!-- Add Content Here -->
       <app-search *ngIf="dataStream.mediumViewport === true"></app-search>
       <router-outlet></router-outlet>
-      <!-- <footer class="footer">
-        <div>
-          <p>2023</p>
-          <p>Developed by 3782291211 using Angular</p>
-        </div>
-      </footer> -->
     </mat-sidenav-content>
   </mat-sidenav-container>
   
