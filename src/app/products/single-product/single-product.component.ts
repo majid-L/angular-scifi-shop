@@ -21,7 +21,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./single-product.component.sass']
 })
 export class SingleProductComponent {
-  private _productId: number | undefined;
+  public productId: number | undefined;
   private _orderId: number | undefined;
   readonly singleProduct$: Observable<SingleProduct | null> = 
     this._store.select(selectSingleProduct);
@@ -41,7 +41,6 @@ export class SingleProductComponent {
   readonly errorData$: Observable<DialogContent | null> = 
     this._store.select(selectData);
   private _customerId: number | undefined;
-  private _singleProduct: Product | undefined;
   private _subscription = Subscription.EMPTY;
   private _searchResultSubscription = Subscription.EMPTY;
   private _404Subscription = Subscription.EMPTY;
@@ -57,9 +56,9 @@ export class SingleProductComponent {
   );
 
   readonly dataStream$ = combineLatest([
-    this._route.params, this.isHandset$, this.reviewCreateStatus$, this.reviewUpdateStatus$, this.reviewDeleteStatus$, this.loggedInUserId$
-  ]).pipe(map(([params, isHandset, createStatus, updateStatus, deleteStatus, loggedInUserId]) => ({
-    params, isHandset, createStatus, updateStatus, deleteStatus, loggedInUserId
+    this._route.paramMap, this.isHandset$, this.reviewCreateStatus$, this.reviewUpdateStatus$, this.reviewDeleteStatus$, this.loggedInUserId$
+  ]).pipe(map(([paramMap, isHandset, createStatus, updateStatus, deleteStatus, loggedInUserId]) => ({
+    paramMap, isHandset, createStatus, updateStatus, deleteStatus, loggedInUserId
   })));
 
   constructor(
@@ -86,9 +85,13 @@ export class SingleProductComponent {
       });
 
     this._subscription = this.dataStream$
-      .subscribe(({ params, isHandset, createStatus, updateStatus, deleteStatus, loggedInUserId }) => {
+      .subscribe(({ paramMap, isHandset, createStatus, updateStatus, deleteStatus, loggedInUserId }) => {
+        const productId = Number(paramMap.get("id"));
+        if (this.productId !== productId) {
+          this._store.dispatch(loadSingleProduct({ productId }));
+        }
+        this.productId = productId;
         this._isHandset = isHandset;
-        this._productId = params["id"];
 
         if (loggedInUserId && [createStatus, updateStatus, deleteStatus].some(status => status === "success")) {
           const snackBarMessage = createStatus === "success" ? "Your review has been published."
@@ -97,7 +100,7 @@ export class SingleProductComponent {
           : "Done";
           this._store.dispatch(searchOrderHistory({ 
             customerId: Number(loggedInUserId),
-            productId: params["id"] 
+            productId
           }));
           this._snackBar.open(snackBarMessage, 'Dismiss', {
             horizontalPosition: "start",
@@ -126,10 +129,9 @@ export class SingleProductComponent {
     if (this._customerId) {
       this._store.dispatch(searchOrderHistory({ 
         customerId: this._customerId,
-        productId: this._productId! 
+        productId: this.productId! 
       }));
     }
-    this._store.dispatch(loadSingleProduct({ productId: this._productId! }));
   }
 
   get lightModeEnabled() {
@@ -139,7 +141,7 @@ export class SingleProductComponent {
   newReviewTemplate(product: Product): NewReviewRequest & { product: Product } {
     return {
       customerId: Number(this._customerId!),
-      productId: Number(this._productId!),
+      productId: Number(this.productId!),
       orderId: this._orderId!,
       title: "",
       body: "",
