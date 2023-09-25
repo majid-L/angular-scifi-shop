@@ -5,13 +5,19 @@ img
   height: 100px
   width: 100px
 
-.mat-mdc-dialog-title
-  font-size: 20px
+.dialog-title
   padding: 5px
-  margin-bottom: 10px
+  display: flex
+  justify-content: space-between
+  align-items: center
+  gap: 10px
+
+  h2
+    font-size: 20px
 
 .mat-mdc-dialog-content
   padding-top: 0
+  max-height: none
 
 .mat-mdc-dialog-actions
   padding: 8px 0
@@ -30,7 +36,7 @@ h3
 .product-description
   margin: 0 0 10px
 
-.rating-label, .radio-group, label
+.rating-label, .radio-group, .radio-group div, label
   display: flex
   align-items: center
   gap: 10px
@@ -39,6 +45,9 @@ h3
 .radio-group
   height: 40px
   margin: 0 0 10px
+
+.radio-group div
+  margin: 0
 
 label
   margin: 0

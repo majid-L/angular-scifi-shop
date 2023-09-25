@@ -13,7 +13,7 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $light-primary: mat.define-palette(mat.$purple-palette, A400);
-$light-accent: mat.define-palette(mat.$cyan-palette, 600);
+$light-accent: mat.define-palette(mat.$cyan-palette, A400);
 
 // The warn palette is optional (defaults to red).
 $light-warn: mat.define-palette(mat.$pink-palette, 500);
@@ -43,6 +43,7 @@ $dark-theme: mat.define-dark-theme((
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include mat.all-component-themes($dark-theme);
+
 .light-mode {
-  @include mat.all-component-colors($light-theme)
+  @include mat.all-component-colors($light-theme);
 }

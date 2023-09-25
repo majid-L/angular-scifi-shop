@@ -18,6 +18,7 @@
 .sidenav 
   width: 210px
   background: var(--sidenavBgColor)
+  z-index: 4
 
 .mat-drawer-content
   position: static
@@ -27,7 +28,7 @@
   backdrop-filter: blur(7px)
   position: fixed !important
   left: 0
-  z-index: 3 !important
+  z-index: 4 !important
 
 .mdc-list-item.mdc-list-item--with-one-line
   height: 45px
@@ -38,8 +39,13 @@
   padding: 35px 15px
 
 .nav-header
+  display: flex
+  justify-content: center
   height: 80px
   box-shadow: 0 0 8px 6px var(--sidenavBgColor) inset
+
+.toolbar-image
+  height: 90px
 
 .mat-mdc-nav-list
   padding: 0
@@ -96,15 +102,11 @@
   align-items: center
 
 .logo
-  width: 160px
+  width: 150px
 
-.toolbar-image
-  height: 90%
-  position: absolute
-  z-index: 1
-  scale: 1.4
-  left: 15%
-  top: 7px
+@media (max-width: 800px)
+  .topnav
+    background: var(--narrowNavToolbarBg)
 
 @media (max-width: 580px)
   .logo
