@@ -22,6 +22,7 @@ import { Title } from '@angular/platform-browser';
 })
 export class SingleProductComponent {
   public productId: number | undefined;
+  public loggedInUserId: string | number | null | undefined;
   private _orderId: number | undefined;
   readonly singleProduct$: Observable<SingleProduct | null> = 
     this._store.select(selectSingleProduct);
@@ -91,6 +92,7 @@ export class SingleProductComponent {
           this._store.dispatch(loadSingleProduct({ productId }));
         }
         this.productId = productId;
+        this.loggedInUserId = loggedInUserId;
         this._isHandset = isHandset;
 
         if (loggedInUserId && [createStatus, updateStatus, deleteStatus].some(status => status === "success")) {

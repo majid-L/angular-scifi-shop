@@ -131,9 +131,18 @@
             <mat-chip class="price mat-elevation-z3">{{ product.price | currency: '£' }}</mat-chip>
           </div>
 
-          <div class="buttons">
-            <app-action-buttons [product]="product"></app-action-buttons>
-          </div>
+          <ng-container *ngIf="loggedInUserId; else notLoggedIn">
+            <div class="buttons">
+              <app-action-buttons [product]="product"></app-action-buttons>
+            </div>
+          </ng-container>
+
+          <ng-template #notLoggedIn>
+            <div class="not-logged-in">
+              <mat-icon>perm_identity</mat-icon>
+              <p>Log in to buy product or add to cart</p>
+            </div>
+          </ng-template>
         </mat-tab>
 
         <!-- Reviews tab -->

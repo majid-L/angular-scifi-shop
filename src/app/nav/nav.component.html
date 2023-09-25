@@ -57,7 +57,7 @@
 
         <app-search *ngIf="dataStream.mediumViewport === false"></app-search>
         
-        <div class="active-user-controls">
+        <div class="active-user-controls" [class.reduced-gap]="dataStream.loggedInUserId">
           <ng-container *ngIf="dataStream.currentUser || dataStream.loggedInUserId; else showLogin">
   
             <button (click)="emitEventToChild()" mat-mini-fab color="primary" matRipple [matRippleRadius]="rippleRadius"

@@ -12,19 +12,20 @@
 
       <mat-tab-group (selectedTabChange)="tabChange($event)">
         <mat-tab label="Login">
+          <ng-container *ngTemplateOutlet="confirmation; context: { msg: 'Successfully logged in.' }"></ng-container>
           <app-auth-form [formType]="formType"></app-auth-form>
-          <ng-container [ngTemplateOutlet]="confirmation"></ng-container>
         </mat-tab>
 
         <mat-tab label="Signup">
+          <ng-container *ngTemplateOutlet="confirmation; context: { msg: 'Successfully signed up. You have also been logged in to your account.' }"></ng-container>
           <app-auth-form [formType]="formType"></app-auth-form>
           <mat-spinner *ngIf="isLoading" class="spinner" color="primary"></mat-spinner>
-          <ng-container [ngTemplateOutlet]="confirmation"></ng-container>
         </mat-tab>
 
         <mat-tab label="Login with SSO">
           <div>
             <p>Use single sign-on to access the app.</p>
+            <ng-container *ngTemplateOutlet="confirmation; context: { msg: 'Successfully logged in via ' + socialUser?.provider }"></ng-container>
             <div class="sso-buttons">
               <div id="google-login">
                 <asl-google-signin-button 
@@ -51,7 +52,6 @@
               </button>
 
             </div>
-            <ng-container [ngTemplateOutlet]="confirmation"></ng-container>
           </div>
         </mat-tab>
       </mat-tab-group>
@@ -59,11 +59,12 @@
   </div>
 </section>
 
-<ng-template #confirmation>
+<ng-template let-msg="msg" #confirmation>
   <ng-container *ngIf="authIsSuccess$ | async">
     <p class="confirmation-text">
       <mat-icon class="confirmation-icon">check_circle</mat-icon>
-      Successfully {{ socialUser ? 'logged in via ' + socialUser.provider : formType === 'Login' ? 'logged in.' : 'signed up. You have also been logged in to your account.' }}
+      {{ msg }}
+      <!-- Successfully {{ formType === 'Login' ? 'logged in.' : socialUser ? 'logged in via ' + socialUser.provider : 'signed up. You have also been logged in to your account.' }} -->
     </p>
   </ng-container>
 </ng-template>
