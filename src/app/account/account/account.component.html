@@ -144,7 +144,12 @@
       </div>
 
       <div>
-        <button mat-raised-button color="warn" (click)="openDialog(accountData.id)">Delete account</button>
+        <button 
+          mat-raised-button color="warn" 
+          (click)="openDialog(accountData.id)"
+          [disabled]="accountData.username === 'alexnes'"
+          >Delete account</button>
+          <p style="margin: 5px 0; font-style: italic;" *ngIf="accountData.username === 'alexnes'">Cannot delete sample customer account.</p>
       </div>
 
     </section>

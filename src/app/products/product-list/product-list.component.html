@@ -27,7 +27,7 @@
 
   <main *ngLet="(searchTerm$ | async) as searchTerm">
     <ng-container *ngIf="products && products.length > 0; else noResults">
-      <div class="subtitle" *ngIf="searchTerm && (pagination$ | async) as pagination">
+      <div class="subtitle" *ngIf="searchTerm && (pagination$ | async) as pagination" #scrollRef>
         <h2>Found {{ pagination.totalResults }} matches for "{{ searchTerm }}".</h2>
         <button mat-mini-fab color="warn" (click)="reloadResults()" aria-label="Reload products">
           <mat-icon>close</mat-icon>
@@ -137,7 +137,7 @@
 
     <ng-template #noResults>
       <ng-container *ngIf="products?.length === 0 && searchTerm">
-        <div class="empty">
+        <div class="empty" #scrollRef>
           <p class="bold">No matches found for "{{ searchTerm }}".</p>
           <p>No products were found using the provided search term. Try another search or reload all products.</p>
           <img class="filter" src="assets/empty-4.svg">

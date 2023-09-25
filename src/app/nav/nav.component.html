@@ -50,9 +50,9 @@
           mat-icon-button
           (click)="drawer.toggle()"
           *ngIf="dataStream.mediumViewport">
-          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+          <mat-icon aria-label="Side nav toggle icon" color="primary">menu</mat-icon>
         </button>
-        <img class="logo" src="assets/logo-alt.svg">
+        <img class="logo" [src]="lightModeEnabled ? 'assets/logo-alt-2.png' : 'assets/logo-alt.svg'">
         </div>
 
         <app-search *ngIf="dataStream.mediumViewport === false"></app-search>

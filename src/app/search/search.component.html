@@ -1,6 +1,6 @@
 <div class="searchbar" [ngClass]="{hide: hideSearchbar, show: !hideSearchbar}">
   <form #searchForm="ngForm" (ngSubmit)="search(searchForm)">
-    <mat-form-field class="form-field" [appearance]="lightModeEnabled || isMediumViewport ? 'fill' : 'outline'">
+      <mat-form-field class="form-field" [appearance]="isMediumViewport ? 'fill' : 'outline'">
         <mat-label>Search products</mat-label>
         <input matInput type="text" [(ngModel)]="productName" name="productName" placeholder="Enter product name">
         <button type="submit" mat-icon-button matSuffix [attr.aria-label]="'Search products'">

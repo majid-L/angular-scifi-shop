@@ -39,7 +39,7 @@
             </mat-card-content>
 
             <mat-action-row *ngIf="component === 'account'">
-              <button mat-stroked-button (click)="toggleForm(address.key)" class="toggle-form" color="accent">
+              <button mat-stroked-button (click)="toggleForm(address.key)" class="toggle-form" color="primary">
                 <ng-container *ngIf="formIsShown(address.key); else altText">
                   <mat-icon>visibility_off</mat-icon>
                   <span>Hide form</span>

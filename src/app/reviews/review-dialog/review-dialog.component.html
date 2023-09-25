@@ -1,5 +1,10 @@
 <section *ngLet="data.review as review">
-  <h2 mat-dialog-title>{{ data.operation === "update" ? "Update review" : "Post new review"}}</h2>
+  <div class="dialog-title">
+    <h2>{{ data.operation === "update" ? "Update review" : "Post new review"}}</h2>
+    <button mat-icon-button matSuffix (click)="onNoClick()">
+      <mat-icon color="primary">close</mat-icon>
+    </button>
+  </div>
   <mat-divider></mat-divider>
   <br>
 
@@ -54,13 +59,15 @@
 
       <div class="radio-group">
         <label><mat-icon>thumbs_up_down</mat-icon>Recommend product?</label>
-        <mat-radio-group formControlName="recommend">
-          <mat-radio-button [value]="true">Yes</mat-radio-button>
-          <mat-radio-button [value]="false">No</mat-radio-button>
-        </mat-radio-group>
-        <button *ngIf="reviewForm.get('recommend')!.value !== null" matSuffix mat-icon-button aria-label="Clear" (click)="clearField('recommend', null)">
-          <mat-icon>close</mat-icon>
-        </button>
+        <div>
+          <mat-radio-group formControlName="recommend">
+            <mat-radio-button [value]="true">Yes</mat-radio-button>
+            <mat-radio-button [value]="false">No</mat-radio-button>
+          </mat-radio-group>
+          <button *ngIf="reviewForm.get('recommend')!.value !== null" matSuffix mat-icon-button aria-label="Clear" (click)="clearField('recommend', null)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
       </div>
 
       <div mat-dialog-actions>
