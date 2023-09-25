@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
@@ -26,7 +26,8 @@ import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.sass']
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, AfterViewInit {
+  @ViewChild("scrollRef") scrollRef: ElementRef | undefined;
   loggedInUserId$: Observable<string | number | null> = this._store.select(selectLoggedInUserId);
   wishlist$: Observable<Wishlist | null> = this._store.select(selectWishlist);
   products$: Observable<Product[] | null> = this._store.select(selectProducts);
@@ -41,6 +42,7 @@ export class ProductListComponent implements OnInit {
   wishlistActiveId$: Observable<number> = this._store.select(selectActiveWishlistId);
   private _breakpointSubscription = Subscription.EMPTY;
   private _streamSubscription = Subscription.EMPTY;
+  private _productsSubscription = Subscription.EMPTY;
   listDisplayStyle = "grid";
   showDisplayToggle = true;
   private _wishlistOperation: "add" | "remove" | undefined;
@@ -60,7 +62,7 @@ export class ProductListComponent implements OnInit {
     private _wishlistService: WishlistService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     window.scrollTo({ top: 0 });
     this._breakpointSubscription = this._breakPointObserver
       .observe('(max-width: 880px)')
@@ -99,6 +101,15 @@ export class ProductListComponent implements OnInit {
           this._store.dispatch(resetWishlistStatus());
         }
       });
+  }
+
+  ngAfterViewInit(): void {
+    this._productsSubscription = this.products$.subscribe(() => {
+      if (this.scrollRef) {
+        document.querySelector("main")!.scrollIntoView();
+        window.scrollBy(0, -100);
+      }
+    });
   }
   
   get headerImageSrc() {
@@ -146,5 +157,6 @@ export class ProductListComponent implements OnInit {
   ngOnDestroy() {
     this._breakpointSubscription.unsubscribe();
     this._streamSubscription.unsubscribe();
+    this._productsSubscription.unsubscribe();
   }
 }

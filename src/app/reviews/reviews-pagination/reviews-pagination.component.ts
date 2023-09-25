@@ -19,7 +19,6 @@ export class ReviewsPaginationComponent {
   readonly loadStatus$: Observable<Status> = this._store.select(selectLoadStatus);
   currentPage = 1;
   currentLimit = 25;
-  //private _idParam: number | undefined;
   private _subscription = Subscription.EMPTY;
 
   constructor(
@@ -58,7 +57,7 @@ export class ReviewsPaginationComponent {
         } else {
           this._store.dispatch(loadAllReviews({ page, limit }));
         }
-      } else if (!customerId) {
+      } else if (!customerId && !this.productId) {
         this._store.dispatch(loadAllReviews({ page, limit }));
       } else if (this.productId && (page > 1 || limit !== 25)) {
         this._store.dispatch(loadProductReviews({ 

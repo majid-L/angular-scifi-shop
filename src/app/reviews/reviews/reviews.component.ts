@@ -38,7 +38,10 @@ export class ReviewsComponent {
     operation: "create" | "update") {
       this._store.dispatch(resetReviewsStatus());
       this.dialog.open(ReviewDialogComponent, {
-        data: { review, operation }
+        data: { review, operation },
+        width: "100vw",
+        maxWidth: "1000px",
+        height: "90%"
       });
   }
   

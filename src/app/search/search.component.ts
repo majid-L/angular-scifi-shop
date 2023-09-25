@@ -51,10 +51,6 @@ export class SearchComponent {
     });
   }
 
-  get lightModeEnabled() {
-    return document.body.classList.contains("light-mode");
-  }
-
   search(searchForm: NgForm) {
     if (!this.productName?.trim()) return;
     this._store.dispatch(setSearchTerm({ searchTerm: this.productName }));

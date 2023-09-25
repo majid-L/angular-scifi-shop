@@ -72,6 +72,7 @@ export class SingleProductComponent {
   ) { }
 
   ngOnInit() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     this._searchResultSubscription = this.orderSearchResult$
       .subscribe(orderSearchResult => {
         if (orderSearchResult) {
@@ -153,6 +154,7 @@ export class SingleProductComponent {
       this._store.dispatch(resetReviewsStatus());
       this.dialog.open(ReviewDialogComponent, {
         width: this._isHandset ? "100vw" : "80vw",
+        height: "90%",
         maxWidth: "1000px",
         data: { review, operation }
       });

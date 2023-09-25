@@ -70,6 +70,7 @@ export class CheckoutComponent {
   }
 
   ngOnInit() {
+    window.scrollTo({ top: 0 });
     this._subscription = this.dataStream$
       .subscribe(({ expressCheckoutItem, cartItemCount, newOrder, loggedInUserId }) => {
         if (loggedInUserId) {
