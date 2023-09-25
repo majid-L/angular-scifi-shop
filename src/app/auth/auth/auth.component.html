@@ -10,7 +10,7 @@
     <div class="padding">
       <mat-icon class="close" (click)="hideOverlay()">close</mat-icon>
 
-      <mat-tab-group (selectedTabChange)="tabChange($event)" selectedIndex="2">
+      <mat-tab-group (selectedTabChange)="tabChange($event)">
         <mat-tab label="Login">
           <app-auth-form [formType]="formType"></app-auth-form>
           <ng-container [ngTemplateOutlet]="confirmation"></ng-container>
