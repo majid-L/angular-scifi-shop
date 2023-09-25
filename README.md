@@ -1,9 +1,14 @@
 # Sci-fi-themed Angular project
 
-This is a sci-fi themed Angular application, brimming with features (including its own fictitious lore).
+This is a sci-fi themed Angular application, brimming with advanced features (including its own fictitious lore) and focused on user experience.
 
-<img src="src/assets/logo.svg" width=600>
+<a href="https://xpulse.vercel.app"><img src="src/assets/logo.svg" width=600></a>
 <br>
+
+## [Visit the app](https://xpulse.vercel.app)
+Here is a preview of the products page.
+
+<img src="src/assets/products_screenshot.png" width=800>
 
 ## Key product features
 - Built with **Angular Material** components.
