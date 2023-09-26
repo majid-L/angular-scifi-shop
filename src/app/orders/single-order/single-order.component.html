@@ -38,7 +38,11 @@
             <h2 class="bold">{{ formatTitle(order) }}</h2>
           </mat-card-title>
           <mat-card-subtitle>
-            Order #{{ order.id }}; placed on {{ order.createdAt | date: 'short' }}
+            <span>Order #{{ order.id }}</span>
+            <br>
+            <span>Placed on {{ order.createdAt | date: 'short' }}</span>
+            <br>
+            <span>Status: {{ order.status }}</span>
           </mat-card-subtitle>
         </mat-card-header>
 

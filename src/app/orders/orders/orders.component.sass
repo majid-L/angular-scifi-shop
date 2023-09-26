@@ -6,6 +6,11 @@ h2
   font-size: 20px
   margin: 20px 0 5px
 
+h3
+  font-size: 16px
+  margin: 0 0 5px
+  font-weight: 500
+
 .heading img
   width: 95%
   left: 0
@@ -66,7 +71,7 @@ span img:hover
   scale: 1.2
 
 .gallery
-  margin-top: 20px
+  margin-top: 15px
   margin-left: 10px
   display: flex
   flex-wrap: wrap
@@ -79,8 +84,11 @@ span img:hover
   margin-bottom: 5px
 
 p.bold
+  display: -webkit-box
+  -webkit-line-clamp: 2
+  -webkit-box-orient: vertical
   overflow: hidden
-  text-overflow: ellipsis
+  white-space: normal
   width: 85%
 
 .delete
@@ -100,7 +108,10 @@ p.bold
   margin-top: -10px
   margin-bottom: 10px
 
+@media (max-width: 500px)  
+  section
+    margin-bottom: 30px
+
 @media (max-width: 320px)  
   section
     padding: 0 10px
-    margin-bottom: 30px
