@@ -9,9 +9,8 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { loadProducts } from 'src/app/ngrx/products/products.actions';
+import { loadProducts, setSearchTerm } from 'src/app/ngrx/products/products.actions';
 import { selectLoadStatus, selectPagination, selectProducts } from 'src/app/ngrx/products/products.feature';
-import { resetWishlistStatus } from 'src/app/ngrx/wishlist/wishlist.actions';
 
 @Component({
   selector: 'app-products-pagination',
@@ -52,6 +51,7 @@ export class ProductsPaginationComponent {
     });
 
     this._routeSubscription = this._route.queryParamMap.subscribe(queryParamMap => {
+      this._store.dispatch(setSearchTerm({ searchTerm: null }));
       this.queryParams = Object.create(queryParamMap).params;
       this.activeFilters = this.selectFilters(Object.create(queryParamMap).params);
       this.category = queryParamMap.get("category") || "";
