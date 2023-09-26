@@ -40,8 +40,7 @@ export class ReviewsComponent {
       this.dialog.open(ReviewDialogComponent, {
         data: { review, operation },
         width: "100vw",
-        maxWidth: "1000px",
-        height: "90%"
+        maxWidth: "1000px"
       });
   }
   

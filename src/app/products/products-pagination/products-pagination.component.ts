@@ -52,7 +52,6 @@ export class ProductsPaginationComponent {
     });
 
     this._routeSubscription = this._route.queryParamMap.subscribe(queryParamMap => {
-      this._titleService.setTitle("Products - " + queryParamMap.get("category") || queryParamMap.get("supplier") || "Products");
       this.queryParams = Object.create(queryParamMap).params;
       this.activeFilters = this.selectFilters(Object.create(queryParamMap).params);
       this.category = queryParamMap.get("category") || "";
@@ -60,9 +59,9 @@ export class ProductsPaginationComponent {
       this._store.dispatch(loadProducts(this.queryParams));
 
       if (queryParamMap.get("category")) {
-        this._titleService.setTitle("Products - " + queryParamMap.get("category"));
+        this._titleService.setTitle(queryParamMap.get("category")!);
       } else if (queryParamMap.get("supplier")) {
-        this._titleService.setTitle("Products by " + queryParamMap.get("supplier"));
+        this._titleService.setTitle(queryParamMap.get("supplier")!);
       } else {
         this._titleService.setTitle("Products");
       }

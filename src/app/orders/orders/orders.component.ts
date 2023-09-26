@@ -43,6 +43,7 @@ export class OrdersComponent {
   ) { }
 
   ngOnInit() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     this._customerIdSubscription = this.loggedInUserId$.subscribe(id => {
       if (id) {
         this._loggedInUserId = Number(id);

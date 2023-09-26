@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectAccount } from 'src/app/ngrx/account/account.feature';
-import { selectLoadStatus } from 'src/app/ngrx/cart/cart.feature';
+import { selectCartItemsCount, selectLoadStatus } from 'src/app/ngrx/cart/cart.feature';
 
 @Component({
   selector: 'app-cart-page',
@@ -11,6 +11,7 @@ import { selectLoadStatus } from 'src/app/ngrx/cart/cart.feature';
 })
 export class CartPageComponent {
   readonly loadStatus$: Observable<Status> = this._store.select(selectLoadStatus);
+  readonly cartItemsCount$: Observable<number | undefined> = this._store.select(selectCartItemsCount);
   readonly accountData$: Observable<Customer | null> = this._store.select(selectAccount);
 
   constructor(

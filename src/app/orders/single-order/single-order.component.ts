@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable, Subscription } from 'rxjs';
@@ -44,12 +45,15 @@ export class SingleOrderComponent {
     private _route: ActivatedRoute,
     private _router: Router,
     private _store: Store,
+    private _title: Title
   ) { }
 
   ngOnInit() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     this._subscription = this.dataStream$
       .subscribe(({ params, loggedInUserId }) => {
         this.orderId = params["id"];
+        this._title.setTitle("Order #" + params["id"])
         if (loggedInUserId) {
           this._loggedInUserId = Number(loggedInUserId);
           this._store.dispatch(loadSingleOrder({ 

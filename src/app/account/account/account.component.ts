@@ -79,7 +79,8 @@ export class AccountComponent implements OnInit {
   get passwordConfirm() { return this.passwordForm.get("passwordConfirm"); }
 
   ngOnInit() {
-     this.passwordForm.addValidators(this._accountService.matchValidator(
+    window.scrollTo({ top: 0 });
+    this.passwordForm.addValidators(this._accountService.matchValidator(
       this.passwordForm.get("password")!, this.passwordForm.get("passwordConfirm")!
     ));
     this.passwordForm.updateValueAndValidity();

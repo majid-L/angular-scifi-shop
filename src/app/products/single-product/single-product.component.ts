@@ -157,10 +157,9 @@ export class SingleProductComponent {
     operation: "create" | "update") {
       this._store.dispatch(resetReviewsStatus());
       this.dialog.open(ReviewDialogComponent, {
+        data: { review, operation },
         width: this._isHandset ? "100vw" : "80vw",
-        height: "90%",
-        maxWidth: "1000px",
-        data: { review, operation }
+        maxWidth: "1000px"
       });
   }
 
