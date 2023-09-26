@@ -18,6 +18,10 @@ export class CartPageComponent {
     private _store: Store<AppState>
   ) { }
 
+  ngOnInit() {
+    window.scrollTo({ top: 0 });
+  }
+
   get lightModeEnabled() {
     return document.body.classList.contains("light-mode");
   }
