@@ -28,7 +28,9 @@ export class ProductDialogComponent {
       product: this.data.product,
       quantity: this.quantity 
     }));
-    this._router.navigate(["/checkout"]);
     this.dialogRef.close();
+    this.dialogRef.afterClosed().subscribe(() => {
+      this._router.navigate(["/checkout"]);
+    });
   }
 }
