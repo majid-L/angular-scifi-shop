@@ -1,0 +1,78 @@
+<section>
+  <h2>{{ expressCheckoutItem ? "Express checkout item" : "Order items" }}</h2>
+
+  <div *ngIf="!expressCheckoutItem" class="hint">
+    <p class="subtitle">
+      <span class="icon"><mat-icon>info</mat-icon></span>
+      <span>Tip: to modify the quantity of any of the below items, simply update your cart via the sidebar.</span>
+    </p>
+  </div>
+
+  <ng-container *ngIf="expressCheckoutItem; else orderItemsList">
+    <p [ngClass]="{'total': true, 'light-bg total-purple': lightModeEnabled}">Order total: <span>{{ expressCheckoutTotal | currency: "£" }}</span></p>
+
+    <li class="order-item">
+      <ng-container *ngTemplateOutlet="orderItem; context: { item: expressCheckoutItem }"></ng-container>
+    </li>
+
+    <h4>Update quantity</h4>
+
+    <div class="input-area">
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Quantity</mat-label>
+        <input matInput type="number" required [formControl]="quantity">
+        <mat-error *ngIf="quantity.errors">
+          <mat-icon class="icon">error</mat-icon>
+            {{ quantity.errors['required'] ? 'Quantity is required.'
+            : quantity.errors['min'] ? 'Quantity must be at least 1.'
+            : quantity.errors['pattern'] ? 'Quantity must be whole number.'
+            : 'Insufficient stock.'}}
+        </mat-error>
+      </mat-form-field>
+      <button *ngIf="quantity.value !== expressCheckoutItem.quantity" type="button" (click)="updateQuantity()" mat-stroked-button color="primary" [disabled]="quantity.errors">
+        <mat-icon>edit</mat-icon>
+        Update quantity</button>
+      </div>
+  </ng-container>
+
+  <ng-template #orderItemsList>
+    <ng-container *ngIf="(cart$ | async) as cart">
+      <p [ngClass]="{'total': true, 'light-bg total-purple': lightModeEnabled}">Order total: <span>{{ cartTotal$ | async | currency: "£" }}</span></p>
+      <ul class="order-items-ul">
+        <li class="order-item" *ngFor="let cartItem of cart.cartItems">
+          <ng-container *ngTemplateOutlet="orderItem; context: { item: cartItem }"></ng-container>
+        </li>
+      </ul>
+    </ng-container>
+  </ng-template>
+
+  <button class="next" mat-stroked-button matStepperNext>
+    Proceed
+    <mat-icon>navigate_next</mat-icon>
+  </button>
+
+</section>
+
+<!-- ********** Order item template ********** -->
+<ng-template let-item="item" #orderItem>
+  <span 
+    [matBadge]="item.quantity"
+    matBadgeSize="large"
+    matBadgePosition="above after"
+    matBadgeColor="accent">
+  <img 
+    [src]="'assets/icons/black/' + item.product.thumbnail"
+    [routerLink]="['/products', item.product.id]"
+    [alt]="item.product.name"
+    matTooltip="Go to product page">
+  </span>
+  <div>
+    <h3 
+      [routerLink]="['/products', item.product.id]"
+      >{{ item.product.name }}</h3>
+    <mat-chip>
+      <p class="bold">{{ item.product.price | currency: "£" }}</p>
+    </mat-chip>
+  </div>
+  <mat-divider></mat-divider>
+</ng-template>
