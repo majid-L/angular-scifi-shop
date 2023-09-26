@@ -43,7 +43,11 @@
 
               <mat-card-title>
                 <app-rating class="review-rating" [review]="review"></app-rating>
-                <h4 class="review-title">{{ review.title }}</h4>
+                <h4 class="review-title">
+                  <mat-icon class="quote-icon">format_quote</mat-icon>
+                  {{ review.title }}
+                  <mat-icon>format_quote</mat-icon>
+                </h4>
               </mat-card-title>
 
               <mat-card-subtitle class="list-item-subtitle">

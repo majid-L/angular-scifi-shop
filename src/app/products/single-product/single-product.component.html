@@ -59,7 +59,11 @@
 
                 <span *ngIf="review.recommend" class="icon-with-text"><mat-icon color="primary">thumb_up</mat-icon>You recommended this item.</span>
               </div>
-              <h3 class="review-text"><mat-icon>format_quote</mat-icon>{{ review.title }}</h3>
+              <h3 class="review-text">
+                <mat-icon class="quote-icon">format_quote</mat-icon>
+                {{ review.title }}
+                <mat-icon>format_quote</mat-icon>
+              </h3>
               <blockquote class="review-text">{{ review.body }}</blockquote>
             </mat-card-content>
             <mat-divider></mat-divider>

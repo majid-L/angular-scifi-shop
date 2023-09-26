@@ -50,7 +50,9 @@
           <div class="cart-page-card-content">
             <img [src]="'assets/icons/transparent/' + item.product.thumbnail" [alt]="item.product.name">
             <div>
-              <app-chips [product]="item.product"></app-chips>
+              <div class="chips">
+                <app-chips [product]="item.product"></app-chips>
+              </div>
               <ng-container *ngTemplateOutlet="accordion; context:{item}"></ng-container> 
               <ng-container *ngTemplateOutlet="actions; context:{item}"></ng-container> 
             </div>

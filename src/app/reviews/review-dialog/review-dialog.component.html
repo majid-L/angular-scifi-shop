@@ -1,4 +1,4 @@
-<section *ngLet="data.review as review">
+<mat-dialog-content *ngLet="data.review as review">
   <div class="dialog-title">
     <h2>{{ data.operation === "update" ? "Update review" : "Post new review"}}</h2>
     <button mat-icon-button matSuffix (click)="onNoClick()">
@@ -13,16 +13,7 @@
       <mat-card-title>
         <h3>{{ review.product!.name }}</h3>
       </mat-card-title>
-        <mat-chip-listbox aria-label="Product information">
-            <mat-chip>
-              <mat-icon matChipAvatar>category</mat-icon>
-              {{ review.product!.categoryName }}
-            </mat-chip>
-            <mat-chip>
-              <mat-icon matChipAvatar>business</mat-icon>
-              Sold by <strong>{{ review.product!.supplierName }}</strong>
-            </mat-chip>
-          </mat-chip-listbox>
+        <app-chips class="chips" [product]="review.product"></app-chips>
         </mat-card-header>
         <mat-card-content>
             <p class="product-description">{{ review.product!.description }}</p>
@@ -30,7 +21,7 @@
         </mat-card-content>
   </mat-card>
 
-  <div mat-dialog-content>
+  <div>
     <div class="rating-label">
     <p>Rating:</p>
     <span class="rating-chip" [matBadge]="reviewForm.get('rating')!.value" matBadgeColor="accent">
@@ -51,7 +42,7 @@
 
       <mat-form-field subscriptSizing="dynamic">
         <mat-label>Review</mat-label>
-        <textarea matInput formControlName="body" placeholder="Type your review here."></textarea>
+        <textarea class="textarea" matInput cdkTextareaAutosize="true" formControlName="body" placeholder="Type your review here."></textarea>
         <button *ngIf="reviewForm.get('body')!.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearField('body', '')">
           <mat-icon>close</mat-icon>
         </button>
@@ -86,5 +77,5 @@
       </div>
     </form>
   </div>
-</section>
+</mat-dialog-content>
 <mat-progress-bar *ngIf="showLoadingBar" mode="indeterminate"></mat-progress-bar>
