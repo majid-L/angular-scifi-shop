@@ -43,15 +43,8 @@ export class ActionButtonsComponent {
   }
 
   showDialog() {
-    const { id, name, price, stock, thumbnail } = this.product!;
     this.dialog.open(ProductDialogComponent, {
-      data: { 
-        productId: id, 
-        productName: name, 
-        productPrice: price, 
-        stockLevel: stock, 
-        thumbnail
-      },
+      data: { product: this.product },
     });
   }
 

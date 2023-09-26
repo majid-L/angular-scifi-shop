@@ -50,13 +50,13 @@ export class CheckoutComponent {
   loading = true;
   orderStatus: "pending" | "completed" | undefined;
 
-  private expressCheckoutItem: ExpressCheckoutItem | null | undefined;
+  expressCheckoutItem: ExpressCheckoutItem | null | undefined;
   stepperOrientation$: Observable<StepperOrientation>;
   billingAddressFormGroup = this._accountService.createAddressForm();
   shippingAddressFormGroup = this._accountService.createAddressForm();
   billingAddress: Address | null | undefined;
   shippingAddress: Address | null | undefined;
-  visitedSteps: string[] = ["Billing address"];
+  visitedSteps: string[] = ["Order items"];
   useExisting = { billingAddress: false, shippingAddress: false };
 
   constructor(
@@ -91,7 +91,6 @@ export class CheckoutComponent {
 
   useAddress(data: AddressEmitData) {
     this.useExisting[data.type!] = data.useExisting;
-    //this.useExisting[data.type!] = true;
     this[data.type!] = data.address;
   }
   
@@ -110,9 +109,15 @@ export class CheckoutComponent {
     };
 
     if (this.expressCheckoutItem) {
+      const item = {
+        productId: this.expressCheckoutItem.product.id,
+        price: Number(this.expressCheckoutItem.product.price),
+        quantity: this.expressCheckoutItem.quantity
+      };
+
       (requestBody as typeof requestBody & 
-        { item: ExpressCheckoutItem }
-      ).item = this.expressCheckoutItem!;
+        { item: typeof item }
+      ).item = item;
     }
 
     this._store.dispatch(createOrder({ 

@@ -118,7 +118,7 @@ export class PaymentComponent implements OnInit {
             this.orderTotal = cartTotal;
           }
           if (expressCheckoutItem) {
-            this.orderTotal = expressCheckoutItem.price * expressCheckoutItem.quantity;
+            this.orderTotal = Number(expressCheckoutItem.product.price) * expressCheckoutItem.quantity;
           }
         
           this._checkoutService.createPaymentIntent(Math.round(this.orderTotal * 100))

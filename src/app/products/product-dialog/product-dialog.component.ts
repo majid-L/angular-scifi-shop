@@ -14,13 +14,7 @@ export class ProductDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<ProductDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { 
-      productId: number,
-      productName: string,
-      productPrice: string,
-      stockLevel: number,
-      thumbnail: string
-    },
+    @Inject(MAT_DIALOG_DATA) public data: { product: Product },
     private _store: Store<AppState>,
     private _router: Router
   ) { }
@@ -31,8 +25,7 @@ export class ProductDialogComponent {
 
   goToCheckout() {
     this._store.dispatch(addExpressCheckoutItem({ 
-      productId: this.data.productId,
-      price: Number(this.data.productPrice),
+      product: this.data.product,
       quantity: this.quantity 
     }));
     this._router.navigate(["/checkout"]);
