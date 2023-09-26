@@ -1,23 +1,21 @@
-section
-  margin: 0 20px
+.mat-mdc-dialog-content
+  padding: 20px
+  max-height: 90vh
 
 img
   height: 100px
   width: 100px
 
 .dialog-title
-  padding: 5px
+  margin-bottom: 10px
   display: flex
   justify-content: space-between
   align-items: center
   gap: 10px
 
   h2
+    margin: 0
     font-size: 20px
-
-.mat-mdc-dialog-content
-  padding-top: 0
-  max-height: none
 
 .mat-mdc-dialog-actions
   padding: 8px 0
@@ -27,11 +25,11 @@ img
   display: flex
   flex-direction: column
 
-.mat-mdc-chip-set
-  margin: 10px 0
-
 h3
   margin: 0
+
+.textarea
+  word-break: normal
 
 .product-description
   margin: 0 0 10px
@@ -60,6 +58,9 @@ label
 .rating-chip .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled)
     background-color: #4527a0
 
+.chips
+  margin: 10px 0
+  
 .mat-mdc-form-field
   width: 100%
   margin-bottom: 20px
@@ -67,9 +68,6 @@ label
   word-wrap: normal
 
 @media (max-width: 440px)
-  .mat-mdc-dialog-content
-    padding: 0 0 20px
-
   .radio-group
     flex-direction: column
 
