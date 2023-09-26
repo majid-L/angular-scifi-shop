@@ -208,8 +208,7 @@ declare global {
   }
 
   type ExpressCheckoutItem = {
-    productId: number
-    price: number
+    product: Product
     quantity: number
   }
 
