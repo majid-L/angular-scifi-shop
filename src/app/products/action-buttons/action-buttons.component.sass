@@ -10,15 +10,20 @@
   gap: 5px
   align-items: center
   justify-content: center
+  width: 80%
 
 .flex
   display: flex
-  gap: 10px
+  flex-direction: column
+  align-items: center
+  gap: 8px
   width: 50%
+  margin: 5px 0
 
 .mat-mdc-fab
-  width: 36px
-  height: 36px
+  width: 70%
+  height: fit-content !important
+  padding: 3px 20px
 
 .green
   color: green
@@ -26,3 +31,7 @@
 button:not(.mat-mdc-fab)
   width: 50%
   flex-grow: 1
+
+@media (max-width: 400px)
+  .added-to-cart
+    font-size: 14px
