@@ -1,0 +1,85 @@
+section
+  margin-left: 30px
+
+h2
+  margin-bottom: 10px
+
+.order-items-ul
+  display: flex
+  flex-direction: column
+  gap: 20px
+  padding: 0
+  margin: 16px 0 0
+
+.order-item
+  display: flex
+  height: fit-content
+  gap: 30px
+
+  h3
+    margin: 0 0 10px
+    cursor: pointer
+    transition: all 0.3s ease
+
+  h3:hover
+    color: var(--headingHoverColor)
+
+  p
+    margin: 5px 0
+
+  img
+    border: 1px solid gray
+    cursor: pointer
+    height: 100%
+    max-height: 100px
+    transition: all 0.3s ease
+
+  img:hover
+    scale: 1.05
+    border: 1px solid var(--primaryColor)
+
+.icon
+  display: flex
+
+.light-bg
+  background: #dbdbdb !important
+
+.total-purple
+  color: #9c27b0
+
+.input-area
+  display: flex
+  flex-direction: column
+  gap: 15px
+  width: fit-content
+
+.mat-mdc-form-field-error
+  padding: 0
+  display: flex
+  gap: 4px
+  align-items: center
+  justify-content: center
+
+.next
+  margin: 30px 0 0
+
+@media (max-width: 500px)
+  section
+    margin: 0 10px
+
+  h2
+    font-size: 20px
+
+  .order-item
+    gap: 20px
+
+    img
+      height: 75px
+
+    h3
+      display: -webkit-box
+      -webkit-line-clamp: 2
+      -webkit-box-orient: vertical
+      overflow: hidden
+      font-size: 16px
+      margin: 0 0 5px
