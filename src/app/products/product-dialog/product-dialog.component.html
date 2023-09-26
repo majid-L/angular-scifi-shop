@@ -1,12 +1,12 @@
 <div class="header">
-  <h2 mat-dialog-title>{{data.productName}}</h2>
-  <img [src]="'assets/icons/black/' + data.thumbnail">
+  <h2 mat-dialog-title>{{data.product.name}}</h2>
+  <img [src]="'assets/icons/black/' + data.product.thumbnail">
 </div>
 <div mat-dialog-content>
   <p>Please select quantity.</p>
   <mat-form-field subscriptSizing="dynamic">
     <mat-label>Quantity</mat-label>
-    <input matInput type="number" required min="1" pattern="\d+" [max]="data.stockLevel" [(ngModel)]="quantity" #qty="ngModel">
+    <input matInput type="number" required min="1" pattern="\d+" [max]="data.product.stock" [(ngModel)]="quantity" #qty="ngModel">
     <mat-error><mat-icon class="icon">error</mat-icon>
         {{ qty.errors?.['required'] ? 'Quantity is required.'
         : qty.errors?.['min'] ? 'Quantity must be at least 1.'

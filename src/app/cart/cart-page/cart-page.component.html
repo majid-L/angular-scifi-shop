@@ -10,6 +10,7 @@
   <section>
     <ng-container *ngIf="(accountData$ | async) as customer">
       <h1 class="username">{{ customer.username }}'s cart</h1>
+      <p class="name">{{ customer.name }}</p>
       <p class="name">{{ (cartItemsCount$ | async) }} items</p>
       <mat-divider></mat-divider>
     </ng-container>
