@@ -9,31 +9,42 @@
   background: var(--hintBg)
   color: #212121
   margin: 0 0 18px
-  padding: 10px 5px 0 !important
+  padding: 10px 5px 5px
   border-radius: 5px
   border: 1px solid #212121
   box-shadow: 0 0 5px 3px #5f65682f
+
+.klarna-hint
+  display: flex
+  align-items: center
+  gap: 10px
 
 .subtitle, li
   display: flex
   align-items: center
   gap: 10px
-  margin: 8px 0 8px 10px
+  margin: 8px
+
+.subtitle
+  margin: 20px 20px 20px 10px
 
 .icon
   display: flex
 
 ul
-  margin: 5px 0
+  margin: 15px 0 5px
+  padding: 0 10px
 
 li
   flex-direction: column
   align-items: flex-start
   gap: 4px
   margin: 5px 0 15px
+  padding: 0 0 10px
 
 li p 
   margin: 0
+  width: fit-content !important
 
 .mat-mdc-form-field
   margin-bottom: 12px
@@ -53,6 +64,16 @@ li p
 .pay
   font-size: 16px
 
+.copy-to-clipboard
+  display: flex
+  align-items: center
+  flex-wrap: wrap
+  gap: 5px
+  margin: 5px 0 0
+
+.card-detail
+  background: lightgray !important
+
 $breakpoint-tablet: 700px
 @media (max-width: $breakpoint-tablet)
   .mat-mdc-card
@@ -65,12 +86,13 @@ $breakpoint-tablet: 700px
     *
       width: 100%
 
-  .mat-mdc-card-subtitle p
-    width: 80%
-
 @media(max-width: 400px)
   .mat-mdc-card-header, .mat-mdc-card-content
     padding: 0
   
   ::ng-deep .mat-vertical-content
     padding: 0 10px 10px 0 !important
+
+@media (min-width: 500px)
+  .mat-mdc-card-subtitle
+    padding: 5px 15px !important

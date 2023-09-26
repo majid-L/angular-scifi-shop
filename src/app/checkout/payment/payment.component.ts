@@ -75,9 +75,11 @@ export class PaymentComponent implements OnInit {
   };
 
   testCardNumbers = [
-    { type: "Visa", number: "4000 0082 6000 0000" },
-    { type: "Visa (debit)", number: "4000 0582 6000 0005" },
-    { type: "Mastercard", number: "5555 5582 6555 4449" }
+    { type: "Visa", number: "4000 0082 6000 0000", detail: "valid", color: "green" },
+    { type: "Visa (debit)", number: "4000 0582 6000 0005", detail: "valid", color: "green" },
+    { type: "Mastercard", number: "5555 5582 6555 4449", detail: "valid", color: "green" },
+    { type: "Visa", number: "4000 0000 0000 9995", detail: "fail payment", color: "red" },
+    { type: "Visa", number: "4000 0025 0000 3155", detail: "requires authentication", color: "#c56607" }
   ];
 
   get lightModeEnabled() {

@@ -13,19 +13,22 @@
     <mat-card-subtitle *ngIf="paymentMethod === 'Card'" matTooltip="Instead of using real card details, this feature uses mock transactions to simulate real-world payments." matTooltipPosition="above">
       <p class="subtitle">
         <span class="icon"><mat-icon>info</mat-icon></span>
-        <span>Use any one of the following card numbers:</span>
+        <span>Try out one or more of the following card numbers:</span>
       </p>
       <ul>
         <li *ngFor="let card of testCardNumbers">
           <p>{{ card.type }}: <strong>{{ card.number }}</strong></p>
-          <button mat-raised-button [id]="card.number" color="primary" [cdkCopyToClipboard]="card.number" (click)="copyCardNumber(card.number)">
-            <mat-icon>file_copy</mat-icon>
-            Copy to clipboard
-          </button>
+          <div class="copy-to-clipboard">
+            <mat-chip class="card-detail"><strong [style]="{ color: card.color }">{{ card.detail }}</strong></mat-chip>
+            <button mat-raised-button [id]="card.number" color="primary" [cdkCopyToClipboard]="card.number" (click)="copyCardNumber(card.number)">
+              <mat-icon>file_copy</mat-icon>
+              Copy
+            </button>
+          </div>
         </li>
       </ul>
     </mat-card-subtitle>
-    <mat-card-subtitle *ngIf="paymentMethod === 'Klarna'">
+    <mat-card-subtitle class="klarna-hint" *ngIf="paymentMethod === 'Klarna'">
       <mat-icon class="icon">help</mat-icon>
       <p>At the next screen, verify your Klarna transaction using this phone number: <span class="bold">01895808666</span></p>
     </mat-card-subtitle>
