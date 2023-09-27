@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { logoutRequest } from '../ngrx/auth/auth.actions';
 import { hideDialog } from '../ngrx/notification/notification.actions';
 
 @Component({
@@ -22,5 +23,10 @@ export class DialogComponent {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
     this._store.dispatch(hideDialog());
+  }
+
+  forceRetry() {
+    this._store.dispatch(logoutRequest());
+    window.location.reload();
   }
 }

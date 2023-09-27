@@ -27,7 +27,14 @@
     </div>
     <div mat-dialog-actions>
       <button (click)="hideOverlay()" mat-stroked-button mat-dialog-close color="primary">Close</button>
-      <button *ngIf="!data.buttons" routerLink="/" mat-dialog-close mat-stroked-button color="primary">Return to home</button>
+      <ng-container *ngIf="data.error?.status === 401; else returnToHome">
+        <button routerLink="/" (click)="forceRetry()" mat-dialog-close mat-stroked-button color="primary">Retry</button>
+      </ng-container>
+
+      <ng-template #returnToHome>
+        <button *ngIf="!data.buttons" routerLink="/" mat-dialog-close mat-stroked-button color="primary">Return to home</button>
+      </ng-template>
+     
       <button *ngIf="data.buttons?.newOrder" [routerLink]="data.buttons!.newOrder" (click)="hideOverlay()" mat-raised-button mat-dialog-close color="accent">View order</button>
     </div>
   </div>
