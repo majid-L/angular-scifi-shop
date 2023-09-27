@@ -23,13 +23,14 @@ export class CartComponent {
   activeId$: Observable<number> = this._store.select(selectActiveId);
   dataStream$ = combineLatest([
     this.cart$, this.cartTotal$, this.loadStatus$, this.updateStatus$, this.activeId$, this.loggedInUserId$
-  ]).pipe(map(([cart, cartTotal, loadStatus, updateStatus, activeId, loggedInUserId]) => {
-      return { cart, cartTotal, loadStatus, updateStatus, activeId, loggedInUserId };
+  ]).pipe(map(([cart, cartTotal, loadStatus, updateStatus, activeId]) => {
+      return { cart, cartTotal, loadStatus, updateStatus, activeId };
     })
   );
   private _loggedInUserId: number | undefined;
-  private _statusSubscription = Subscription.EMPTY;
+  private _loggedInUserIdSubscription = Subscription.EMPTY;
   private _cartSubscription = Subscription.EMPTY;
+  private _statusSubscription = Subscription.EMPTY;
   showDescription: { [productId: number]: boolean } = {};
   showForm: { [productId: number]: boolean } = {};
   quantities: { [productId: number]: number } = {};
@@ -42,11 +43,13 @@ export class CartComponent {
 
   ngOnInit() {
     this.isSidebar = this.component === "cart-sidebar";
-    this._cartSubscription = this.dataStream$.subscribe(({ cart, loggedInUserId }) => {
-      if (loggedInUserId) {
-        this._loggedInUserId = Number(loggedInUserId);
+    this._loggedInUserIdSubscription = this.loggedInUserId$.subscribe(id => {
+      if (id) {
+        this._loggedInUserId = Number(id);
       }
+    });
 
+    this._cartSubscription = this.cart$.subscribe(cart => {
       if (cart) {
         cart.cartItems.forEach(item => {
           this.quantities[item.product.id] = item.quantity;
@@ -54,32 +57,27 @@ export class CartComponent {
       }
     });
 
-    this._statusSubscription = this.dataStream$.subscribe(({ updateStatus }) => {
+    this._statusSubscription = this.updateStatus$.subscribe(updateStatus => {
       if (updateStatus === "success") {
         this._snackBar.open('Cart updated.', 'Dismiss', {
           horizontalPosition: "start",
           verticalPosition: "top",
           duration: 7000
         });
+        this._store.dispatch(resetStatus());
       }
     });
-  }
-
-  emitSidebarCloseEvent() {
-    this.closeSidebarEvent.emit();
-  }
-
-  ngOnDestroy() {
-    this._cartSubscription.unsubscribe();
-    this._statusSubscription.unsubscribe();
   }
 
   get lightModeEnabled() {
     return document.body.classList.contains("light-mode");
   }
 
+  emitSidebarCloseEvent() {
+    this.closeSidebarEvent.emit();
+  }
+
   modifyQuantity(productId: number, quantity: number) {
-    this._store.dispatch(resetStatus());
     this._store.dispatch(updateActiveId({ activeId: productId }));
     if (quantity === 0) {
       this._store.dispatch(removeCartItem({ 
@@ -96,7 +94,6 @@ export class CartComponent {
   }
 
   deleteItem(productId: number) {
-    this._store.dispatch(resetStatus());
     this._store.dispatch(updateActiveId({ activeId: productId }));
     this._store.dispatch(removeCartItem({ 
       productId, 
@@ -105,7 +102,6 @@ export class CartComponent {
   }
 
   emptyCart() {
-    this._store.dispatch(resetStatus());
     this._store.dispatch(updateActiveId({ activeId: -1 }));
     this._store.dispatch(clearCart({ customerId: this._loggedInUserId! }));
   }
@@ -116,5 +112,11 @@ export class CartComponent {
 
   toggleForm(productId: number, show: boolean) {
     this.showForm[productId] = show;
+  }
+
+  ngOnDestroy() {
+    this._cartSubscription.unsubscribe();
+    this._statusSubscription.unsubscribe();
+    this._loggedInUserIdSubscription.unsubscribe();
   }
 }

@@ -21,7 +21,7 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./single-product.component.sass']
 })
 export class SingleProductComponent {
-  public productId: number | undefined;
+  public productId: string | undefined | null;
   public loggedInUserId: string | number | null | undefined;
   private _orderId: number | undefined;
   readonly singleProduct$: Observable<SingleProduct | null> = 
@@ -87,9 +87,9 @@ export class SingleProductComponent {
 
     this._subscription = this.dataStream$
       .subscribe(({ paramMap, isHandset, createStatus, updateStatus, deleteStatus, loggedInUserId }) => {
-        const productId = Number(paramMap.get("id"));
+        const productId = paramMap.get("id");
         if (this.productId !== productId) {
-          this._store.dispatch(loadSingleProduct({ productId }));
+          this._store.dispatch(loadSingleProduct({ productId: Number(productId) }));
         }
         this.productId = productId;
         this.loggedInUserId = loggedInUserId;
@@ -102,7 +102,7 @@ export class SingleProductComponent {
           : "Done";
           this._store.dispatch(searchOrderHistory({ 
             customerId: Number(loggedInUserId),
-            productId
+            productId: Number(productId)
           }));
           this._snackBar.open(snackBarMessage, 'Dismiss', {
             horizontalPosition: "start",
@@ -131,7 +131,7 @@ export class SingleProductComponent {
     if (this._customerId) {
       this._store.dispatch(searchOrderHistory({ 
         customerId: this._customerId,
-        productId: this.productId! 
+        productId: Number(this.productId) 
       }));
     }
   }
