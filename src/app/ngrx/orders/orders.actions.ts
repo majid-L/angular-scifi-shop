@@ -66,3 +66,5 @@ export const updateOrderSuccess = createAction(
   "[New Order - Redirect Component] Update Order - Success",
   props<SingleOrderResponse>()
 );
+
+export const resetStatus = createAction("[Orders Component] Reset Status");

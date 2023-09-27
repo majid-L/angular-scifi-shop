@@ -55,6 +55,7 @@ export class DeleteDialogComponent {
 
   ngOnDestroy() {
     this._subscription.unsubscribe();
+    this._socialLoginSubscription.unsubscribe();
     this._store.dispatch(resetStatus());
   }
 }

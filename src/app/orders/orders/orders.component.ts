@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { map, Observable, shareReplay, Subscription } from 'rxjs';
 import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
-import { deleteOrder, loadOrders } from 'src/app/ngrx/orders/orders.actions';
+import { deleteOrder, loadOrders, resetStatus } from 'src/app/ngrx/orders/orders.actions';
 import { selectDeleteStatus, selectLoadStatus, selectNewOrder, selectOrders } from 'src/app/ngrx/orders/orders.feature';
 
 @Component({
@@ -62,11 +62,6 @@ export class OrdersComponent {
     })
   }
 
-  ngOnDestroy() {
-    this._statusSubscription.unsubscribe();
-    this._customerIdSubscription.unsubscribe();
-  }
-
   get lightModeEnabled() {
     return document.body.classList.contains("light-mode");
   }
@@ -87,5 +82,11 @@ export class OrdersComponent {
       orderId,
       customerId: this._loggedInUserId!
     }));
+  }
+
+  ngOnDestroy() {
+    this._store.dispatch(resetStatus());
+    this._statusSubscription.unsubscribe();
+    this._customerIdSubscription.unsubscribe();
   }
 }

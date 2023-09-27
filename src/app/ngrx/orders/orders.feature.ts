@@ -1,6 +1,6 @@
 import { createFeature, createReducer, on } from "@ngrx/store"
 import { httpError } from "../notification/notification.actions";
-import { addExpressCheckoutItem, clearSingleOrder, createOrder, createOrderSuccess, deleteOrder, deleteOrderSuccess, loadOrders, loadOrdersSuccess, loadSingleOrder, loadSingleOrderSuccess, clearExpressCheckout, updateOrder, updateOrderSuccess } from "./orders.actions";
+import { addExpressCheckoutItem, clearSingleOrder, createOrder, createOrderSuccess, deleteOrder, deleteOrderSuccess, loadOrders, loadOrdersSuccess, loadSingleOrder, loadSingleOrderSuccess, clearExpressCheckout, updateOrder, updateOrderSuccess, resetStatus } from "./orders.actions";
 
 const initialState: OrdersState = {
   orders: null,
@@ -70,8 +70,9 @@ export const ordersReducer = createReducer(
   }),
   on(deleteOrder, state => ({ ...state, deleteStatus: "loading" as const })),
   on(deleteOrderSuccess, (state, payload) => {
-    const filteredOrders = state.orders!.orders.length === 0 ? [] 
-      : state.orders!.orders.filter(order => order.id !== payload.deletedOrder.id);
+    const filteredOrders = !state.orders ? [] 
+      : state.orders.orders.length === 0 ? [] 
+      : state.orders.orders.filter(order => order.id !== payload.deletedOrder.id);
     return {
       ...state,
       orders: { ...state.orders, orders: filteredOrders } as OrdersResponse,
@@ -79,6 +80,13 @@ export const ordersReducer = createReducer(
       singleOrder: payload.deletedOrder
     }
   }),
+  on(resetStatus, state => ({ 
+    ...state, 
+    loadStatus: "pending" as const, 
+    createStatus: "pending" as const,
+    updateStatus: "pending" as const,
+    deleteStatus: "pending" as const
+  })),
   on(httpError, state => ({ 
     ...state, 
     loadStatus: "error" as const, 

@@ -6,7 +6,7 @@ import { combineLatest, map, Observable, Subscription } from 'rxjs';
 import { selectAccount } from 'src/app/ngrx/account/account.feature';
 import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
 import { notify } from 'src/app/ngrx/notification/notification.actions';
-import { clearSingleOrder, deleteOrder, loadSingleOrder } from 'src/app/ngrx/orders/orders.actions';
+import { clearSingleOrder, deleteOrder, loadSingleOrder, resetStatus } from 'src/app/ngrx/orders/orders.actions';
 import { selectDeleteStatus, selectLoadStatus, selectNewOrder, selectSingleOrder } from 'src/app/ngrx/orders/orders.feature';
 import { selectData } from '../../ngrx/notification/notification.feature';
 
@@ -53,7 +53,7 @@ export class SingleOrderComponent {
     this._subscription = this.dataStream$
       .subscribe(({ params, loggedInUserId }) => {
         this.orderId = params["id"];
-        this._title.setTitle("Order #" + params["id"])
+        this._title.setTitle("Order #" + params["id"]);
         if (loggedInUserId) {
           this._loggedInUserId = Number(loggedInUserId);
           this._store.dispatch(loadSingleOrder({ 
@@ -98,6 +98,7 @@ export class SingleOrderComponent {
 
   ngOnDestroy() {
     this._store.dispatch(clearSingleOrder());
+    this._store.dispatch(resetStatus());
     this._subscription.unsubscribe();
     this._statusSubscription.unsubscribe();
     this._404Subscription.unsubscribe();

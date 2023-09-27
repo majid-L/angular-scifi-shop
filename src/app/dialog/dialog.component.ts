@@ -18,6 +18,9 @@ export class DialogComponent {
 
   hideOverlay() {
     this.dialogRef.close();
+    this.dialogRef.afterClosed().subscribe(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
     this._store.dispatch(hideDialog());
   }
 }
