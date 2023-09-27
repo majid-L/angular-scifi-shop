@@ -111,10 +111,10 @@
                 </div>
                 
                 <div>
-                  <p>{{ product.stock }}</p>
+                  <p *ngIf="product.stock > 0">{{ product.stock }}</p>
                   <span class="bold">
-                    <mat-icon color="primary">check_box</mat-icon>
-                    <p>{{ product.stock > 0 ? "In stock" : "Out of stock." }}</p>
+                    <mat-icon [color]="product.stock > 0 ? 'primary' : 'warn'">{{ product.stock > 0 ? "check_box" : "highlight_off" }}</mat-icon>
+                    <p>{{ product.stock > 0 ? "In stock" : "Out of stock" }}</p>
                   </span>
                 </div>
                 <div>
@@ -135,14 +135,23 @@
             <mat-chip class="price mat-elevation-z3">{{ product.price | currency: '£' }}</mat-chip>
           </div>
 
-          <ng-container *ngIf="loggedInUserId; else notLoggedIn">
-            <div class="buttons">
-              <app-action-buttons [product]="product"></app-action-buttons>
+          <ng-container *ngIf="product.stock === 0; else actionButtons">
+            <div class="unavailable">
+              <mat-icon>highlight_off</mat-icon>
+              <p>Item is out of stock</p>
             </div>
           </ng-container>
 
+          <ng-template #actionButtons>
+            <ng-container *ngIf="loggedInUserId; else notLoggedIn">
+              <div class="buttons">
+                <app-action-buttons [product]="product"></app-action-buttons>
+              </div>
+            </ng-container>
+          </ng-template>
+
           <ng-template #notLoggedIn>
-            <div class="not-logged-in">
+            <div class="unavailable">
               <mat-icon>perm_identity</mat-icon>
               <p>Log in to buy product or add to cart</p>
             </div>
@@ -153,7 +162,7 @@
         <mat-tab label="Reviews">
           <app-reviews
              component="product"
-             [productId]="productId"
+             [productId]="+productId!"
             [showCreateReviewButton]="showCreateReviewButton"
             [newReviewTemplate]="newReviewTemplate(product)"
           ></app-reviews>

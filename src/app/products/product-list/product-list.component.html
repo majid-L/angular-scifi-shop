@@ -103,9 +103,9 @@
             <mat-card-content [routerLink]="['/products', product.id]">
               <p class="product-description">{{ product.description }}</p>
               <div class="price">
-                <p class="stock">
-                  <mat-icon>label</mat-icon>
-                  {{ product.stock }} in stock
+                <p class="stock" [class.red]="product.stock === 0">
+                  <mat-icon [color]="product.stock > 0 ? 'white' : 'warn'">{{ product.stock > 0 ? "label" : "highlight_off" }}</mat-icon>
+                  {{ product.stock > 0 ? product.stock + " in stock" : "Out of stock" }}
                 </p>
                 <mat-chip class="bold">
                   <p>{{ product.price | currency: 'GBP' }}</p>
@@ -120,12 +120,22 @@
               </mat-card-actions>
             </div>
 
-            <div class="not-logged-in" *ngIf="!(loggedInUserId$ | async)">
-              <mat-icon>perm_identity</mat-icon>
-              <p>Log in to buy product or add to cart</p>
-            </div>
-          
-    
+            <ng-container *ngIf="product.stock === 0; else notLoggedIn">
+              <div class="unavailable" >
+                <mat-icon>highlight_off</mat-icon>
+                <p>Item is out of stock.</p>
+              </div>
+            </ng-container>
+
+            <ng-template #notLoggedIn>
+              <ng-container *ngIf="!(loggedInUserId$ | async)">
+                <div class="unavailable">
+                  <mat-icon>perm_identity</mat-icon>
+                  <p>Log in to buy product or add to cart</p>
+                </div>
+              </ng-container>
+            </ng-template>
+            
           <ng-container *ngIf="((cartUpdateStatus$ | async) === 'loading' && (cartActiveId$ | async) === product.id) || ((wishlistUpdateStatus$ | async) === 'loading' && (wishlistActiveId$ | async) === product.id)">
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
           </ng-container>

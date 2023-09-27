@@ -42,7 +42,12 @@
             <br>
             <span>Placed on {{ order.createdAt | date: 'short' }}</span>
             <br>
-            <span>Status: {{ order.status }}</span>
+            <mat-divider style="margin: 10px 0"></mat-divider>
+            <em class="status-column">Status: {{ order.status }}
+              <mat-icon *ngIf="order.status === 'completed'" class="green">check_circle</mat-icon>
+              <mat-icon *ngIf="order.status === 'pending'" class="amber">error</mat-icon>
+              <mat-icon *ngIf="order.status==='payment failed'" color="warn">cancel</mat-icon>
+            </em>
           </mat-card-subtitle>
         </mat-card-header>
 

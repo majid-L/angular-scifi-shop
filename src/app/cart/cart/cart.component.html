@@ -114,16 +114,19 @@
       
       <mat-form-field>
         <mat-label>Quantity</mat-label>
-        <input matInput [(ngModel)]="quantities[item.product.id]" name="quantity" #quantity="ngModel" type="number" required min="0">
+        <input matInput [(ngModel)]="quantities[item.product.id]" name="quantity" #quantity="ngModel" type="number" required min="0" [max]="item.product.stock">
         <mat-error *ngIf="quantity.errors?.['required']">
           Quantity is required.
         </mat-error>
         <mat-error *ngIf="quantity.errors?.['min']">
             Quantity cannot be less than 0.
         </mat-error>
+        <mat-error *ngIf="quantity.errors?.['max']">
+          Quantity cannot exceed stock.
+      </mat-error>
       </mat-form-field>
       <mat-action-row>
-        <button mat-button color="accent" (click)="modifyQuantity(item.product.id, quantities[item.product.id])">Update</button>
+        <button mat-button color="accent" (click)="modifyQuantity(item.product.id, quantities[item.product.id])" [disabled]="quantity.invalid">Update</button>
       </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>
