@@ -1,7 +1,8 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { map, Observable, shareReplay, Subscription } from 'rxjs';
 import { resetWishlistStatus } from 'src/app/ngrx/wishlist/wishlist.actions';
 import { selectActiveId, selectLoadStatus, selectUpdateStatus, selectWishlist } from 'src/app/ngrx/wishlist/wishlist.feature';
 import { WishlistService } from '../wishlist.service';
@@ -19,10 +20,15 @@ export class WishlistComponent {
   private _subscription = Subscription.EMPTY;
   operation: "remove" | "removeAll" | undefined;
 
+  smallViewport$: Observable<boolean> = this._breakpointObserver
+    .observe('(max-width: 500px)')
+    .pipe(map(result => result.matches), shareReplay());
+
   constructor(
     private _store: Store<AppState>,
     private _wishlistService: WishlistService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _breakpointObserver: BreakpointObserver
   ) { }
 
   ngOnInit() {
