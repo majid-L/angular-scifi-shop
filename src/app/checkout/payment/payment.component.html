@@ -10,7 +10,7 @@
       </mat-toolbar>
       <mat-divider></mat-divider>
     </mat-card-title>
-    <mat-card-subtitle *ngIf="paymentMethod === 'Card'" matTooltip="Instead of using real card details, this feature uses mock transactions to simulate real-world payments." matTooltipPosition="above">
+    <mat-card-subtitle *ngIf="paymentMethod === 'Card'" matTooltip="Instead of using real card details, this feature uses mock transactions to simulate real-world payments." matTooltipPosition="above" [matTooltipDisabled]="smallViewport$ | async">
       <p class="subtitle">
         <span class="icon"><mat-icon>info</mat-icon></span>
         <span>Try out one or more of the following card numbers:</span>

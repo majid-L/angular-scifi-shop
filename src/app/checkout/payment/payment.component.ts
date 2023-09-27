@@ -1,6 +1,6 @@
 import { formatCurrency } from '@angular/common';
 import { Component, Inject, OnInit, ViewChild, LOCALE_ID, Output, EventEmitter, Input, SimpleChange } from '@angular/core';
-import { combineLatest, map, Observable, Subscription } from 'rxjs';
+import { combineLatest, map, Observable, shareReplay, Subscription } from 'rxjs';
 import { StripeService, StripePaymentElementComponent } from 'ngx-stripe';
 import { StripeElementsOptions, Appearance, PaymentIntentResult, StripePaymentElementOptions, StripePaymentElementChangeEvent } from '@stripe/stripe-js';
 import { Store } from '@ngrx/store';
@@ -11,6 +11,7 @@ import { selectAccount } from 'src/app/ngrx/account/account.feature';
 import { CheckoutService } from '../checkout.service';
 import { selectExpressCheckoutItem } from 'src/app/ngrx/orders/orders.feature';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-payment',
@@ -38,6 +39,9 @@ export class PaymentComponent implements OnInit {
   ]).pipe(map(([cartTotal, expressCheckoutItem]) => {
     return { cartTotal, expressCheckoutItem }
   }));
+  smallViewport$: Observable<boolean> = this._breakpointObserver
+    .observe('(max-width: 500px)')
+    .pipe(map(result => result.matches), shareReplay());
 
   orderTotal = 0;
   elementsOptions: StripeElementsOptions = { locale: 'en' };
@@ -92,6 +96,7 @@ export class PaymentComponent implements OnInit {
     private _stripeService: StripeService,
     private _store: Store<AppState>,
     private _snackBar: MatSnackBar,
+    private _breakpointObserver: BreakpointObserver,
     @Inject(LOCALE_ID) private locale: string
   ) {}
 
