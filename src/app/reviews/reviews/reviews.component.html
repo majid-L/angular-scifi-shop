@@ -1,4 +1,4 @@
-<section class="reviews-tab">
+<section class="reviews-tab" *ngLet="(loggedInUserId$ | async) as loggedInUserId">
 
   <div class="paginator">
     <app-reviews-pagination [productId]="productId"></app-reviews-pagination>
@@ -27,7 +27,7 @@
         <mat-list-item *ngFor="let review of reviews">
           <mat-card>
             <mat-card-header>
-              <ng-container *ngIf="component === 'product'; else noLink">
+              <ng-container *ngIf="component === 'product' || review.customerId != loggedInUserId; else noLink">
                 <div routerLink="/reviews" [queryParams]="{ customerId: review.customerId}" class="customer-info reviews-link" [matTooltip]="'View reviews posted by ' + review.customer!.username" matTooltipPosition="after">
                   <img [src]="review.customer!.avatar">
                   <p class="bold">{{ review.customer!.username }}</p>
@@ -63,7 +63,7 @@
                 <p>{{ review.body }}</p>
               </blockquote>
             </mat-card-content>
-            <mat-card-actions *ngIf="review.customerId == (loggedInUserId$ | async)">
+            <mat-card-actions *ngIf="review.customerId == loggedInUserId">
               <button mat-raised-button (click)="showDialog(review, 'update')" color="primary">
                 <mat-icon>edit</mat-icon>
                 Edit review
