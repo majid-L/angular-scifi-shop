@@ -7,9 +7,12 @@ import { authenticateWithSSO, authenticateWithSSOSuccess, loginRequest, loginSuc
 import { httpError, notify } from "../notification/notification.actions";
 import { Router } from "@angular/router";
 import { clearCurrentUser } from "../account/account.actions";
+import { SocialAuthService, SocialUser } from "@abacritt/angularx-social-login";
 
 @Injectable()
 export class AuthEffects {
+  private _socialLoginUser: SocialUser | undefined;
+
   loginOrSignup$ = createEffect(() => this.actions$.pipe(
     ofType(loginRequest, signupRequest),
     exhaustMap(({ requestBody, endpoint }) => {
@@ -44,6 +47,9 @@ export class AuthEffects {
     ofType(logoutRequest),
     exhaustMap(() => {
       window.localStorage.removeItem('userId');
+      if (this._socialLoginUser) {
+        this._authService.signOut();
+      };
       return this.authService.logout()
       .pipe(
         map(logoutResponse => {
@@ -68,6 +74,13 @@ export class AuthEffects {
   constructor(
     private actions$: Actions,
     private authService: AuthService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private _authService: SocialAuthService
+  ) {
+    this._authService.authState.subscribe(user => {
+      if (user) {
+        this._socialLoginUser = user;
+      }
+    });
+  }
 }
