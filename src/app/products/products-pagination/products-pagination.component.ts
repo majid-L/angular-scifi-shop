@@ -51,7 +51,6 @@ export class ProductsPaginationComponent {
     });
 
     this._routeSubscription = this._route.queryParamMap.subscribe(queryParamMap => {
-      this._store.dispatch(setSearchTerm({ searchTerm: null }));
       this.queryParams = Object.create(queryParamMap).params;
       this.activeFilters = this.selectFilters(Object.create(queryParamMap).params);
       this.category = queryParamMap.get("category") || "";
@@ -84,7 +83,10 @@ export class ProductsPaginationComponent {
   }
 
   removeFilter(param: string) {
-    this.updateUrlQueryParams({ [param]: null })
+    this.updateUrlQueryParams({ [param]: null });
+    if (param === "product") {
+      this._store.dispatch(setSearchTerm({ searchTerm: null }));
+    }
   }
 
   clearAllFilters() {

@@ -2,7 +2,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable, Subscription } from 'rxjs';
 import { 
@@ -18,7 +18,7 @@ import { selectLoadStatus, selectPagination, selectProducts, selectSearchTerm } 
 import { resetWishlistStatus } from 'src/app/ngrx/wishlist/wishlist.actions';
 import { selectWishlist } from 'src/app/ngrx/wishlist/wishlist.feature';
 import { WishlistService } from 'src/app/wishlist/wishlist.service';
-import { loadProducts, setSearchTerm } from 'src/app/ngrx/products/products.actions';
+import { setSearchTerm } from 'src/app/ngrx/products/products.actions';
 import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
 
 @Component({
@@ -57,6 +57,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   constructor(
     private _store: Store<AppState>,
     private _route: ActivatedRoute,
+    private _router: Router,
     private _breakPointObserver: BreakpointObserver,
     private _snackBar: MatSnackBar,
     private _wishlistService: WishlistService
@@ -137,7 +138,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
 
   reloadResults() {
     this._store.dispatch(setSearchTerm({ searchTerm: null }));
-    this._store.dispatch(loadProducts({}));
+    this._router.navigate([]);
   }
 
   productIsInWishlist(productId: number, wishlist: Wishlist) {
@@ -155,6 +156,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnDestroy() {
+    this._store.dispatch(setSearchTerm({ searchTerm: null }));
     this._breakpointSubscription.unsubscribe();
     this._streamSubscription.unsubscribe();
     this._productsSubscription.unsubscribe();

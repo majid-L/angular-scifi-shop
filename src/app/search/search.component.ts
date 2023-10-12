@@ -54,13 +54,11 @@ export class SearchComponent {
   search(searchForm: NgForm) {
     if (!this.productName?.trim()) return;
     this._store.dispatch(setSearchTerm({ searchTerm: this.productName }));
-    this._store.dispatch(loadProducts({
-      product: this.productName
-    }));
-    searchForm.reset();
     this._router.navigate(["/products"], {
+      queryParams: { product: this.productName },
       queryParamsHandling: "merge"
     });
+    searchForm.reset();
   }
 
   ngOnDestroy() {
