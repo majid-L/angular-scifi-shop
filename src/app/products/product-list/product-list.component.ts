@@ -14,11 +14,10 @@ import {
   selectUpdateStatus as selectWishlistUpdateStatus
 } from 'src/app/ngrx/wishlist/wishlist.feature';
 import { selectCategories, selectSuppliers } from 'src/app/ngrx/categories/categories.feature';
-import { selectLoadStatus, selectPagination, selectProducts, selectSearchTerm } from 'src/app/ngrx/products/products.feature';
+import { selectLoadStatus, selectPagination, selectProducts } from 'src/app/ngrx/products/products.feature';
 import { resetWishlistStatus } from 'src/app/ngrx/wishlist/wishlist.actions';
 import { selectWishlist } from 'src/app/ngrx/wishlist/wishlist.feature';
 import { WishlistService } from 'src/app/wishlist/wishlist.service';
-import { setSearchTerm } from 'src/app/ngrx/products/products.actions';
 import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
 
 @Component({
@@ -33,7 +32,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   products$: Observable<Product[] | null> = this._store.select(selectProducts);
   categories$: Observable<Category[] | null> = this._store.select(selectCategories);
   suppliers$: Observable<Supplier[] | null> = this._store.select(selectSuppliers);
-  searchTerm$: Observable<string | null> = this._store.select(selectSearchTerm);
   pagination$: Observable<Pagination> = this._store.select(selectPagination);
   productLoadStatus$: Observable<Status> = this._store.select(selectLoadStatus);
   cartUpdateStatus$: Observable<Status> = this._store.select(selectCartUpdateStatus);
@@ -45,6 +43,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   private _productsSubscription = Subscription.EMPTY;
   listDisplayStyle = "grid";
   showDisplayToggle = true;
+  searchTerm: string | null = null;
   private _wishlistOperation: "add" | "remove" | undefined;
   category: Category | null | undefined = null;
   supplier: Supplier | null | undefined = null;
@@ -78,6 +77,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
 
     this._streamSubscription = this.datastream$
       .subscribe(({ categories, suppliers, queryParamMap, wishlistUpdateStatus }) => {
+        this.searchTerm = queryParamMap.get("product");
         const categoryParam = queryParamMap.get("category");
         const supplierParam = queryParamMap.get("supplier");
         if (categoryParam && categories) {
@@ -137,7 +137,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   }
 
   reloadResults() {
-    this._store.dispatch(setSearchTerm({ searchTerm: null }));
     this._router.navigate([]);
   }
 
@@ -156,7 +155,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this._store.dispatch(setSearchTerm({ searchTerm: null }));
     this._breakpointSubscription.unsubscribe();
     this._streamSubscription.unsubscribe();
     this._productsSubscription.unsubscribe();

@@ -29,8 +29,3 @@ export const searchOrderHistorySuccess = createAction(
   "[SingleProduct Component] Search Order History - Success",
   props<OrderSearchResponse>()
 );
-
-export const setSearchTerm = createAction(
-  "[Search Component] Update Search Term",
-  props<{ searchTerm: string | null }>()
-);

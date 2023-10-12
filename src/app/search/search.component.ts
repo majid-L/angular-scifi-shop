@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { loadProducts, setSearchTerm } from '../ngrx/products/products.actions';
 import { Router } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map, Observable, shareReplay, Subscription } from 'rxjs';
@@ -53,7 +52,6 @@ export class SearchComponent {
 
   search(searchForm: NgForm) {
     if (!this.productName?.trim()) return;
-    this._store.dispatch(setSearchTerm({ searchTerm: this.productName }));
     this._router.navigate(["/products"], {
       queryParams: { 
         product: this.productName,

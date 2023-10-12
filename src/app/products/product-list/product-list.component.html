@@ -25,7 +25,7 @@
     </app-products-pagination>
   </div>
 
-  <main *ngLet="(searchTerm$ | async) as searchTerm">
+  <main>
     <ng-container *ngIf="products && products.length > 0; else noResults">
       <div class="results-subtitle" *ngIf="searchTerm && (pagination$ | async) as pagination" #scrollRef>
         <h2>Found {{ pagination.totalResults }} matches for "{{ searchTerm }}".</h2>

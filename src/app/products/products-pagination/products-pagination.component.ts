@@ -9,7 +9,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { loadProducts, setSearchTerm } from 'src/app/ngrx/products/products.actions';
+import { loadProducts } from 'src/app/ngrx/products/products.actions';
 import { selectLoadStatus, selectPagination, selectProducts } from 'src/app/ngrx/products/products.feature';
 
 @Component({
@@ -84,9 +84,6 @@ export class ProductsPaginationComponent {
 
   removeFilter(param: string) {
     this.updateUrlQueryParams({ [param]: null });
-    if (param === "product") {
-      this._store.dispatch(setSearchTerm({ searchTerm: null }));
-    }
   }
 
   clearAllFilters() {
