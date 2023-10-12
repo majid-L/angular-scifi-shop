@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectCategories, selectSuppliers } from '../ngrx/categories/categories.feature';
+import { selectCategories, selectCategoriesLoadStatus, selectSuppliers, selectSuppliersLoadStatus } from '../ngrx/categories/categories.feature';
 
 @Component({
   selector: 'app-home',
@@ -9,8 +9,10 @@ import { selectCategories, selectSuppliers } from '../ngrx/categories/categories
   styleUrls: ['./home.component.sass']
 })
 export class HomeComponent {
-  suppliers$: Observable<Supplier[] | null> = this._store.select(selectSuppliers);
   categories$: Observable<Category[] | null> = this._store.select(selectCategories);
+  suppliers$: Observable<Supplier[] | null> = this._store.select(selectSuppliers);
+  categoriesLoadStatus$: Observable<Status> = this._store.select(selectCategoriesLoadStatus);
+  suppliersLoadStatus$: Observable<Status> = this._store.select(selectSuppliersLoadStatus);
 
   constructor (
     private _store: Store<AppState>
