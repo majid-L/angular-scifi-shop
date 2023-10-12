@@ -55,7 +55,10 @@ export class SearchComponent {
     if (!this.productName?.trim()) return;
     this._store.dispatch(setSearchTerm({ searchTerm: this.productName }));
     this._router.navigate(["/products"], {
-      queryParams: { product: this.productName },
+      queryParams: { 
+        product: this.productName,
+        page: 1
+      },
       queryParamsHandling: "merge"
     });
     searchForm.reset();
