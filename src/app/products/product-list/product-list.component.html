@@ -55,7 +55,7 @@
                 </mat-chip>
                 <span class="icon-with-text">
                   <mat-icon color="primary">stars</mat-icon>
-                  {{ product.averageRating }} <span class="italic">({{ product.numOfReviews }} reviews)</span>
+                  {{ product.averageRating | number: '1.0-1' }} <span class="italic">({{ product.numOfReviews }} reviews)</span>
                 </span>
               </div>
     
