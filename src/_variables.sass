@@ -10,7 +10,7 @@ $darkHeadingHoverColor: $darkPrimary
 $darkCartTotalColor: $darkPrimary
 $darkProductCardBg: black
 $darkSuccessColor: #53f91c
-$darkHintBg: #ffdc1c
+$darkHintBg: #ffbf3e
 $darkHeadingColor: #212121
 $darkAuthBg: #2e2d2d
 $darkBg: #212121
@@ -20,12 +20,13 @@ $darkButtonBg: #202124
 $darkButtonBorder: none
 $darkPriceChipBorder: 2px double #9f9d9d
 $darkChipShadow: #ffaa00b5
+$darkScrollbarTrackBg: #424242
+$darkScrollbarThumbBg: #ffaa0086
 
 // mixin that enables css variables in dark mode
 @mixin dark()
   --primaryColor: #{$darkPrimary}
   --mainNavToolbarBg: #{$darkMainNavbarBg}
-  --narrowNavToolbarBg: #{$darkMainNavbarBg}
   --sidenavBgColor: #{$darkSidenavBg}
   --activeAnchorBg: #{$darkActiveAnchorBg}
   --textColor: #{$darkActiveAnchorColor}
@@ -46,13 +47,14 @@ $darkChipShadow: #ffaa00b5
   --buttonBorder: #{$darkButtonBorder}
   --priceChipBorder: #{$darkPriceChipBorder}
   --chipShadow: #{$darkChipShadow}
+  --scrollbarTrackBg: #{$darkScrollbarTrackBg}
+  --scrollbarThumbBg: #{$darkScrollbarThumbBg}
 
 /**************************************************************/
 
 // Light mode variables
 $lightPrimary: #D500F9
-$lightMainNavbarBg: linear-gradient(90deg, #f2c2fb 0, #c0c0c0 100%)
-$lightNarrowNavbarBg: linear-gradient(90deg, #f2c2fb 0, #523657 70%, #212121 100%)
+$lightMainNavbarBg: lightgray
 $lightSidenavBg: whitesmoke
 $lightActiveAnchorBg: #D500F9
 $lightActiveAnchorColor: whitesmoke
@@ -62,7 +64,7 @@ $lightHeadingHoverColor: #e150fa
 $lightCartTotalColor: #e150fa
 $lightProductCardBg: #212121
 $lightSuccessColor: green
-$lightHintBg: #ec96fb
+$lightHintBg: #df2dff70
 $lightHeadingColor: whitesmoke
 $lightAuthBg: whitesmoke
 $lightBg: lightgray
@@ -73,12 +75,13 @@ $lightButtonBg: #fff
 $lightButtonBorder: 1px solid #dadce0
 $lightPriceChipBorder: 1px solid #787676
 $lightChipShadow: #ec96fb
+$lightScrollbarTrackBg: lightgray
+$lightScrollbarThumbBg: #d400f986
 
 // mixin that enables css variables in light mode
 @mixin light()
   --primaryColor: #{$lightPrimary}
   --mainNavToolbarBg: #{$lightMainNavbarBg}
-  --narrowNavToolbarBg: #{$lightNarrowNavbarBg}
   --sidenavBgColor: #{$lightSidenavBg}
   --activeAnchorBg: #{$lightActiveAnchorBg}
   --textColor: #{$lightActiveAnchorColor}
@@ -99,3 +102,5 @@ $lightChipShadow: #ec96fb
   --buttonBorder: #{$lightButtonBorder}
   --priceChipBorder: #{$lightPriceChipBorder}
   --chipShadow: #{$lightChipShadow}
+  --scrollbarTrackBg: #{$lightScrollbarTrackBg}
+  --scrollbarThumbBg: #{$lightScrollbarThumbBg}

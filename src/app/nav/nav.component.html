@@ -8,8 +8,18 @@
       <mat-nav-list>
         <a mat-list-item routerLink="/" [routerLinkActive]="activeLink" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page"><span>Home</span></a>
         <a mat-list-item routerLink="/products" [routerLinkActive]="activeLink" ariaCurrentWhenActive="page"><span>Products</span></a>
-        <a mat-list-item routerLink="/reviews" [routerLinkActive]="activeLink" ariaCurrentWhenActive="page"><span>Reviews</span></a>
+
+        <a *ngIf="dataStream.loggedInUserId" mat-list-item routerLink="/account" [routerLinkActive]="activeLink"><span>My account</span></a>
+
         <a *ngIf="dataStream.loggedInUserId" mat-list-item routerLink="/orders" [routerLinkActive]="activeLink"><span>My orders</span></a>
+
+        <a *ngIf="dataStream.loggedInUserId" mat-list-item routerLink="/cart" [routerLinkActive]="activeLink"><span>My cart</span></a>
+
+        <a *ngIf="dataStream.loggedInUserId" mat-list-item routerLink="/wishlist" [routerLinkActive]="activeLink"><span>My wishlist</span></a>
+
+        <a *ngIf="dataStream.loggedInUserId" mat-list-item routerLink="/favorites" [routerLinkActive]="activeLink"><span>My favorites</span></a>
+
+        <a mat-list-item routerLink="/reviews" [routerLinkActive]="activeLink" ariaCurrentWhenActive="page"><span>Reviews</span></a>
       </mat-nav-list>
   
       <mat-toolbar class="nav-header" [class.light]="lightModeEnabled">

@@ -15,6 +15,7 @@
 .sidenav-container
   height: 100%
 
+
 .sidenav 
   width: 210px
   background: var(--sidenavBgColor)
@@ -41,14 +42,28 @@
 .nav-header
   display: flex
   justify-content: center
-  height: 80px
-  box-shadow: 0 0 8px 6px var(--sidenavBgColor) inset
+  height: 90px
+  background: none
+  position: relative
+  margin-bottom: 10px
+
+.nav-header:before
+  position: absolute
+  content: ""
+  top: -12px
+  height: 100%
+  width: 100%
+  padding: 10px 0
+  background: var( --mainNavToolbarBg)
+  z-index: -1
 
 .toolbar-image
   height: 90px
+  z-index: 1
 
 .mat-mdc-nav-list
   padding: 0
+  margin-bottom: 10px
 
 .mat-toolbar.mat-primary
   position: sticky
@@ -102,11 +117,7 @@
   align-items: center
 
 .logo
-  width: 150px
-
-@media (max-width: 800px)
-  .topnav
-    background: var(--narrowNavToolbarBg)
+  width: 120px
 
 @media (max-width: 580px)
   .logo

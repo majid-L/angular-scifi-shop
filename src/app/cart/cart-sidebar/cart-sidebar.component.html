@@ -1,9 +1,22 @@
 <mat-sidenav-container hasBackdrop="true" (backdropClick)="cartSidebar.close()">
-  <mat-sidenav class="cart-sidebar" #cartSidebar mode="push" position="end" fixedInViewport>
-    
+  <mat-sidenav
+    class="cart-sidebar"
+    #cartSidebar
+    (opened)="toggleBodyOverflow('hide')"
+    (closed)="toggleBodyOverflow('show')"
+    mode="push"
+    position="end"
+    fixedInViewport
+  >
     <mat-toolbar color="primary">
       <h2>Cart</h2>
-      <button class="close-icon" mat-mini-fab (click)="cartSidebar.toggle()" color="primary" aria-label="Close cart sidebar">
+      <button
+        class="close-icon"
+        mat-mini-fab
+        (click)="cartSidebar.toggle()"
+        color="primary"
+        aria-label="Close cart sidebar"
+      >
         <mat-icon>close</mat-icon>
       </button>
     </mat-toolbar>
@@ -12,6 +25,5 @@
       component="cart-sidebar"
       (closeSidebarEvent)="cartSidebar.close()"
     ></app-cart>
-
   </mat-sidenav>
 </mat-sidenav-container>
