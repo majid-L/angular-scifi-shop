@@ -20,6 +20,21 @@ import { selectWishlist } from 'src/app/ngrx/wishlist/wishlist.feature';
 import { WishlistService } from 'src/app/wishlist/wishlist.service';
 import { selectLoggedInUserId } from 'src/app/ngrx/auth/auth.feature';
 
+const placeholderProduct = 	{
+  "id": 2,
+  "name": "Short-range thermal sensors",
+  "numOfTimesOrdered": 12,
+  "totalUnitsOrdered": 29,
+  "numOfReviews": 7,
+  "averageRating": "3.14",
+  "description": "8-pack of thermal sensors, each with a 10-m radius and 30 second duration. Useful for inconspicuously tracking heat signatures within a small radius.",
+  "price": "236",
+  "stock": 39,
+  "categoryName": "Components",
+  "supplierName": "G & B Supplies",
+  "thumbnail": "blank.png"
+}
+
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
@@ -44,6 +59,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   listDisplayStyle = "grid";
   showDisplayToggle = true;
   searchTerm: string | null = null;
+  placeholderProducts: Product[] = [];
   private _wishlistOperation: "add" | "remove" | undefined;
   category: Category | null | undefined = null;
   supplier: Supplier | null | undefined = null;
@@ -74,6 +90,8 @@ export class ProductListComponent implements OnInit, AfterViewInit {
           this.showDisplayToggle = true;
         }
       });
+
+    this.placeholderProducts = Array(25).fill(0).map(() => placeholderProduct);
 
     this._streamSubscription = this.datastream$
       .subscribe(({ categories, suppliers, queryParamMap, wishlistUpdateStatus }) => {

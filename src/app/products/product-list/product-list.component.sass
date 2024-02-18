@@ -218,6 +218,40 @@ h2
 .red
   color: #e91e63
 
+// Placeholder styles
+.product-card-placeholder
+  .glow
+    position: relative
+    margin-bottom: 5px
+    margin-top: 5px
+   
+  .stock
+    margin-left: 2.5px
+
+  .price
+    margin-top: 10px
+
+  .glow:before
+    position: absolute
+    content: ""
+    height: 100%
+    width: 100%
+    z-index: 1
+  
+  img, .glow:before
+    animation: 2s ease-in-out 0s infinite placeholder-glow
+
+@keyframes placeholder-glow
+  0%
+    background-color: rgb(23, 23, 23)
+  
+  50%
+    background-color: rgb(54, 53, 53)
+
+  100% 
+    background-color: rgb(23, 23, 23)
+
+
 @media (max-width: 500px)
   .product-grid
     display: block
