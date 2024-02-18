@@ -6,6 +6,8 @@ import { createOrUpdateAddress, createOrUpdateAddressSuccess, deleteAddress, del
 import { dispatchErrorAction } from "..";
 import { notify } from "../notification/notification.actions";
 import { Router } from "@angular/router";
+import { authFailure } from "../auth/auth.actions";
+import { of } from "rxjs";
 
 @Injectable()
 export class AccountEffects {
@@ -16,7 +18,10 @@ export class AccountEffects {
       map(accountResponse => {
         return loadAccountSuccess(accountResponse);
       }),
-      catchError(dispatchErrorAction)
+      catchError(() => {
+        window.localStorage.removeItem("userId");
+        return of(authFailure());
+      })
     ))
   ));
 

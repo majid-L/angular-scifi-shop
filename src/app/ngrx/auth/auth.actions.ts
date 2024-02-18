@@ -46,3 +46,5 @@ export const logoutSuccess = createAction(
   "[Auth Component] Logout Success",
   props<{ msg: string }>()
 );
+
+export const authFailure = createAction("[App Component] Authentication Failed");

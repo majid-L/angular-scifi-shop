@@ -16,8 +16,8 @@ import { ReviewsPageComponent } from './reviews/reviews-page/reviews-page.compon
 import { AuthService } from './auth/auth.service';
 
 const authenticationGuard: CanActivateFn = () => {
-  const loggedInUserId = inject(AuthService).loggedInUserId;
-  if (!loggedInUserId) {
+  const customerAccount = inject(AuthService).accountData;
+  if (!customerAccount) {
     return inject(Router).createUrlTree(["/"]);
   } else {
     return true;

@@ -12,7 +12,8 @@ import {
   signupSuccess,
   signupRequest,
   authenticateWithSSO,
-  authenticateWithSSOSuccess
+  authenticateWithSSOSuccess,
+  authFailure
 } from './auth.actions';
 
 const initialState: AuthState = {
@@ -62,7 +63,7 @@ export const authReducer = createReducer(
       logoutStatus: "success" as const
     };
   }),
-  on(deleteUserSuccess, state => ({
+  on(deleteUserSuccess, authFailure, state => ({
     ...state,
     loggedInUserId: null
   })),

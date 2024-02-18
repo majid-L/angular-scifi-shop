@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { authenticateWithSSO } from '../ngrx/auth/auth.actions';
 import { SocialUser } from '@abacritt/angularx-social-login';
 import { selectLoggedInUserId } from '../ngrx/auth/auth.feature';
+import { selectAccount } from '../ngrx/account/account.feature';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class AuthService {
     withCredentials: true
   };
   public loggedInUserId: string | number | null = null;
+  public accountData: Customer | null = null;
 
   constructor(
     private _http: HttpClient,
@@ -25,6 +27,10 @@ export class AuthService {
   ) {
     _store.select(selectLoggedInUserId).subscribe(id => {
       this.loggedInUserId = id;
+    });
+
+    _store.select(selectAccount).subscribe(accountData => {
+      this.accountData = accountData;
     });
   }
 
