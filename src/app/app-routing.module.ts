@@ -24,6 +24,15 @@ const authenticationGuard: CanActivateFn = () => {
   }
 }
 
+const newOrderGuard: CanActivateFn = () => {
+  const loggedInUserId = inject(AuthService).loggedInUserId;
+  if (!loggedInUserId) {
+    return inject(Router).createUrlTree(["/"]);
+  } else {
+    return true;
+  }
+}
+
 const routes: Routes = [
   { 
     path: "", 
@@ -77,7 +86,7 @@ const routes: Routes = [
     path: "orders/new",
     title: "New order",
     component: NewOrderRedirectComponent,
-    canActivate: [authenticationGuard]
+    canActivate: [newOrderGuard]
   },
   { 
     path: "orders/:id",
